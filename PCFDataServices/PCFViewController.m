@@ -7,6 +7,7 @@
 //
 
 #import <Security/SecItem.h>
+#import <AFNetworking/AFNetworking.h>
 
 #import "PCFViewController.h"
 #import "PCFTableViewController.h"
@@ -49,10 +50,12 @@ static NSString *const kRedirectURI2 = @"http://localhost";
 - (IBAction)signInButtonPressed:(id)sender
 {
     self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, 10, CGRectGetWidth(self.view.frame) - 20, CGRectGetHeight(self.view.frame) - 20)];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://accounts.google.com/o/oauth2/auth?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=https://www.google.com/m8/feeds", kRedirectURI1, kClientID]]]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://accounts.google.com/o/oauth2/auth?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=openid%%20email%%20profile", kRedirectURI1, kClientID]]]];
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
 }
+
+#pragma mark - UIWebView
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -76,7 +79,18 @@ static NSString *const kRedirectURI2 = @"http://localhost";
                                        redirectURI:kRedirectURI1
                                            success:^(AFOAuthCredential *credential) {
                                                NSLog(@"Success");
-                                               BOOL success = [AFOAuthCredential storeCredential:credential withIdentifier:@"PCFDataServicesID"];
+                                               [AFOAuthCredential storeCredential:credential withIdentifier:@"PCFDataServicesID"];
+                                               NSURLRequest *request = [client requestWithMethod:@"GET" path:@"https://www.googleapis.com/oauth2/v1/userinfo"
+                                                                                      parameters:@{@"Authorization" : [NSString stringWithFormat:@"Bearer %@", credential.accessToken]}];
+                                               
+                                               AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                                                                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                                                                                                       NSLog(@"GOT USER INFO");
+                                                                                                                                   }
+                                                                                                                                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                                                                                                       NSLog(@"FAILURE");
+                                                                                                                                   }];
+                                               [operation start];
                                                [webView removeFromSuperview];
                                            } failure:^(NSError *error) {
                                                NSLog(@"Failure");
