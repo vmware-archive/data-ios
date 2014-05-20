@@ -6,11 +6,12 @@
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <Security/SecItem.h>
+#import <Security/Security.h>
 #import <AFNetworking/AFNetworking.h>
+#import <GooglePlus/GooglePlus.h>
+#import <GoogleOpenSource/GoogleOpenSource.h>
 
 #import "PCFViewController.h"
-#import "PCFTableViewController.h"
 
 #import "AFOAuth2Client.h"
 
@@ -18,17 +19,20 @@ static NSString *const kOAuthServerURL = @"https://accounts.google.com/";
 static NSString *const kClientID = @"958201466680-dd8mf4n57g6echld0km7senh80ahf1s6.apps.googleusercontent.com";
 static NSString *const kClientSecret = @"cxmDXp45JC1zdqcgk1cSgmTZ";
 
-static NSString *const kClientID2 = @"958201466680.apps.googleusercontent.com";
+static NSString *const kClientID2 = @"958201466680-j991tfkh55de7vrlaqfn06ntichvaum3.apps.googleusercontent.com";
+static NSString *const kClientSecret2 = @"ceadvC4aJ8fjm34ZPeGoO8zw";
 
 static NSString *const kRedirectURI1 = @"urn:ietf:wg:oauth:2.0:oob";
 static NSString *const kRedirectURI2 = @"http://localhost";
 
-@interface PCFViewController ()
+@interface PCFViewController () <GPPSignInDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *userNameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 
 @property (weak, nonatomic) IBOutlet UIButton *signInButton;
+
+@property (retain, nonatomic) IBOutlet GPPSignInButton *googleSignInButton;
 
 @property (strong, nonatomic) UIWebView *webView;
 
@@ -39,6 +43,18 @@ static NSString *const kRedirectURI2 = @"http://localhost";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    GPPSignIn *signIn = [GPPSignIn sharedInstance];
+    signIn.shouldFetchGooglePlusUser = YES;
+    //signIn.shouldFetchGoogleUserEmail = YES;  // Uncomment to get the user's email
+    
+    signIn.clientID = kClientID2;
+    
+//    signIn.scopes = @[ kGTLAuthScopePlusLogin ];  // "https://www.googleapis.com/auth/plus.login" scope
+    signIn.scopes = @[ @"profile" ];            // "profile" scope
+    
+    // Optional: declare signIn.actions, see "app activities"
+    signIn.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,10 +65,11 @@ static NSString *const kRedirectURI2 = @"http://localhost";
 
 - (IBAction)signInButtonPressed:(id)sender
 {
-    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, 10, CGRectGetWidth(self.view.frame) - 20, CGRectGetHeight(self.view.frame) - 20)];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://accounts.google.com/o/oauth2/auth?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=openid%%20email%%20profile", kRedirectURI1, kClientID]]]];
-    self.webView.delegate = self;
-    [self.view addSubview:self.webView];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://accounts.google.com/o/oauth2/auth?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=openid%%20email%%20profile", @"com.pivotal.PCFDataServices:/oauth2callback", kClientID2]]];
+//    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, 10, CGRectGetWidth(self.view.frame) - 20, CGRectGetHeight(self.view.frame) - 20)];
+//    [self.webView loadRequest:[NSURLRequest requestWithURL:]];
+//    self.webView.delegate = self;
+//    [self.view addSubview:self.webView];
 }
 
 #pragma mark - UIWebView
@@ -98,6 +115,18 @@ static NSString *const kRedirectURI2 = @"http://localhost";
 			[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
 		}
 	}
+}
+
+#pragma mark - Google+ sign-in
+
+- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth
+                   error:(NSError *)error {
+    NSLog(@"Received error %@ and auth object %@",error, auth);
+}
+
+- (void)presentSignInViewController:(UIViewController *)viewController {
+    // This is an example of how you can implement it if your app is navigation-based.
+    [[self navigationController] pushViewController:viewController animated:YES];
 }
 
 @end

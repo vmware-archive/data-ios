@@ -52,10 +52,18 @@
                                     <action selector="signInButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="p2i-gL-jM8"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZEv-C1-Rgc" customClass="GPPSignInButton">
+                                <rect key="frame" x="105" y="232" width="110" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Google+ sign-in">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="googleSignInButton" destination="ZEv-C1-Rgc" id="Ugf-YH-yfi"/>
                         <outlet property="passwordField" destination="RPF-kQ-Yh3" id="7ih-v9-h7Z"/>
                         <outlet property="signInButton" destination="l8e-GS-uNx" id="pDZ-nz-DyE"/>
                         <outlet property="userNameField" destination="dx3-Cc-ZTS" id="ne4-hg-uaT"/>
