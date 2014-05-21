@@ -5,6 +5,9 @@
       location = "group:PCFDataServices"
       name = "PCFDataServices">
       <FileRef
+         location = "group:PCFDataSignIn+Internal.h">
+      </FileRef>
+      <FileRef
          location = "group:PCFDataSignIn.h">
       </FileRef>
       <FileRef

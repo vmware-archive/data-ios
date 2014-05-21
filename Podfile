@@ -19,5 +19,5 @@ target 'PCFDataServicesSpecs' do
     link_with 'PCFDataServicesSpecs'
     pod 'Kiwi/XCTest'
     pod 'AFOAuth2Client'
-    #    pod 'PCFDataServices', :path => './'
+    pod 'PCFDataServices', :path => './'
 end

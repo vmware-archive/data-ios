@@ -9,6 +9,8 @@
 #import "PCFDataSignIn.h"
 #import "AFOAuth2Client.h"
 
+NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
+
 static NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
 
 typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
@@ -30,6 +32,12 @@ static dispatch_once_t _sharedOnceToken;
         }
     });
     return _sharedPCFDataSignIn;
+}
+
++ (void)setSharedInstance:(PCFDataSignIn *)sharedInstance
+{
+    _sharedOnceToken = 0;
+    _sharedPCFDataSignIn = sharedInstance;
 }
 
 - (id)init

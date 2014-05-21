@@ -63,9 +63,7 @@
 // that authentication has failed.
 - (BOOL)trySilentAuthentication;
 
-// Starts the authentication process. Set |attemptSSO| to try single sign-on.
-// If |attemptSSO| is true, try to authenticate with the Google+ app, if
-// installed. If false, always use Google+ via Chrome or Mobile Safari for
+// Starts the authentication process. Use Mobile Safari for
 // authentication. The delegate will be called at the end of this process.
 // Note that this method should not be called when the app is starting up,
 // (e.g in application:didFinishLaunchingWithOptions:). Instead use the

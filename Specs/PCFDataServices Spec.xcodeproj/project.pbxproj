@@ -23,6 +23,7 @@
 		F145A5EA192BF81700CF830B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EC192BF81700CF830B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EE192BF81700CF830B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		F1BE2715192CED8300E498E8 /* PCFDataSignIn+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PCFDataSignIn+Internal.h"; sourceTree = "<group>"; };
 		F1E8FE0C192BCF6B00D17CF2 /* PCFDataSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataSignIn.h; sourceTree = "<group>"; };
 		F1E8FE0D192BCF6B00D17CF2 /* PCFDataSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataSignIn.m; sourceTree = "<group>"; };
 		F1F9F936192BF956002848C7 /* PCFDataServicesSpecs.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataServicesSpecs.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +85,7 @@
 			children = (
 				F1E8FE0C192BCF6B00D17CF2 /* PCFDataSignIn.h */,
 				F1E8FE0D192BCF6B00D17CF2 /* PCFDataSignIn.m */,
+				F1BE2715192CED8300E498E8 /* PCFDataSignIn+Internal.h */,
 			);
 			name = PCFDataServices;
 			path = ../PCFDataServices;
