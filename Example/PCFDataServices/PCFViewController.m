@@ -8,8 +8,9 @@
 
 #import <Security/Security.h>
 #import <AFNetworking/AFNetworking.h>
-#import <GooglePlus/GooglePlus.h>
 #import <GoogleOpenSource/GoogleOpenSource.h>
+
+#import "JRSwizzle.h"
 
 #import "PCFViewController.h"
 
@@ -32,19 +33,42 @@ static NSString *const kRedirectURI2 = @"http://localhost";
 
 @property (weak, nonatomic) IBOutlet UIButton *signInButton;
 
-@property (retain, nonatomic) IBOutlet GPPSignInButton *googleSignInButton;
+@property (strong, nonatomic) IBOutlet PCFButton *googleSignInButton;
 
 @property (strong, nonatomic) UIWebView *webView;
 
 @end
 
+@implementation PCFButton
+
+- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
+{
+    [super addTarget:target action:action forControlEvents:controlEvents];
+}
+
+@end
+
+static GPPSignIn *signIn;
+
 @implementation PCFViewController
+
+- (void)openURL:(NSURL *)url
+{
+    NSLog(@"Open URL");
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    GPPSignIn *signIn = [GPPSignIn sharedInstance];
+    signIn = [GPPSignIn sharedInstance];
+    
+    NSError *error;
+    [UIApplication jr_swizzleMethod:@selector(openURL:) withMethod:@selector(openURL:) error:&error];
+    if (error) {
+        NSLog(@"Oh No!");
+    }
+    
     signIn.shouldFetchGooglePlusUser = YES;
     //signIn.shouldFetchGoogleUserEmail = YES;  // Uncomment to get the user's email
     

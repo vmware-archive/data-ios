@@ -52,41 +52,41 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
-    static NSString *const kOAuthServerURL = @"https://accounts.google.com/";
-    static NSString *const kClientID2 = @"958201466680-j991tfkh55de7vrlaqfn06ntichvaum3.apps.googleusercontent.com";
-    static NSString *const kClientSecret2 = @"ceadvC4aJ8fjm34ZPeGoO8zw";
-    
-    __block NSString *code;
-    NSArray *pairs = [url.query componentsSeparatedByString:@"&"];
-    [pairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
-        if ([pair hasPrefix:@"code"]) {
-            code = [pair substringFromIndex:5];
-            *stop = YES;
-        }
-    }];
-    
-    AFOAuth2Client *client = [AFOAuth2Client clientWithBaseURL:[NSURL URLWithString:kOAuthServerURL]
-                                                      clientID:kClientID2
-                                                        secret:kClientSecret2];
-    [client authenticateUsingOAuthWithPath:@"/o/oauth2/token"
-                                      code:code
-                               redirectURI:@"com.pivotal.PCFDataServices:/oauth2callback"
-                                   success:^(AFOAuthCredential *credential) {
-                                       NSLog(@"Success");
-                                       [AFOAuthCredential storeCredential:credential withIdentifier:@"PCFDataServicesID"];
-                                       NSURLRequest *request = [client requestWithMethod:@"GET" path:@"https://www.googleapis.com/oauth2/v1/userinfo"
-                                                                              parameters:@{@"Authorization" : [NSString stringWithFormat:@"Bearer %@", credential.accessToken]}];
-                                       
-                                       AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
-                                                                                                                           success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                                                                                                               NSLog(@"GOT USER INFO");
-                                                                                                                           }
-                                                                                                                           failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                                                                                               NSLog(@"FAILURE");                                                                  }];
-                                       [operation start];
-                                   } failure:^(NSError *error) {
-                                       NSLog(@"Failure");
-                                   }];
+//    static NSString *const kOAuthServerURL = @"https://accounts.google.com/";
+//    static NSString *const kClientID2 = @"958201466680-j991tfkh55de7vrlaqfn06ntichvaum3.apps.googleusercontent.com";
+//    static NSString *const kClientSecret2 = @"ceadvC4aJ8fjm34ZPeGoO8zw";
+//    
+//    __block NSString *code;
+//    NSArray *pairs = [url.query componentsSeparatedByString:@"&"];
+//    [pairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
+//        if ([pair hasPrefix:@"code"]) {
+//            code = [pair substringFromIndex:5];
+//            *stop = YES;
+//        }
+//    }];
+//    
+//    AFOAuth2Client *client = [AFOAuth2Client clientWithBaseURL:[NSURL URLWithString:kOAuthServerURL]
+//                                                      clientID:kClientID2
+//                                                        secret:kClientSecret2];
+//    [client authenticateUsingOAuthWithPath:@"/o/oauth2/token"
+//                                      code:code
+//                               redirectURI:@"com.pivotal.PCFDataServices:/oauth2callback"
+//                                   success:^(AFOAuthCredential *credential) {
+//                                       NSLog(@"Success");
+//                                       [AFOAuthCredential storeCredential:credential withIdentifier:@"PCFDataServicesID"];
+//                                       NSURLRequest *request = [client requestWithMethod:@"GET" path:@"https://www.googleapis.com/oauth2/v1/userinfo"
+//                                                                              parameters:@{@"Authorization" : [NSString stringWithFormat:@"Bearer %@", credential.accessToken]}];
+//                                       
+//                                       AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+//                                                                                                                           success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//                                                                                                                               NSLog(@"GOT USER INFO");
+//                                                                                                                           }
+//                                                                                                                           failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                                                                                                                               NSLog(@"FAILURE");                                                                  }];
+//                                       [operation start];
+//                                   } failure:^(NSError *error) {
+//                                       NSLog(@"Failure");
+//                                   }];
 
     return [GPPURLHandler handleURL:url
                   sourceApplication:sourceApplication

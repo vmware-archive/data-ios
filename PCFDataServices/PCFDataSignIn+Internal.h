@@ -9,8 +9,20 @@
 #import "PCFDataSignIn.h"
 
 OBJC_EXTERN NSString *const kPCFOAuthCredentialID;
+OBJC_EXTERN NSString *const kPCFDataServicesErrorDomain;
+
+typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
+    PCFDataServicesNoClientIDError,
+    PCFDataServicesNoClientSecretError,
+    PCFDataServicesNoOpenIDConnectURLError,
+    PCFDataServicesFailedAuthenticationError,
+    PCFDataServicesMalformedURLError,
+};
 
 @interface PCFDataSignIn ()
+
+// The client used to make the OAuth requests to the OpenID connect server.
+- (AFOAuth2Client *)authClient;
 
 + (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
 

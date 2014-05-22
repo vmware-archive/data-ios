@@ -14,11 +14,14 @@
 
 SPEC_BEGIN(PCFDataSignInSpec)
 
-static NSString *const kTestOAuthToken = @"";
+static NSString *const kTestOAuthToken = @"ya29.HQCrkKW12Yd9ZBoAAABMOFnwSb-LJUDm0MebYgoHls0zVNRrZYpDmpdpylIrEw";
+static NSString *const kTestRefreshToken @"1/5mSJo631AVmdw1rFUsxofZJnXprvs2-EZ8nLpCYtDJY"
+static NSString *const kTestTokenType = @"Bearer";
 
 static NSString *const kTestOpenIDConnectURL = @"https://testOpenIDConnectURL.com";
 
 static NSString *const kTestClientID = @"TestClientID";
+static NSString *const kTestClientSecret = @"TestClientSecret";
 
 static NSString *const kTestBundleIndentifier = @"com.testbundleID.spec";
 
@@ -28,6 +31,7 @@ void (^resetSharedInstance)(void) = ^{
 
 void (^setupForSuccessfulSilentAuth)(void) = ^{
     AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:@"Bearer"];
+    [cred setRefreshToken:@"TestRefreshToken" expiration:[NSDate dateWithTimeIntervalSinceNow:60 * 60]]
     [AFOAuthCredential storeCredential:cred withIdentifier:kPCFOAuthCredentialID];
 };
 
@@ -39,6 +43,7 @@ void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>) = ^(id<PCFSignInDelega
     PCFDataSignIn *instance = [PCFDataSignIn sharedInstance];
     [instance setOpenIDConnectURL:kTestOpenIDConnectURL];
     [instance setClientID:kTestClientID];
+    [instance setClientSecret:kTestClientSecret];
     [instance setDelegate:delegate];
 };
 
@@ -147,11 +152,89 @@ context(@"PCFDataSignIn Specification", ^{
     });
     
     describe(@"PCFDataSignIn Authentication callback", ^{
-        it(@"PCFDataSignIn instance parses out the OAuth code from the application:openURL:sourceApplication:annotation: callback", ^{
-//            [[PCFDataSignIn sharedInstance] handleURL:<#(NSURL *)#> sourceApplication:<#(NSString *)#> annotation:<#(id)#>];
+        
+        SEL authSelector = @selector(authenticateUsingOAuthWithPath:code:redirectURI:success:failure:);
+        
+        it(@"should parse out the OAuth code from the application:openURL:sourceApplication:annotation: callback", ^{
+            NSString *authCode = @"4/qQvXtvkdOQ40l_TJP1aAFYLlRdbF.skN_a6n1694XmmS0T3UFEsO4VTJBjAI";
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"com.pivotal.pcfdataservices:/oauth2callback?state=57934744&code=%@", authCode]];
+            
+            setupPCFDataSignInInstance();
+            
+            [[[[PCFDataSignIn sharedInstance] authClient] should] receive:authSelector
+                                                            withArguments:any(), authCode, any(), any(), any()];
+            
+            [[PCFDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+        });
+        
+        it(@"should call delegate finishedWithAuth:error: with a credential object if authentication is successful", ^{
+            NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
+            AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:kTestTokenType];
+            
+            [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
+            setupPCFDataSignInInstance(instanceDelegate);
+            
+            [[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
+                void (^success)(AFOAuthCredential *) = params[3];
+                success(credential);
+                return nil;
+            }];
+        });
+        
+        it(@"should call delegate finishedWithAuth:error: method with an error object if authentication fails", ^{
+            NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
+            NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain
+                                                 code:PCFDataServicesFailedAuthenticationError
+                                             userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }]
+            
+            [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, error];
+            setupPCFDataSignInInstance(instanceDelegate);
+            
+            [[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
+                void (^failure)(AFOAuthCredential *) = params[4];
+                failure(error);
+                return nil;
+            }];
         });
     });
     
+    describe(@"Sign out and disconnect", ^{
+        
+        beforeEach(^{
+            setupPCFDataSignInInstance();
+            setupForSuccessfulSilentAuth();
+            
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] should] beNonNil];
+        });
+        
+        afterEach(^{
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] should] beNil];
+            resetSharedInstance();
+        });
+        
+        it(@"should remove the OAuth token from the keychain when signing out", ^{
+            [[PCFDataSignIn sharedInstance] signOut];
+        });
+        
+        it(@"should revoke OAuth token from the OpenID Connect server when disconnecting", ^{
+            [PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:) withBlock:^id(NSArray *params) {
+                AFHTTPRequestOperation *operation = params[0];
+                [[[[operation request].URL relativeString] should] equal:@"revoke"];
+            }];
+            
+            [[PCFDataSignIn sharedInstance] disconnect];
+        });
+        
+        it(@"should remove the OAuth token from the keychain when disconnecting", ^{
+            [PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:) withBlock:^id(NSArray *params) {
+                AFHTTPRequestOperation *operation = params[0];
+                void (^completionBlock)(void) = [operation completionBlock];
+                completionBlock();
+            }];
+            
+            [[PCFDataSignIn sharedInstance] disconnect];
+        });
+    });
 });
 
 SPEC_END

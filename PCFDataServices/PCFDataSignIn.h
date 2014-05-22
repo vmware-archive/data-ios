@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class AFOAuthCredential;
+@class AFOAuthCredential, AFOAuth2Client;
 
 @protocol PCFSignInDelegate
 
@@ -36,6 +36,10 @@
 // The client ID of the app from the Open ID Connection console.
 // Must set for sign-in to work.
 @property(nonatomic, copy) NSString *clientID;
+
+// The client secret of the app from the Open ID Connection console.
+// Must be set for sign-in to work.
+@property(nonatomic, copy) NSString *clientSecret;
 
 // The OpenID Connect Authentication UI URL endpoint
 // Must be set for sign-in to work.

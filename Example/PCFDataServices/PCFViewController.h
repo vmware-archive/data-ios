@@ -7,6 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GooglePlus/GooglePlus.h>
+
+@interface PCFButton : GPPSignInButton
+
+@end
 
 @interface PCFViewController : UIViewController
 

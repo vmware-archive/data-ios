@@ -14,6 +14,7 @@
 		F1B601CE1925257200B65371 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1B601CC1925257200B65371 /* Main.storyboard */; };
 		F1B601D11925257200B65371 /* PCFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B601D01925257200B65371 /* PCFViewController.m */; };
 		F1B601D31925257200B65371 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1B601D21925257200B65371 /* Images.xcassets */; };
+		F1BE271B192EA44500E498E8 /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BE271A192EA44500E498E8 /* JRSwizzle.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,8 @@
 		F1B601CF1925257200B65371 /* PCFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCFViewController.h; sourceTree = "<group>"; };
 		F1B601D01925257200B65371 /* PCFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCFViewController.m; sourceTree = "<group>"; };
 		F1B601D21925257200B65371 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F1BE2719192EA44500E498E8 /* JRSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRSwizzle.h; sourceTree = "<group>"; };
+		F1BE271A192EA44500E498E8 /* JRSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRSwizzle.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +76,8 @@
 		F1B601C01925257200B65371 /* PCFDataServices */ = {
 			isa = PBXGroup;
 			children = (
+				F1BE2719192EA44500E498E8 /* JRSwizzle.h */,
+				F1BE271A192EA44500E498E8 /* JRSwizzle.m */,
 				F1B601C91925257200B65371 /* PCFAppDelegate.h */,
 				F1B601CA1925257200B65371 /* PCFAppDelegate.m */,
 				F1B601CC1925257200B65371 /* Main.storyboard */,
@@ -198,6 +203,7 @@
 			files = (
 				F1B601D11925257200B65371 /* PCFViewController.m in Sources */,
 				F1B601CB1925257200B65371 /* PCFAppDelegate.m in Sources */,
+				F1BE271B192EA44500E498E8 /* JRSwizzle.m in Sources */,
 				F1B601C71925257200B65371 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -52,7 +52,7 @@
                                     <action selector="signInButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="p2i-gL-jM8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZEv-C1-Rgc" customClass="GPPSignInButton">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZEv-C1-Rgc" customClass="PCFButton">
                                 <rect key="frame" x="105" y="232" width="110" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Google+ sign-in">

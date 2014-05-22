@@ -6,21 +6,23 @@
 //
 //
 
-#import "PCFDataSignIn.h"
+#import "PCFDataSignIn+Internal.h"
 #import "AFOAuth2Client.h"
 
 NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
 
-static NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
-
-typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
-    PCFDataServicesNoClientIDError,
-    PCFDataServicesNoOpenIDConnectURLError,
-    PCFDataServicesMalformedURLError,
-};
+NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
 
 static PCFDataSignIn *_sharedPCFDataSignIn;
 static dispatch_once_t _sharedOnceToken;
+
+static
+
+@interface PCFDataSignIn ()
+
+@property (nonatomic) AFOAuth2Client *authClient;
+
+@end
 
 @implementation PCFDataSignIn
 
@@ -58,6 +60,17 @@ static dispatch_once_t _sharedOnceToken;
     }
 }
 
+- (AFOAuth2Client *)authClient
+{
+    if (!_authClient) {
+        NSURL *baseURL = [NSURL URLWithString:self.openIDConnectURL];
+        _authClient = [AFOAuth2Client clientWithBaseURL:baseURL
+                                               clientID:self.clientID
+                                                 secret:self.clientSecret];
+    }
+    return _authClient;
+}
+
 - (BOOL)hasAuthInKeychain
 {
 #warning TODO: Complete
@@ -73,18 +86,17 @@ static dispatch_once_t _sharedOnceToken;
 - (void)authenticate
 {
     if (!self.clientID) {
-        NSDictionary *userInfo =  @{
-                                    NSLocalizedDescriptionKey : @"Missing client ID",
-                                    };
-        [self callDelegateWithErrorCode:PCFDataServicesNoClientIDError userInfo:userInfo];
+        [self callDelegateWithErrorCode:PCFDataServicesNoClientIDError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client ID" }];
+        return;
+    }
+    
+    if (!self.clientSecret) {
+        [self callDelegateWithErrorCode:PCFDataServicesNoClientSecretError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client Secret" }];
         return;
     }
     
     if (!self.openIDConnectURL) {
-        NSDictionary *userInfo =  @{
-                                    NSLocalizedDescriptionKey : @"Missing Open ID Connect URL",
-                                    };
-        [self callDelegateWithErrorCode:PCFDataServicesNoOpenIDConnectURLError userInfo:userInfo];
+        [self callDelegateWithErrorCode:PCFDataServicesNoOpenIDConnectURLError userInfo:@{ NSLocalizedDescriptionKey : @"Missing Open ID Connect URL" }];
         return;
     }
     
@@ -115,12 +127,12 @@ sourceApplication:(NSString *)sourceApplication
 
 - (void)signOut
 {
-    
+#warning TODO: Complete
 }
 
 - (void)disconnect
 {
-    
+#warning TODO: Complete
 }
 
 @end
