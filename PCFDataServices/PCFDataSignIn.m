@@ -201,7 +201,7 @@ sourceApplication:(NSString *)sourceApplication
 
 - (void)signOut
 {
-#warning TODO: Complete
+    [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
 }
 
 - (void)disconnect

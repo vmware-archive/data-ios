@@ -6,16 +6,17 @@
 //
 //
 
+#import <AFNetworking/AFNetworking.h>
+#import "AFOAuth2Client.h"
+
 #import "Kiwi.h"
 
 #import "PCFDataSignIn+Internal.h"
 
-#import "AFOAuth2Client.h"
-
 SPEC_BEGIN(PCFDataSignInSpec)
 
 static NSString *const kTestOAuthToken = @"ya29.HQCrkKW12Yd9ZBoAAABMOFnwSb-LJUDm0MebYgoHls0zVNRrZYpDmpdpylIrEw";
-static NSString *const kTestRefreshToken @"1/5mSJo631AVmdw1rFUsxofZJnXprvs2-EZ8nLpCYtDJY"
+static NSString *const kTestRefreshToken = @"1/5mSJo631AVmdw1rFUsxofZJnXprvs2-EZ8nLpCYtDJY";
 static NSString *const kTestTokenType = @"Bearer";
 
 static NSString *const kTestOpenIDConnectURL = @"https://testOpenIDConnectURL.com";
@@ -31,7 +32,7 @@ void (^resetSharedInstance)(void) = ^{
 
 void (^setupForSuccessfulSilentAuth)(void) = ^{
     AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:@"Bearer"];
-    [cred setRefreshToken:@"TestRefreshToken" expiration:[NSDate dateWithTimeIntervalSinceNow:60 * 60]]
+    [cred setRefreshToken:@"TestRefreshToken" expiration:[NSDate dateWithTimeIntervalSinceNow:60 * 60]];
     [AFOAuthCredential storeCredential:cred withIdentifier:kPCFOAuthCredentialID];
 };
 
@@ -159,7 +160,7 @@ context(@"PCFDataSignIn Specification", ^{
             NSString *authCode = @"4/qQvXtvkdOQ40l_TJP1aAFYLlRdbF.skN_a6n1694XmmS0T3UFEsO4VTJBjAI";
             NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"com.pivotal.pcfdataservices:/oauth2callback?state=57934744&code=%@", authCode]];
             
-            setupPCFDataSignInInstance();
+            setupPCFDataSignInInstance(nil);
             
             [[[[PCFDataSignIn sharedInstance] authClient] should] receive:authSelector
                                                             withArguments:any(), authCode, any(), any(), any()];
@@ -174,7 +175,7 @@ context(@"PCFDataSignIn Specification", ^{
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
             setupPCFDataSignInInstance(instanceDelegate);
             
-            [[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
+            [[[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
                 void (^success)(AFOAuthCredential *) = params[3];
                 success(credential);
                 return nil;
@@ -185,13 +186,13 @@ context(@"PCFDataSignIn Specification", ^{
             NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
             NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain
                                                  code:PCFDataServicesFailedAuthenticationError
-                                             userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }]
+                                             userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }];
             
-            [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, error];
+            [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:any(), error];
             setupPCFDataSignInInstance(instanceDelegate);
             
-            [[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
-                void (^failure)(AFOAuthCredential *) = params[4];
+            [[[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
+                void (^failure)(NSError *) = params[4];
                 failure(error);
                 return nil;
             }];
@@ -201,7 +202,7 @@ context(@"PCFDataSignIn Specification", ^{
     describe(@"Sign out and disconnect", ^{
         
         beforeEach(^{
-            setupPCFDataSignInInstance();
+            setupPCFDataSignInInstance(nil);
             setupForSuccessfulSilentAuth();
             
             [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] should] beNonNil];
@@ -217,19 +218,22 @@ context(@"PCFDataSignIn Specification", ^{
         });
         
         it(@"should revoke OAuth token from the OpenID Connect server when disconnecting", ^{
-            [PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:) withBlock:^id(NSArray *params) {
-                AFHTTPRequestOperation *operation = params[0];
-                [[[[operation request].URL relativeString] should] equal:@"revoke"];
-            }];
+            [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
+                                                  withBlock:^id(NSArray *params) {
+                                                      AFHTTPRequestOperation *operation = params[0];
+                                                      [[[[operation request].URL relativeString] should] equal:@"revoke"];
+                                                      return nil;
+                                                  }];
             
             [[PCFDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should remove the OAuth token from the keychain when disconnecting", ^{
-            [PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:) withBlock:^id(NSArray *params) {
+            [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:) withBlock:^id(NSArray *params) {
                 AFHTTPRequestOperation *operation = params[0];
                 void (^completionBlock)(void) = [operation completionBlock];
                 completionBlock();
+                return nil;
             }];
             
             [[PCFDataSignIn sharedInstance] disconnect];
