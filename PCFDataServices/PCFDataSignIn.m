@@ -6,12 +6,16 @@
 //
 //
 
-#import "PCFDataSignIn+Internal.h"
+#import <AFNetworking/AFNetworking.h>
 #import "AFOAuth2Client.h"
+
+#import "PCFDataSignIn+Internal.h"
 
 NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
 
 NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
+
+NSString *const kPCFOAuthPath = @"/o/oauth2/token";
 
 static PCFDataSignIn *_sharedPCFDataSignIn;
 static dispatch_once_t _sharedOnceToken;
@@ -67,62 +71,132 @@ static
         _authClient = [AFOAuth2Client clientWithBaseURL:baseURL
                                                clientID:self.clientID
                                                  secret:self.clientSecret];
+        
+        _authClient.parameterEncoding = AFJSONParameterEncoding;
     }
     return _authClient;
 }
 
+- (NSString *)redirectURI
+{
+    static NSString *bundleIdentifier;
+    if (!bundleIdentifier) {
+        bundleIdentifier = [NSString stringWithFormat:@"%@:/oauth2callback", [[NSBundle mainBundle] bundleIdentifier]];
+    }
+    return bundleIdentifier;
+}
+
 - (BOOL)hasAuthInKeychain
 {
-#warning TODO: Complete
-    return YES;
+    return [self credentialFromKeychain] ? YES : NO;
+}
+
+- (AFOAuthCredential *)credentialFromKeychain
+{
+    return [AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID];
+}
+
+- (BOOL)storeCredential:(AFOAuthCredential *)credential
+{
+    return [AFOAuthCredential storeCredential:credential withIdentifier:kPCFOAuthCredentialID];
 }
 
 - (BOOL)trySilentAuthentication
 {
-#warning TODO: Complete
-    return YES;
+    return [self authenticateWithInteractiveOption:NO];
 }
 
 - (void)authenticate
 {
+    [self authenticateWithInteractiveOption:YES];
+}
+
+- (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
+{
     if (!self.clientID) {
         [self callDelegateWithErrorCode:PCFDataServicesNoClientIDError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client ID" }];
-        return;
+        return NO;
     }
     
     if (!self.clientSecret) {
         [self callDelegateWithErrorCode:PCFDataServicesNoClientSecretError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client Secret" }];
-        return;
+        return NO;
     }
     
     if (!self.openIDConnectURL) {
         [self callDelegateWithErrorCode:PCFDataServicesNoOpenIDConnectURLError userInfo:@{ NSLocalizedDescriptionKey : @"Missing Open ID Connect URL" }];
-        return;
+        return NO;
     }
     
-#warning TODO: try silent auth before jumping out to safari.
+    AFOAuthCredential *savedCredential = [self credentialFromKeychain];
+    if (savedCredential) {
+        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthPath
+                                           refreshToken:savedCredential.refreshToken
+                                                success:^(AFOAuthCredential *credential) {
+                                                    [self storeCredential:credential];
+                                                    [self.delegate finishedWithAuth:credential error:nil];
+                                                }
+                                                failure:^(NSError *error) {
+                                                    [self.delegate finishedWithAuth:nil error:error];
+                                                }];
+        return YES;
+    }
     
-    NSString *bundleIdentifier = [NSString stringWithFormat:@"%@:/oauth2callback", [[NSBundle mainBundle] bundleIdentifier]];
+    if (!interactive) {
+        return NO;
+    }
+    
+    [self performOAuthLogin];
+    
+    return YES;
+}
+
+- (void)performOAuthLogin
+{
     NSString *scopesString = [self.scopes componentsJoinedByString:@"%%20"];
-    NSString *urlWithParams = [NSString stringWithFormat:@"%@?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=%@", self.openIDConnectURL, bundleIdentifier, self.clientID, scopesString];
-    NSURL *authURL = [NSURL URLWithString:urlWithParams];
+    NSString *urlWithParams = [NSString stringWithFormat:@"%@?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=%@", self.openIDConnectURL, self.redirectURI, self.clientID, scopesString];
+    NSURL *OAuthURL = [NSURL URLWithString:urlWithParams];
     
-    if (!authURL || !authURL.scheme || !authURL.host) {
-        NSDictionary *userInfo =  @{
-                                    NSLocalizedDescriptionKey : @"The authorization URL was malformed. Please check the openIDConnectURL value.",
-                                    };
+    if (!OAuthURL || !OAuthURL.scheme || !OAuthURL.host) {
+        NSDictionary *userInfo =  @{ NSLocalizedDescriptionKey : @"The authorization URL was malformed. Please check the openIDConnectURL value." };
         [self callDelegateWithErrorCode:PCFDataServicesMalformedURLError userInfo:userInfo];
-        return;
     }
     
-    [[UIApplication sharedApplication] openURL:authURL];
+    [[UIApplication sharedApplication] openURL:OAuthURL];
+}
+
+- (NSString *)OAuthCodeFromRedirectURI:(NSURL *)redirectURI
+{
+    __block NSString *code;
+    NSArray *pairs = [redirectURI.query componentsSeparatedByString:@"&"];
+    [pairs enumerateObjectsUsingBlock:^(NSString *pair, NSUInteger idx, BOOL *stop) {
+        if ([pair hasPrefix:@"code"]) {
+            code = [pair substringFromIndex:5];
+            *stop = YES;
+        }
+    }];
+    return code;
 }
 
 - (BOOL)handleURL:(NSURL *)url
 sourceApplication:(NSString *)sourceApplication
        annotation:(id)annotation
 {
-    return YES;
+    if ([url isEqual:[self redirectURI]]) {
+        NSString *code = [self OAuthCodeFromRedirectURI:url];
+        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthPath
+                                                   code:code
+                                            redirectURI:[self redirectURI]
+                                                success:^(AFOAuthCredential *credential) {
+                                                    [self storeCredential:credential];
+                                                    [self.delegate finishedWithAuth:credential error:nil];
+                                                }
+                                                failure:^(NSError *error) {
+                                                    [self.delegate finishedWithAuth:nil error:error];
+                                                }];
+        return YES;
+    }
+    return NO;
 }
 
 - (void)signOut

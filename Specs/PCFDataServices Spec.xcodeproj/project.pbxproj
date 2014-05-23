@@ -17,7 +17,6 @@
 
 /* Begin PBXFileReference section */
 		10F021DF31854ADA85B91F84 /* Pods-PCFDataServicesSpecs.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PCFDataServicesSpecs.xcconfig"; path = "../Pods/Pods-PCFDataServicesSpecs.xcconfig"; sourceTree = "<group>"; };
-		6CD85B39928F4159845DEC09 /* Pods-PCFDataServicesTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PCFDataServicesTests.xcconfig"; path = "../Pods/Pods-PCFDataServicesTests.xcconfig"; sourceTree = "<group>"; };
 		AA27B082064A4641BC857737 /* libPods-PCFDataServicesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PCFDataServicesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D99E6EB469C04CF993C9CE49 /* libPods-PCFDataServicesSpecs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PCFDataServicesSpecs.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F145A5EA192BF81700CF830B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -55,7 +54,6 @@
 				F1F9F93A192BF956002848C7 /* PCFDataServicesSpecs */,
 				F1E8FABE192BA3A500D17CF2 /* Frameworks */,
 				F1E8FABD192BA3A500D17CF2 /* Products */,
-				6CD85B39928F4159845DEC09 /* Pods-PCFDataServicesTests.xcconfig */,
 				10F021DF31854ADA85B91F84 /* Pods-PCFDataServicesSpecs.xcconfig */,
 			);
 			sourceTree = "<group>";
