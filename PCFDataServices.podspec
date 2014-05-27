@@ -7,6 +7,7 @@ Pod::Spec.new do |s|
   s.authors  = 'Elliott Garcea'
   s.source   = { :git => 'https://github.com/cfmobile/data-ios.git', :tag => "0.1.0" }
   s.requires_arc = true
+  s.frameworks = 'SystemConfiguration', 'MobileCoreServices'
 
   s.ios.deployment_target = '6.0'
   s.dependency 'AFOAuth2Client'

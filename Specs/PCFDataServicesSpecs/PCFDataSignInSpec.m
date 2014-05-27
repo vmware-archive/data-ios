@@ -59,8 +59,33 @@ void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>) = ^(id<PCFSignInDelega
 
 context(@"PCFDataSignIn Specification", ^{
     
+    __block AFOAuthCredential *credential;
+    
+    beforeAll(^{
+        [[NSBundle mainBundle] stub:@selector(bundleIdentifier) andReturn:kTestBundleIndentifier];
+    });
+    
     beforeEach(^{
         resetSharedInstance();
+        
+        //Stub out AFOAuthCredential as the Keychain is not available in a testing environment.
+        [AFOAuthCredential stub:@selector(storeCredential:withIdentifier:) withBlock:^id(NSArray *params) {
+            credential = params[0];
+            return @YES;
+        }];
+        
+        [AFOAuthCredential stub:@selector(deleteCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
+            credential = nil;
+            return @YES;
+        }];
+        
+        [AFOAuthCredential stub:@selector(retrieveCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
+            return credential;
+        }];
+    });
+    
+    afterEach(^{
+        credential = nil;
     });
     
     describe(@"PCFDataSignIn shared instance initialization", ^{
@@ -105,10 +130,6 @@ context(@"PCFDataSignIn Specification", ^{
             
             __block NSObject<PCFSignInDelegate> *instanceDelegate;
             
-//            beforeAll(^{
-//                [[NSBundle mainBundle] stub:@selector(bundleIdentifier) andReturn:kTestBundleIndentifier];
-//            });
-            
             beforeEach(^{
                 instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
                 setupPCFDataSignInInstance(instanceDelegate);
@@ -124,11 +145,11 @@ context(@"PCFDataSignIn Specification", ^{
                 [sharedInstance authenticate];
             });
             
-            it(@"should call delegate finishedWithAuth:error: method with a populated AFOAuthCredential object when silent authentication succeeds", ^{
+            it(@"should call delegate |finishedWithAuth:error:| method with a populated AFOAuthCredential object when silent authentication succeeds", ^{
                 setupForSuccessfulSilentAuth();
                 
                 PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
-                [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:any(), nil];
+                [[instanceDelegate shouldEventually] receive:@selector(finishedWithAuth:error:) withArguments:any(), nil];
                 [sharedInstance authenticate];
             });
             
@@ -224,7 +245,6 @@ context(@"PCFDataSignIn Specification", ^{
         });
         
         afterEach(^{
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] should] beNil];
             resetSharedInstance();
         });
         
@@ -232,26 +252,46 @@ context(@"PCFDataSignIn Specification", ^{
             [[PCFDataSignIn sharedInstance] signOut];
         });
         
-        it(@"should revoke OAuth token from the OpenID Connect server when disconnecting", ^{
+        it(@"|disconnect| should try to revoke OAuth token from the OpenID Connect server", ^{
             [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
                                                   withBlock:^id(NSArray *params) {
                                                       AFHTTPRequestOperation *operation = params[0];
-                                                      [[[[operation request].URL relativeString] should] equal:@"revoke"];
+                                                      [[[[operation request].URL relativePath] should] equal:@"/revoke"];
+                                                      void (^completionBlock)(void) = [operation completionBlock];
+                                                      completionBlock();
                                                       return nil;
                                                   }];
             
+            [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
             [[PCFDataSignIn sharedInstance] disconnect];
         });
         
-        it(@"should remove the OAuth token from the keychain when disconnecting", ^{
-            [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:) withBlock:^id(NSArray *params) {
+        it(@"should remove the OAuth token from the keychain if disconnect is successful", ^{
+            [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
+                                                  withBlock:^id(NSArray *params) {
                 AFHTTPRequestOperation *operation = params[0];
                 void (^completionBlock)(void) = [operation completionBlock];
                 completionBlock();
                 return nil;
             }];
             
+            [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
             [[PCFDataSignIn sharedInstance] disconnect];
+        });
+        
+        it(@"should not remove the OAuth token from the keychain if disconnect fails", ^{
+            [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
+                                                  withBlock:^id(NSArray *params) {
+                                                      AFHTTPRequestOperation *operation = params[0];
+                                                      [operation setValue:[NSError errorWithDomain:@"FailedRevokeOperation" code:500 userInfo:nil]
+                                                                   forKey:@"HTTPError"];
+                                                      void (^completionBlock)(void) = [operation completionBlock];
+                                                      completionBlock();
+                                                      return nil;
+                                                  }];
+            
+            [[PCFDataSignIn sharedInstance] disconnect];
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
         });
     });
 });

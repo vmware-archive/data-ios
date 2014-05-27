@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2CAC853B59E343E78192C50A /* libPods-PCFDataServicesSpecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D99E6EB469C04CF993C9CE49 /* libPods-PCFDataServicesSpecs.a */; };
+		F1EF46211934E77500CB8930 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46201934E77500CB8930 /* SystemConfiguration.framework */; };
+		F1EF46231934E78200CB8930 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46221934E78200CB8930 /* MobileCoreServices.framework */; };
 		F1F9F937192BF956002848C7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EA192BF81700CF830B /* XCTest.framework */; };
 		F1F9F938192BF956002848C7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EC192BF81700CF830B /* Foundation.framework */; };
 		F1F9F939192BF956002848C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EE192BF81700CF830B /* UIKit.framework */; };
@@ -25,6 +27,8 @@
 		F1BE2715192CED8300E498E8 /* PCFDataSignIn+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PCFDataSignIn+Internal.h"; sourceTree = "<group>"; };
 		F1E8FE0C192BCF6B00D17CF2 /* PCFDataSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataSignIn.h; sourceTree = "<group>"; };
 		F1E8FE0D192BCF6B00D17CF2 /* PCFDataSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataSignIn.m; sourceTree = "<group>"; };
+		F1EF46201934E77500CB8930 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F1EF46221934E78200CB8930 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		F1F9F936192BF956002848C7 /* PCFDataServicesSpecs.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataServicesSpecs.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F9F93C192BF956002848C7 /* PCFDataServicesSpecs-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PCFDataServicesSpecs-Info.plist"; sourceTree = "<group>"; };
 		F1F9F93E192BF956002848C7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -37,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1EF46231934E78200CB8930 /* MobileCoreServices.framework in Frameworks */,
+				F1EF46211934E77500CB8930 /* SystemConfiguration.framework in Frameworks */,
 				F1F9F937192BF956002848C7 /* XCTest.framework in Frameworks */,
 				F1F9F939192BF956002848C7 /* UIKit.framework in Frameworks */,
 				F1F9F938192BF956002848C7 /* Foundation.framework in Frameworks */,
@@ -69,6 +75,8 @@
 		F1E8FABE192BA3A500D17CF2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F1EF46221934E78200CB8930 /* MobileCoreServices.framework */,
+				F1EF46201934E77500CB8930 /* SystemConfiguration.framework */,
 				AA27B082064A4641BC857737 /* libPods-PCFDataServicesTests.a */,
 				F145A5EA192BF81700CF830B /* XCTest.framework */,
 				F145A5EC192BF81700CF830B /* Foundation.framework */,

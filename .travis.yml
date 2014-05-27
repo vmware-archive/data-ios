@@ -1,0 +1,17 @@
+language: objective-c
+xcode_workspace: PCFDataServices.xcworkspace
+xcode_scheme: PCFDataServicesSpecs
+xcode_sdk: iphonesimulator7.0
+
+notifications:
+    webhooks:
+      - http://pulse.pivotallabs.com/projects/765e14dd-7466-44da-8ef5-9ab8d7cdd9cd/status
+
+before_install:
+  - export LANG=en_US.UTF-8
+  - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
+  - pod install && cd $TRAVIS_BUILD_DIR
+
+before_script:
+  - brew update
+  - brew upgrade xctool

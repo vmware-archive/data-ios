@@ -26,6 +26,6 @@ SPEC CHECKSUMS:
   AFOAuth2Client: 4f05d29e0a26c7ddf529dd7c4480af6ee1e982c6
   google-plus-ios-sdk: 98d76ce1f1edbfe8730628aafe017301a734042c
   Kiwi: c73667f2b84cbf36f1a3830267c5a4ae8dcbd8ba
-  PCFDataServices: 44c1abfff558b4c2c60ff255ac420d9c76b311ee
+  PCFDataServices: e05a5c6055e1aac7abc32beb1acce0307c0e3dd6
 
 COCOAPODS: 0.33.1

@@ -140,15 +140,15 @@ static
                                                     [self.delegate finishedWithAuth:nil error:error];
                                                 }];
         return YES;
+        
     }
     
-    if (!interactive) {
-        return NO;
+    if (interactive) {
+        [self performOAuthLogin];
+        return YES;
     }
     
-    [self performOAuthLogin];
-    
-    return YES;
+    return NO;
 }
 
 - (void)performOAuthLogin
@@ -206,7 +206,29 @@ sourceApplication:(NSString *)sourceApplication
 
 - (void)disconnect
 {
-#warning TODO: Complete
+    NSString *accessToken = [[self credentialFromKeychain] accessToken];
+    if (accessToken) {
+        [self.authClient deletePath:@"/revoke"
+                         parameters:@{ @"token" : accessToken }
+                            success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                [self signOut];
+                            }
+                            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                [self callDelegateWithError:error];
+                            }];
+    } else {
+        NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain
+                                             code:PCFDataServicesMissingAccessToken
+                                         userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Disconnect method called with no credential stored in keychain." }];
+        [self callDelegateWithError:error];
+    }
+}
+
+- (void)callDelegateWithError:(NSError *)error
+{
+    if ([(NSObject *)self.delegate respondsToSelector:@selector(didDisconnectWithError:)]) {
+        [self.delegate didDisconnectWithError:error];
+    }
 }
 
 @end

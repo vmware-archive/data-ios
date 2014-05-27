@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
     PCFDataServicesNoOpenIDConnectURLError,
     PCFDataServicesFailedAuthenticationError,
     PCFDataServicesMalformedURLError,
+    PCFDataServicesMissingAccessToken,
 };
 
 @interface PCFDataSignIn ()
