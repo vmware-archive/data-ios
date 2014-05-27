@@ -66,7 +66,7 @@ static
 
 - (AFOAuth2Client *)authClient
 {
-    if (!_authClient) {
+    if (!_authClient || _authClient.clientID != self.clientID) {
         NSURL *baseURL = [NSURL URLWithString:self.openIDConnectURL];
         _authClient = [AFOAuth2Client clientWithBaseURL:baseURL
                                                clientID:self.clientID
@@ -182,7 +182,7 @@ static
 sourceApplication:(NSString *)sourceApplication
        annotation:(id)annotation
 {
-    if ([url isEqual:[self redirectURI]]) {
+    if ([[url absoluteString] hasPrefix:[self redirectURI]]) {
         NSString *code = [self OAuthCodeFromRedirectURI:url];
         [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthPath
                                                    code:code
