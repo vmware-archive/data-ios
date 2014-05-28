@@ -2,7 +2,6 @@ PODS:
   - AFNetworking (1.3.4)
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 1.3)
-  - google-plus-ios-sdk (1.5.1)
   - Kiwi/ARC (2.2.4)
   - Kiwi/NonARC (2.2.4)
   - Kiwi/XCTest (2.2.4):
@@ -12,8 +11,6 @@ PODS:
     - AFOAuth2Client
 
 DEPENDENCIES:
-  - AFOAuth2Client
-  - google-plus-ios-sdk
   - Kiwi/XCTest
   - PCFDataServices (from `./`)
 
@@ -24,7 +21,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
   AFOAuth2Client: 4f05d29e0a26c7ddf529dd7c4480af6ee1e982c6
-  google-plus-ios-sdk: 98d76ce1f1edbfe8730628aafe017301a734042c
   Kiwi: c73667f2b84cbf36f1a3830267c5a4ae8dcbd8ba
   PCFDataServices: e05a5c6055e1aac7abc32beb1acce0307c0e3dd6
 

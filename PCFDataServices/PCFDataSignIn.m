@@ -15,7 +15,9 @@ NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
 
 NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
 
-NSString *const kPCFOAuthPath = @"/o/oauth2/token";
+NSString *const kPCFOAuthPath = @"/oauth/authorize";
+
+NSString *const kPCFOAuthTokenPath = @"/token";
 
 static PCFDataSignIn *_sharedPCFDataSignIn;
 static dispatch_once_t _sharedOnceToken;
@@ -72,7 +74,7 @@ static
                                                clientID:self.clientID
                                                  secret:self.clientSecret];
         
-        _authClient.parameterEncoding = AFJSONParameterEncoding;
+        _authClient.parameterEncoding = AFFormURLParameterEncoding;
     }
     return _authClient;
 }
@@ -153,16 +155,24 @@ static
 
 - (void)performOAuthLogin
 {
-    NSString *scopesString = [self.scopes componentsJoinedByString:@"%%20"];
-    NSString *urlWithParams = [NSString stringWithFormat:@"%@?state=/profile&redirect_uri=%@&response_type=code&client_id=%@&approval_prompt=force&access_type=offline&scope=%@", self.openIDConnectURL, self.redirectURI, self.clientID, scopesString];
-    NSURL *OAuthURL = [NSURL URLWithString:urlWithParams];
+    NSDictionary *parameters = @{
+                                 @"state" : @"/profile",
+                                 @"redirect_uri" : self.redirectURI,
+                                 @"response_type" : @"code",
+                                 @"client_id" : self.clientID,
+                                 @"approval_prompt" : @"force",
+                                 @"access_type" : @"offline",
+                                 @"scope" : [self.scopes componentsJoinedByString:@"%%20"],
+                                 };
+    NSURL *url = [NSURL URLWithString:kPCFOAuthPath relativeToURL:[NSURL URLWithString:self.openIDConnectURL]];
+    NSURL *urlWithParams = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[kPCFOAuthPath rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(parameters, NSUTF8StringEncoding)]];
     
-    if (!OAuthURL || !OAuthURL.scheme || !OAuthURL.host) {
+    if (!urlWithParams || !urlWithParams.scheme || !urlWithParams.host) {
         NSDictionary *userInfo =  @{ NSLocalizedDescriptionKey : @"The authorization URL was malformed. Please check the openIDConnectURL value." };
         [self callDelegateWithErrorCode:PCFDataServicesMalformedURLError userInfo:userInfo];
     }
     
-    [[UIApplication sharedApplication] openURL:OAuthURL];
+    [[UIApplication sharedApplication] openURL:urlWithParams];
 }
 
 - (NSString *)OAuthCodeFromRedirectURI:(NSURL *)redirectURI
@@ -182,7 +192,7 @@ static
 sourceApplication:(NSString *)sourceApplication
        annotation:(id)annotation
 {
-    if ([[url absoluteString] hasPrefix:[self redirectURI]]) {
+    if ([url.absoluteString.lowercaseString hasPrefix:self.redirectURI.lowercaseString]) {
         NSString *code = [self OAuthCodeFromRedirectURI:url];
         [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthPath
                                                    code:code
