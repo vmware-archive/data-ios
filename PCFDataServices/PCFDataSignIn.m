@@ -52,7 +52,7 @@ static
 {
     self = [super init];
     if (self) {
-        self.scopes = @[@"openid"];
+        self.scopes = @[ @"openid" ];
     }
     return self;
 }
@@ -90,10 +90,10 @@ static
 
 - (BOOL)hasAuthInKeychain
 {
-    return [self credentialFromKeychain] ? YES : NO;
+    return [self credential] ? YES : NO;
 }
 
-- (AFOAuthCredential *)credentialFromKeychain
+- (AFOAuthCredential *)credential
 {
     return [AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID];
 }
@@ -130,9 +130,9 @@ static
         return NO;
     }
     
-    AFOAuthCredential *savedCredential = [self credentialFromKeychain];
+    AFOAuthCredential *savedCredential = [self credential];
     if (savedCredential) {
-        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthPath
+        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath
                                            refreshToken:savedCredential.refreshToken
                                                 success:^(AFOAuthCredential *credential) {
                                                     [self storeCredential:credential];
@@ -164,6 +164,7 @@ static
                                  @"access_type" : @"offline",
                                  @"scope" : [self.scopes componentsJoinedByString:@"%%20"],
                                  };
+    
     NSURL *url = [NSURL URLWithString:kPCFOAuthPath relativeToURL:[NSURL URLWithString:self.openIDConnectURL]];
     NSURL *urlWithParams = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[kPCFOAuthPath rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(parameters, NSUTF8StringEncoding)]];
     
@@ -194,7 +195,7 @@ sourceApplication:(NSString *)sourceApplication
 {
     if ([url.absoluteString.lowercaseString hasPrefix:self.redirectURI.lowercaseString]) {
         NSString *code = [self OAuthCodeFromRedirectURI:url];
-        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthPath
+        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath
                                                    code:code
                                             redirectURI:[self redirectURI]
                                                 success:^(AFOAuthCredential *credential) {
@@ -216,7 +217,7 @@ sourceApplication:(NSString *)sourceApplication
 
 - (void)disconnect
 {
-    NSString *accessToken = [[self credentialFromKeychain] accessToken];
+    NSString *accessToken = [[self credential] accessToken];
     if (accessToken) {
         [self.authClient deletePath:@"/revoke"
                          parameters:@{ @"token" : accessToken }

@@ -141,7 +141,7 @@ context(@"PCFDataSignIn Specification", ^{
             
             it(@"should try authentication with stored credential before defaulting to sigining in through Mobile Safari", ^{
                 PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
-                [[sharedInstance should] receive:@selector(credentialFromKeychain)];
+                [[sharedInstance should] receive:@selector(credential)];
                 [sharedInstance authenticate];
             });
             

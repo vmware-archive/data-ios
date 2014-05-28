@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
 // The client used to make the OAuth requests to the OpenID connect server.
 - (AFOAuth2Client *)authClient;
 
-- (AFOAuthCredential *)credentialFromKeychain;
+- (AFOAuthCredential *)credential;
 
 + (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
 
