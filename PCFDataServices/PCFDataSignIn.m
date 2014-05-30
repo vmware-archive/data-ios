@@ -8,16 +8,14 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import "AFOAuth2Client.h"
-
 #import "PCFDataSignIn+Internal.h"
 
 NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
-
 NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
 
 NSString *const kPCFOAuthPath = @"/oauth/authorize";
-
 NSString *const kPCFOAuthTokenPath = @"/token";
+NSString *const kPCFOAuthRevokePath = @"/revoke";
 
 static PCFDataSignIn *_sharedPCFDataSignIn;
 static dispatch_once_t _sharedOnceToken;
@@ -52,7 +50,7 @@ static
 {
     self = [super init];
     if (self) {
-        self.scopes = @[ @"openid" ];
+        self.scopes = @[ @"openid", @"offline_access" ];
     }
     return self;
 }
@@ -60,7 +58,7 @@ static
 - (void)callDelegateWithErrorCode:(PCFDataServicesErrorCode)code
                          userInfo:(NSDictionary *)userInfo
 {
-    if([self delegate]) {
+    if ([self delegate]) {
         NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:(NSInteger)code userInfo:userInfo];
         [self.delegate finishedWithAuth:nil error:error];
     }
@@ -142,7 +140,6 @@ static
                                                     [self.delegate finishedWithAuth:nil error:error];
                                                 }];
         return YES;
-        
     }
     
     if (interactive) {
@@ -161,8 +158,7 @@ static
                                  @"response_type" : @"code",
                                  @"client_id" : self.clientID,
                                  @"approval_prompt" : @"force",
-                                 @"access_type" : @"offline",
-                                 @"scope" : [self.scopes componentsJoinedByString:@"%%20"],
+                                 @"scope" : [self.scopes componentsJoinedByString:@" "],
                                  };
     
     NSURL *url = [NSURL URLWithString:kPCFOAuthPath relativeToURL:[NSURL URLWithString:self.openIDConnectURL]];
@@ -219,7 +215,7 @@ sourceApplication:(NSString *)sourceApplication
 {
     NSString *accessToken = [[self credential] accessToken];
     if (accessToken) {
-        [self.authClient deletePath:@"/revoke"
+        [self.authClient deletePath:kPCFOAuthRevokePath
                          parameters:@{ @"token" : accessToken }
                             success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                 [self signOut];
