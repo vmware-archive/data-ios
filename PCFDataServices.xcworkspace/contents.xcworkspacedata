@@ -13,6 +13,12 @@
       <FileRef
          location = "group:PCFDataSignIn.m">
       </FileRef>
+      <FileRef
+         location = "group:PCFObject.h">
+      </FileRef>
+      <FileRef
+         location = "group:PCFObject.m">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Specs/PCFDataServices Spec.xcodeproj">
