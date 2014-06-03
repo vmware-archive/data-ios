@@ -7,6 +7,7 @@
 //
 
 #import <Security/Security.h>
+#import <AFNetworking/AFNetworking.h>
 
 #import "PCFDataSignIn.h"
 
@@ -23,8 +24,7 @@ static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUAT
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 
 @property (weak, nonatomic) IBOutlet UIButton *signInButton;
-
-@property (strong, nonatomic) UIWebView *webView;
+@property (weak, nonatomic) IBOutlet UIButton *userInfoButton;
 
 @property (strong, nonatomic) PCFDataSignIn *signIn;
 
@@ -58,6 +58,9 @@ static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUAT
     [self.signIn authenticate];
 }
 
+- (IBAction)getUserInfoButtonPressed:(id)sender
+{
+}
 #pragma mark - PCFDataSignInDelegate
 
 - (void)finishedWithAuth:(AFOAuthCredential *)auth

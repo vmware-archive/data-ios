@@ -50,7 +50,10 @@ static
 {
     self = [super init];
     if (self) {
-        self.scopes = @[ @"openid", @"offline_access" ];
+        self.scopes = @[
+                        @"openid",
+                        @"offline_access",
+                        ];
     }
     return self;
 }

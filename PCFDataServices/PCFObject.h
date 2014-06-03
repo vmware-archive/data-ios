@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^PCFBooleanResultBlock)(BOOL succeeded, NSError *error);
-typedef void (^PCFObjectResultBlock)(PFObject *object, NSError *error);
+@class PCFObject;
 
 @interface PCFObject : NSObject
 
@@ -50,10 +49,10 @@ typedef void (^PCFObjectResultBlock)(PFObject *object, NSError *error);
 /**
  The class name of the object.
  */
-@property (readonly) NSString *parseClassName;
+@property (readonly) NSString *className;
 
 /**
- The id of the object.
+ The ID of the object.
  */
 @property (nonatomic, strong) NSString *objectID;
 
@@ -113,34 +112,29 @@ typedef void (^PCFObjectResultBlock)(PFObject *object, NSError *error);
  @param error Pointer to an NSError that will be set if necessary.
  @result Returns whether the save succeeded.
  */
-- (BOOL)save:(NSError **)error;
+- (BOOL)saveAndWait:(NSError **)error;
 
 /**
  Saves the PCFObject asynchronously.
  */
-- (void)saveInBackground;
+- (void)save;
 
 /**
  Saves the PCFObject asynchronously and executes the given callback block.
- @param block The block to execute. The block should have the following argument signature: (BOOL succeeded, NSError *error)
+ @param success The block to execute when the save operation is successful.
+ @param failure The block to execute when the save operation fails.
  */
-- (void)saveInBackgroundWithBlock:(PCFBooleanResultBlock)block;
-
-/**
- Saves the PCFObject asynchronously and calls the given callback.
- @param target The object to call selector on.
- @param selector The selector to call. It should have the following signature: (void)callbackWithResult:(NSNumber *)result error:(NSError *)error. error will be nil on success and set if there was an error. [result boolValue] will tell you whether the call succeeded or not.
- */
-- (void)saveInBackgroundWithTarget:(id)target selector:(SEL)selector;
+- (void)saveOnSuccess:(void (^)(void))success
+              failure:(void (^)(NSError *error))failure;
 
 #pragma mark -
-#pragma mark Refresh
+#pragma mark Fetch
 
 /** @name Getting an Object from Parse */
 
 /**
  Gets whether the PCFObject has been fetched.
- @result YES if the PCFObject is new or has been fetched or refreshed.  NO otherwise.
+ @result YES if the PCFObject is new or has been fetched.  NO otherwise.
  */
 - (BOOL)isDataAvailable;
 
@@ -148,20 +142,15 @@ typedef void (^PCFObjectResultBlock)(PFObject *object, NSError *error);
  Fetches the PCFObject with the current data from the server and sets an error if it occurs.
  @param error Pointer to an NSError that will be set if necessary.
  */
-- (void)fetch:(NSError **)error;
+- (void)fetchAndWait:(NSError **)error;
 
 /**
  Fetches the PCFObject asynchronously and executes the given callback block.
- @param block The block to execute. The block should have the following argument signature: (PCFObject *object, NSError *error)
+ @param success The block to execute when the fetch operation is successful.
+ @param failure The block to execute when the fetch operation fails.
  */
-- (void)fetchInBackgroundWithBlock:(PCFObjectResultBlock)block;
-
-/**
- Fetches the PCFObject asynchronously and calls the given callback.
- @param target The target on which the selector will be called.
- @param selector The selector to call. It should have the following signature: (void)callbackWithResult:(PCFObject *)refreshedObject error:(NSError *)error. error will be nil on success and set if there was an error. refreshedObject will be the PCFObject with the refreshed data.
- */
-- (void)fetchInBackgroundWithTarget:(id)target selector:(SEL)selector;
+- (void)fetchOnSuccess:(void (^)(void))success
+               failure:(void (^)(NSError *error))failure;
 
 #pragma mark -
 #pragma mark Delete
@@ -175,29 +164,23 @@ typedef void (^PCFObjectResultBlock)(PFObject *object, NSError *error);
  @param error Pointer to an NSError that will be set if necessary.
  @result Returns whether the delete succeeded.
  */
-- (BOOL)delete:(NSError **)error;
+- (BOOL)deleteAndWait:(NSError **)error;
 
 /**
  Deletes the PCFObject asynchronously.
  */
-- (void)deleteInBackground;
+- (void)delete;
 
 /**
  Deletes the PCFObject asynchronously and executes the given callback block.
- @param block The block to execute. The block should have the following argument signature: (BOOL succeeded, NSError *error)
+ @param success The block to execute if the delete operation is successful.
+ @param failure The block to execute if the delete operation fails.
  */
-- (void)deleteInBackgroundWithBlock:(PCFBooleanResultBlock)block;
-
-/**
- Deletes the PCFObject asynchronously and calls the given callback.
- @param target The object to call selector on.
- @param selector The selector to call. It should have the following signature: (void)callbackWithResult:(NSNumber *)result error:(NSError *)error. error will be nil on success and set if there was an error. [result boolValue] will tell you whether the call succeeded or not.
- */
-- (void)deleteInBackgroundWithTarget:(id)target
-                            selector:(SEL)selector;
+- (void)deleteOnSuccess:(void (^)(void))success
+                failure:(void (^)(NSError *error))failure;
 
 #pragma mark -
-#pragma Dirt
+#pragma Dirtiness
 
 /**
  Gets whether any key-value pair in this object (or its children) has been added/updated/removed and not saved yet.

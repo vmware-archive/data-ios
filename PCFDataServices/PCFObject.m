@@ -15,7 +15,7 @@
     
 }
 
-+ (PCFObject *)objectWithClassName:(NSString *)className dictionary:(NSDictionary *)dictionary
++ (instancetype)objectWithClassName:(NSString *)className dictionary:(NSDictionary *)dictionary
 {
     
 }
@@ -61,22 +61,18 @@
 #pragma mark -
 #pragma mark Save
 
-- (BOOL)save:(NSError **)error
+- (BOOL)saveAndWait:(NSError **)error
 {
     
 }
 
-- (void)saveInBackground
+- (void)save
 {
     
 }
 
-- (void)saveInBackgroundWithBlock:(PCFBooleanResultBlock)block
-{
-    
-}
-
-- (void)saveInBackgroundWithTarget:(id)target selector:(SEL)selector
+- (void)saveOnSuccess:(void (^)(void))success
+              failure:(void (^)(NSError *error))failure
 {
     
 }
@@ -89,17 +85,13 @@
     
 }
 
-- (void)fetch:(NSError **)error
+- (void)fetchAndWait:(NSError **)error
 {
     
 }
 
-- (void)fetchInBackgroundWithBlock:(PCFObjectResultBlock)block
-{
-    
-}
-
-- (void)fetchInBackgroundWithTarget:(id)target selector:(SEL)selector
+- (void)fetchOnSuccess:(void (^)(void))success
+               failure:(void (^)(NSError *error))failure
 {
     
 }
@@ -107,23 +99,18 @@
 #pragma mark -
 #pragma mark Delete
 
-- (BOOL)delete:(NSError **)error
+- (BOOL)deleteAndWait:(NSError **)error
 {
     
 }
 
-- (void)deleteInBackground
+- (void)delete
 {
     
 }
 
-- (void)deleteInBackgroundWithBlock:(PCFBooleanResultBlock)block
-{
-    
-}
-
-- (void)deleteInBackgroundWithTarget:(id)target
-                            selector:(SEL)selector
+- (void)deleteOnSuccess:(void (^)(void))success
+                failure:(void (^)(NSError *error))failure
 {
     
 }

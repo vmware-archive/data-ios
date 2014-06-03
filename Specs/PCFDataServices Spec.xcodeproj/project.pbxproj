@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2CAC853B59E343E78192C50A /* libPods-PCFDataServicesSpecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D99E6EB469C04CF993C9CE49 /* libPods-PCFDataServicesSpecs.a */; };
+		F15DD973193CBFC400CFAC93 /* PCFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD972193CBFC400CFAC93 /* PCFObject.m */; };
+		F15DD975193CBFFC00CFAC93 /* PCFObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */; };
 		F1EF46211934E77500CB8930 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46201934E77500CB8930 /* SystemConfiguration.framework */; };
 		F1EF46231934E78200CB8930 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46221934E78200CB8930 /* MobileCoreServices.framework */; };
 		F1F9F937192BF956002848C7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EA192BF81700CF830B /* XCTest.framework */; };
@@ -24,6 +26,9 @@
 		F145A5EA192BF81700CF830B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EC192BF81700CF830B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EE192BF81700CF830B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		F15DD971193CBFC400CFAC93 /* PCFObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFObject.h; sourceTree = "<group>"; };
+		F15DD972193CBFC400CFAC93 /* PCFObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFObject.m; sourceTree = "<group>"; };
+		F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFObjectSpec.m; sourceTree = "<group>"; };
 		F1BE2715192CED8300E498E8 /* PCFDataSignIn+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PCFDataSignIn+Internal.h"; sourceTree = "<group>"; };
 		F1E8FE0C192BCF6B00D17CF2 /* PCFDataSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataSignIn.h; sourceTree = "<group>"; };
 		F1E8FE0D192BCF6B00D17CF2 /* PCFDataSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataSignIn.m; sourceTree = "<group>"; };
@@ -89,6 +94,8 @@
 		F1E8FE0B192BCF6B00D17CF2 /* PCFDataServices */ = {
 			isa = PBXGroup;
 			children = (
+				F15DD971193CBFC400CFAC93 /* PCFObject.h */,
+				F15DD972193CBFC400CFAC93 /* PCFObject.m */,
 				F1E8FE0C192BCF6B00D17CF2 /* PCFDataSignIn.h */,
 				F1E8FE0D192BCF6B00D17CF2 /* PCFDataSignIn.m */,
 				F1BE2715192CED8300E498E8 /* PCFDataSignIn+Internal.h */,
@@ -102,6 +109,7 @@
 			children = (
 				F1F9F93B192BF956002848C7 /* Supporting Files */,
 				F1F9F948192BFA26002848C7 /* PCFDataSignInSpec.m */,
+				F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */,
 			);
 			path = PCFDataServicesSpecs;
 			sourceTree = "<group>";
@@ -213,6 +221,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F15DD975193CBFFC00CFAC93 /* PCFObjectSpec.m in Sources */,
+				F15DD973193CBFC400CFAC93 /* PCFObject.m in Sources */,
 				F1F9F949192BFA26002848C7 /* PCFDataSignInSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
