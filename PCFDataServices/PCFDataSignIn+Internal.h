@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
 
 - (AFOAuthCredential *)credential;
 
+- (AFHTTPClient *)dataServiceClient;
+
 + (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
 
 @end

@@ -8,26 +8,45 @@
 
 #import "PCFObject.h"
 
+@interface PCFObject ()
+
+@property (readwrite) NSString *className;
+
+@property (nonatomic) NSMutableDictionary *contentsDictionary;
+
+@end
+
 @implementation PCFObject
 
 + (instancetype)objectWithClassName:(NSString *)className
 {
-    
+    return [[self alloc] initWithClassName:className];
 }
 
 + (instancetype)objectWithClassName:(NSString *)className dictionary:(NSDictionary *)dictionary
 {
-    
+    PCFObject *instance = [[self alloc] initWithClassName:className];
+    [instance setObjectsForKeysWithDictionary:dictionary];
+    return instance;
 }
 
-- (id)initWithClassName:(NSString *)newClassName
+- (id)initWithClassName:(NSString *)className
 {
+    if (!className || className == (id)[NSNull null] || className.length <= 0) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"invalid className argument " userInfo:nil];
+    }
     
+    self = [super init];
+    if (self) {
+        self.className = className;
+        self.contentsDictionary = [NSMutableDictionary dictionary];
+    }
+    return self;
 }
 
 - (NSArray *)allKeys
 {
-    
+    return [self.contentsDictionary allKeys];
 }
 
 #pragma mark -
@@ -35,35 +54,40 @@
 
 - (id)objectForKey:(NSString *)key
 {
-    
+    return self.contentsDictionary[key];
 }
 
 - (void)setObject:(id)object forKey:(NSString *)key
 {
-    
+    self.contentsDictionary[key] = object;
+}
+
+- (void)setObjectsForKeysWithDictionary:(NSDictionary *)dictionary
+{
+    [self.contentsDictionary addEntriesFromDictionary:dictionary];
 }
 
 - (void)removeObjectForKey:(NSString *)key
 {
-    
+    [self.contentsDictionary removeObjectForKey:key];
 }
 
 - (id)objectForKeyedSubscript:(NSString *)key
 {
-    
+    return self.contentsDictionary[key];
 }
 
 - (void)setObject:(id)object forKeyedSubscript:(NSString *)key
 {
-    
+    self.contentsDictionary[key] = object;
 }
 
 #pragma mark -
 #pragma mark Save
 
-- (BOOL)saveAndWait:(NSError **)error
+- (BOOL)saveSynchronously:(NSError **)error
 {
-    
+    return YES;
 }
 
 - (void)save
@@ -82,10 +106,10 @@
 
 - (BOOL)isDataAvailable
 {
-    
+    return YES;
 }
 
-- (void)fetchAndWait:(NSError **)error
+- (void)fetchSynchronously:(NSError **)error
 {
     
 }
@@ -99,14 +123,9 @@
 #pragma mark -
 #pragma mark Delete
 
-- (BOOL)deleteAndWait:(NSError **)error
+- (BOOL)deleteSynchronously:(NSError **)error
 {
-    
-}
-
-- (void)delete
-{
-    
+    return YES;
 }
 
 - (void)deleteOnSuccess:(void (^)(void))success
@@ -120,12 +139,12 @@
 
 - (BOOL)isDirty
 {
-    
+    return YES;
 }
 
 - (BOOL)isDirtyForKey:(NSString *)key
 {
-    
+    return YES;
 }
 
 @end

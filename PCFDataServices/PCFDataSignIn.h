@@ -64,6 +64,12 @@
 @property(nonatomic, copy) NSString *openIDConnectURL;
 
 /**
+ The PCF Data Service URL endpoint
+ Must be set for PCFObject fetch/save/delete to work.
+ */
+@property(nonatomic, copy) NSString *dataServiceURL;
+
+/**
  The API scopes requested by the app in an array of NSStrings.
  The default value is @[ @"openid", @"offline_access" ].
  */

@@ -34,10 +34,10 @@
 
 /**
  Initializes a new PCFObject with a class name.
- @param newClassName A class name can be any alphanumeric string that begins with a letter. It represents an object in your app, like a User or a Document.
+ @param className A class name can be any alphanumeric string that begins with a letter. It represents an object in your app, like a User or a Document.
  @result Returns the object that is instantiated with the given class name.
  */
-- (id)initWithClassName:(NSString *)newClassName;
+- (id)initWithClassName:(NSString *)className;
 
 #pragma mark -
 #pragma mark Properties
@@ -58,9 +58,7 @@
 
 
 /**
- Returns an array of the keys contained in this object. This does not include
- createdAt, updatedAt, authData, or objectId. It does include things like username
- and ACL.
+ Returns an array of the keys contained in this object. This does not include objectID.
  */
 - (NSArray *)allKeys;
 
@@ -80,6 +78,13 @@
  @param key The key.
  */
 - (void)setObject:(id)object forKey:(NSString *)key;
+
+/**
+ Sets the objects and keys from the dictionary on the PCFObject at once
+ @param dictionary The dictionary with keys and values
+ */
+
+- (void)setObjectsForKeysWithDictionary:(NSDictionary *)dictionary;
 
 /**
  Unsets a key on the object.
@@ -108,16 +113,11 @@
 ///--------------------------------------
 
 /**
- Saves the PCFObject and sets an error if it occurs.
+ Saves the PCFObject synchronously and sets an error if it occurs.
  @param error Pointer to an NSError that will be set if necessary.
  @result Returns whether the save succeeded.
  */
-- (BOOL)saveAndWait:(NSError **)error;
-
-/**
- Saves the PCFObject asynchronously.
- */
-- (void)save;
+- (BOOL)saveSynchronously:(NSError **)error;
 
 /**
  Saves the PCFObject asynchronously and executes the given callback block.
@@ -139,10 +139,10 @@
 - (BOOL)isDataAvailable;
 
 /**
- Fetches the PCFObject with the current data from the server and sets an error if it occurs.
+ Fetches the PCFObject synchronously with the current data from the server and sets an error if it occurs.
  @param error Pointer to an NSError that will be set if necessary.
  */
-- (void)fetchAndWait:(NSError **)error;
+- (void)fetchSynchronously:(NSError **)error;
 
 /**
  Fetches the PCFObject asynchronously and executes the given callback block.
@@ -160,16 +160,11 @@
 ///------------------------------------------
 
 /**
- Deletes the PCFObject and sets an error if it occurs.
+ Deletes the PCFObject synchronously and sets an error if it occurs.
  @param error Pointer to an NSError that will be set if necessary.
  @result Returns whether the delete succeeded.
  */
-- (BOOL)deleteAndWait:(NSError **)error;
-
-/**
- Deletes the PCFObject asynchronously.
- */
-- (void)delete;
+- (BOOL)deleteSynchronously:(NSError **)error;
 
 /**
  Deletes the PCFObject asynchronously and executes the given callback block.

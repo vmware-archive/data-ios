@@ -25,6 +25,7 @@ static
 @interface PCFDataSignIn ()
 
 @property (nonatomic) AFOAuth2Client *authClient;
+@property (nonatomic) AFHTTPClient *dataServiceClient;
 
 @end
 
@@ -78,6 +79,19 @@ static
         _authClient.parameterEncoding = AFFormURLParameterEncoding;
     }
     return _authClient;
+}
+
+- (AFHTTPClient *)dataServiceClient
+{
+    if (!_dataServiceClient) {
+        if (self.dataServiceURL) {
+            _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
+            
+        } else {
+            @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];
+        }
+    }
+    return _dataServiceClient;
 }
 
 - (NSString *)redirectURI
