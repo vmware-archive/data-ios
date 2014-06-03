@@ -11,12 +11,12 @@
 
 #import "PCFObject.h"
 #import "PCFDataSignIn+Internal.h"
-#import "PCFRequestOperation.h"
 
 SPEC_BEGIN(PCFObjectSpec)
 
 describe(@"PCFObject", ^{
     static NSString *const kTestClassName = @"TestClass";
+    static NSString *const kTestObjectID = @"1234";
     
     context(@"constructing a new instance of a PCFObject with nil class name", ^{
         it(@"should throw an exception if passed a nil or empty class name", ^{
@@ -135,51 +135,93 @@ describe(@"PCFObject", ^{
     
     context(@"saving PCFObject instance to the Data Services server", ^{
         __block PCFObject *newObject;
+        __block NSDictionary *expectedContents;
+        
         static NSString *key = @"TestKey";
         static NSString *object = @"TestObject";
         
         beforeEach(^{
-            newObject = [PCFObject objectWithClassName:kTestClassName dictionary:@{ key : object }];
+            expectedContents = @{ key : object };
+            newObject = [PCFObject objectWithClassName:kTestClassName dictionary:expectedContents];
+            newObject.objectID = kTestObjectID;
         });
         
         typedef void (^EnqueueBlock)(NSArray *);
         
-        void (^stubDataServiceClient)(EnqueueBlock) = ^(EnqueueBlock block){
-            [[[PCFDataSignIn sharedInstance] dataServiceClient] stub:@selector(enqueueHTTPRequestOperation:)
-                                                           withBlock:^id(NSArray *params) {
-                                                               block(params);
-                                                               return nil;
-                                                           }];
+        void (^stubURLConnectionSuccess)(EnqueueBlock) = ^(EnqueueBlock block){
+            [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
+                        withBlock:^id(NSArray *params) {
+                            block(params);
+                            return [NSData data];
+                        }];
         };
         
-        it(@"should perform PUT synchronously on remote server when 'saveSyncronously:' selector performed", ^{
-//            stubDataServiceClient(^(NSArray *params){
-//                PCFRequestOperation *requestOperation = params[0];
-//                [[requestOperation should] beKindOfClass:[PCFRequestOperation class]];
-//                [[requestOperation.request.HTTPMethod should] equal:@"PUT"];
-//            });
-//            
-//            [[theValue([newObject saveSynchronously:nil]) should] beTrue];
-#warning Test that the operation is synchronous.
+        void (^stubURLConnectionFail)() = ^{
+            [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
+                        withBlock:^id(NSArray *params) {
+                            return nil;
+                        }];
+        };
+        
+        it(@"should throw an exception if dataServiceURL is not set on the 'PCFDataSignIn' sharedInstance", ^{
+            [[theBlock(^{ [newObject saveSynchronously:nil]; }) should] raiseWithName:NSObjectNotAvailableException];
         });
         
-        it(@"should contain set key value pairs in request body when 'saveSyncronously:' selector performed", ^{
+        context(@"Properly setup PCFDataSignIn sharedInstance", ^{
             
-        });
-        
-        it(@"should populate error object if 'saveSyncronously:' PUT operation fails", ^{
-        });
-        
-        it(@"should perform PUT asyncronously on remote server when 'saveOnSuccess:failure:' selector performed", ^{
+            beforeEach(^{
+                [PCFDataSignIn sharedInstance].dataServiceURL = @"http://testurl.com";
+            });
             
-        });
-        
-        it(@"should call success block if PUT operation is successful", ^{
+            it(@"should perform PUT synchronously on remote server when 'saveSyncronously:' selector performed", ^{
+                stubURLConnectionSuccess(^(NSArray *params){
+                    NSURLRequest *request = params[0];
+                    [[request.HTTPMethod should] equal:@"PUT"];
+                });
+                
+                [[theValue([newObject saveSynchronously:nil]) should] beTrue];
+            });
             
-        });
-        
-        it(@"should call failure block if PUT operation fails", ^{
+            it(@"should contain set key value pairs in request body when 'saveSyncronously:' selector performed", ^{
+                stubURLConnectionSuccess(^(NSArray *params){
+                    NSURLRequest *request = params[0];
+                    NSError *error;
+                    id contents = [NSJSONSerialization JSONObjectWithData:request.HTTPBody options:0 error:&error];
+                    [[contents should] equal:expectedContents];
+                    [[error should] beNil];
+                });
+                
+                [[theValue([newObject saveSynchronously:nil]) should] beTrue];
+            });
             
+            it(@"should populate error object if 'saveSyncronously:' PUT operation fails", ^{
+                stubURLConnectionFail();
+                
+                NSError *error;
+                [[theValue([newObject saveSynchronously:&error]) should] beFalse];
+            });
+            
+            it(@"should have the class name and object ID as the path in the HTTP PUT request", ^{
+                stubURLConnectionSuccess(^(NSArray *params){
+                    NSURLRequest *request = params[0];
+                    [[[request.URL relativeString] should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                });
+                
+                NSError *error;
+                [[theValue([newObject saveSynchronously:&error]) should] beTrue];
+            });
+            
+            it(@"should perform PUT asyncronously on remote server when 'saveOnSuccess:failure:' selector performed", ^{
+                
+            });
+            
+            it(@"should call success block if PUT operation is successful", ^{
+                
+            });
+            
+            it(@"should call failure block if PUT operation fails", ^{
+                
+            });
         });
     });
     

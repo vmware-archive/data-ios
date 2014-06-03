@@ -86,6 +86,7 @@ static
     if (!_dataServiceClient) {
         if (self.dataServiceURL) {
             _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
+            _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
             
         } else {
             @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];

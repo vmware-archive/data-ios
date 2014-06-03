@@ -6,7 +6,10 @@
 //
 //
 
+#import <AFNetworking/AFNetworking.h>
+
 #import "PCFObject.h"
+#import "PCFDataSignIn+Internal.h"
 
 @interface PCFObject ()
 
@@ -85,9 +88,23 @@
 #pragma mark -
 #pragma mark Save
 
+- (NSString *)URLPath
+{
+    return [NSString stringWithFormat:@"%@/%@", self.className, self.objectID];
+}
+
 - (BOOL)saveSynchronously:(NSError **)error
 {
-    return YES;
+#warning TODO: Set request URL based on class name and objectID
+    NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"PUT"
+                                                                                           path:[self URLPath]
+                                                                                     parameters:self.contentsDictionary];
+    NSHTTPURLResponse *response;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+                                                 returningResponse:&response
+                                                             error:error];
+    
+    return responseData ? YES : NO;
 }
 
 - (void)save

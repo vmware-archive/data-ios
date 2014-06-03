@@ -19,12 +19,6 @@
       <FileRef
          location = "group:PCFObject.m">
       </FileRef>
-      <FileRef
-         location = "group:PCFRequestOperation.h">
-      </FileRef>
-      <FileRef
-         location = "group:PCFRequestOperation.m">
-      </FileRef>
    </Group>
    <FileRef
       location = "group:Specs/PCFDataServices Spec.xcodeproj">
