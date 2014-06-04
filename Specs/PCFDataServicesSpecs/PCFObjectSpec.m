@@ -11,6 +11,8 @@
 
 #import "PCFObject.h"
 #import "PCFDataSignIn+Internal.h"
+#import "PCFDataTestConstants.h"
+#import "PCFDataTestHelpers.h"
 
 SPEC_BEGIN(PCFObjectSpec)
 
@@ -194,6 +196,7 @@ describe(@"PCFObject", ^{
         static NSString *object = @"TestObject";
         
         beforeEach(^{
+            [PCFDataSignIn setSharedInstance:nil];
             expectedContents = @{ key : object };
             newObject = [PCFObject objectWithClassName:kTestClassName dictionary:expectedContents];
             newObject.objectID = kTestObjectID;
@@ -206,6 +209,8 @@ describe(@"PCFObject", ^{
         context(@"Properly setup PCFDataSignIn sharedInstance", ^{
             
             beforeEach(^{
+                setupPCFDataSignInInstance(nil);
+                setupForSuccessfulSilentAuth();
                 [PCFDataSignIn sharedInstance].dataServiceURL = @"http://testurl.com";
             });
             
@@ -575,7 +580,84 @@ describe(@"PCFObject", ^{
         });
     });
     
-#warning TODO: Test OpenID connect token validity
+    context(@"OpenID connect token validity on data service client", ^{
+        __block PCFObject *newObject;
+        __block BOOL wasBlockExecuted;
+        
+        static NSString *const kAuthorizationHeaderKey = @"Authorization";
+        
+        void (^verifyAuthorizationInRequest)(NSURLRequest *) = ^(NSURLRequest *request) {
+            NSString *token = [request valueForHTTPHeaderField:kAuthorizationHeaderKey];
+            [[theValue([token hasPrefix:@"Bearer "]) should] beTrue];
+            [[theValue([token hasSuffix:kTestOAuthToken]) should] beTrue];
+        };
+
+        beforeEach(^{
+            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject.objectID = kTestObjectID;
+
+            PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
+            sharedInstance.dataServiceURL = kTestDataServiceURL;
+            
+            wasBlockExecuted = NO;
+        });
+        
+        afterEach(^{
+            [[theValue(wasBlockExecuted) should] beTrue];
+        });
+
+        context(@"synchronous methods", ^{
+            
+            beforeEach(^{
+                stubURLConnectionSuccess(^NSData *(NSArray *params){
+                    NSURLRequest *request = params[0];
+                    verifyAuthorizationInRequest(request);
+                    wasBlockExecuted = YES;
+                    return nil;
+                });
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Fetch HTTP requests", ^{
+                [newObject fetchSynchronously:nil];
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Delete HTTP requests", ^{
+                [newObject deleteSynchronously:nil];
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Save HTTP requests", ^{
+                [newObject saveSynchronously:nil];
+            });
+        });
+        
+        context(@"asynchronous methods", ^{
+            
+            beforeEach(^{
+                AFHTTPClient *client = [PCFDataSignIn sharedInstance].dataServiceClient;
+                
+                [client stub:@selector(enqueueHTTPRequestOperation:)
+                   withBlock:^id(NSArray *params) {
+                       AFHTTPRequestOperation *operation = params[0];
+                       verifyAuthorizationInRequest(operation.request);
+                       wasBlockExecuted = YES;
+                       return nil;
+                   }];
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Fetch HTTP requests", ^{
+                [newObject fetchOnSuccess:nil failure:nil];
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Delete HTTP requests", ^{
+                [newObject deleteOnSuccess:nil failure:nil];
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Save HTTP requests", ^{
+                [newObject saveOnSuccess:nil failure:nil];
+            });
+        });
+
+    });
 });
 
 SPEC_END

@@ -86,12 +86,16 @@
 
 /**
  Returns a shared PCFDataSignIn instance.
+ 
+ @return The PCFDataSignIn shared instance
  */
 + (PCFDataSignIn *)sharedInstance;
 
 /**
  Checks whether the user has either currently signed in or has previous
  authentication saved in keychain.
+ 
+ @return A BOOL representing whether Authentication credentials have been saved in the Keychain
  */
 - (BOOL)hasAuthInKeychain;
 
@@ -106,6 +110,9 @@
  Note that if the previous authentication was revoked by the user, this method
  still returns 'YES' but 'finishedWithAuth:error:' callback will indicate
  that authentication has failed.
+ 
+ @return A BOOL representing whether authentication can be attempted without user interaction
+
  */
 - (BOOL)trySilentAuthentication;
 
@@ -130,6 +137,8 @@
  @param url The redirect URI defined on the OpenID Connect server to return to the application from the Safari Browser
  @param sourceApplication  The bundle ID of the app that is requesting your app to open the URL (url).
  @param A property-list object supplied by the source app to communicate information to the receiving app.
+ 
+ @return YES if the delegate successfully handled the request or NO if the attempt to open the URL resource failed.
  */
 - (BOOL)handleURL:(NSURL *)url
 sourceApplication:(NSString *)sourceApplication

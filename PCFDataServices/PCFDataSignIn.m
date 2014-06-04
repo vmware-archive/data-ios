@@ -85,16 +85,27 @@ static
 
 - (AFHTTPClient *)dataServiceClient
 {
+    if (![self hasAuthInKeychain]) {
+        return nil;
+    }
+    
     if (!_dataServiceClient) {
         if (self.dataServiceURL) {
             _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
             _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
-            
+            [self setAuthorizationHeaderOnClient:_dataServiceClient withCredential:self.credential];
         } else {
             @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];
         }
     }
+    
     return _dataServiceClient;
+}
+
+- (void)setAuthorizationHeaderOnClient:(AFHTTPClient *)client
+                        withCredential:(AFOAuthCredential *)credential
+{
+    [client setDefaultHeader:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", credential.accessToken]];
 }
 
 - (NSString *)redirectURI
@@ -116,7 +127,7 @@ static
     return [AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID];
 }
 
-- (BOOL)storeCredential:(AFOAuthCredential *)credential
+- (BOOL)storeCredentialInKeychain:(AFOAuthCredential *)credential
 {
     return [AFOAuthCredential storeCredential:credential withIdentifier:kPCFOAuthCredentialID];
 }
@@ -153,8 +164,7 @@ static
         [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath
                                            refreshToken:savedCredential.refreshToken
                                                 success:^(AFOAuthCredential *credential) {
-                                                    [self storeCredential:credential];
-                                                    [self.delegate finishedWithAuth:credential error:nil];
+                                                    [self setCredential:credential];
                                                 }
                                                 failure:^(NSError *error) {
                                                     [self.delegate finishedWithAuth:nil error:error];
@@ -168,6 +178,13 @@ static
     }
     
     return NO;
+}
+
+- (void)setCredential:(AFOAuthCredential *)credential
+{
+    [self setAuthorizationHeaderOnClient:self.dataServiceClient withCredential:self.credential];
+    [self storeCredentialInKeychain:credential];
+    [self.delegate finishedWithAuth:credential error:nil];
 }
 
 - (void)performOAuthLogin
@@ -215,8 +232,7 @@ sourceApplication:(NSString *)sourceApplication
                                                    code:code
                                             redirectURI:[self redirectURI]
                                                 success:^(AFOAuthCredential *credential) {
-                                                    [self storeCredential:credential];
-                                                    [self.delegate finishedWithAuth:credential error:nil];
+                                                    [self setCredential:credential];
                                                 }
                                                 failure:^(NSError *error) {
                                                     [self.delegate finishedWithAuth:nil error:error];

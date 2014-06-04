@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
     PCFDataServicesFailedAuthenticationError,
     PCFDataServicesMalformedURLError,
     PCFDataServicesMissingAccessToken,
+    PCFDataServicesAuthorizationRequired,
 };
 
 #endif

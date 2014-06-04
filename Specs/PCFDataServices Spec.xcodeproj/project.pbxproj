@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2CAC853B59E343E78192C50A /* libPods-PCFDataServicesSpecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D99E6EB469C04CF993C9CE49 /* libPods-PCFDataServicesSpecs.a */; };
+		579B48B61940BA9E002F2F26 /* PCFDataTestHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 579B48B51940BA9E002F2F26 /* PCFDataTestHelpers.m */; };
 		F15DD973193CBFC400CFAC93 /* PCFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD972193CBFC400CFAC93 /* PCFObject.m */; };
 		F15DD975193CBFFC00CFAC93 /* PCFObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */; };
 		F1EF46211934E77500CB8930 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46201934E77500CB8930 /* SystemConfiguration.framework */; };
@@ -22,6 +23,9 @@
 /* Begin PBXFileReference section */
 		10F021DF31854ADA85B91F84 /* Pods-PCFDataServicesSpecs.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PCFDataServicesSpecs.xcconfig"; path = "../Pods/Pods-PCFDataServicesSpecs.xcconfig"; sourceTree = "<group>"; };
 		576D2AEA193F9C89000E895C /* PCFDataError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataError.h; sourceTree = "<group>"; };
+		579B48B21940B6E6002F2F26 /* PCFDataTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataTestConstants.h; sourceTree = "<group>"; };
+		579B48B41940BA9E002F2F26 /* PCFDataTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataTestHelpers.h; sourceTree = "<group>"; };
+		579B48B51940BA9E002F2F26 /* PCFDataTestHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataTestHelpers.m; sourceTree = "<group>"; };
 		AA27B082064A4641BC857737 /* libPods-PCFDataServicesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PCFDataServicesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D99E6EB469C04CF993C9CE49 /* libPods-PCFDataServicesSpecs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PCFDataServicesSpecs.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F145A5EA192BF81700CF830B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -59,6 +63,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		579B48B31940BA85002F2F26 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				579B48B21940B6E6002F2F26 /* PCFDataTestConstants.h */,
+				579B48B41940BA9E002F2F26 /* PCFDataTestHelpers.h */,
+				579B48B51940BA9E002F2F26 /* PCFDataTestHelpers.m */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		F1E8FAB1192BA34800D17CF2 = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +123,7 @@
 		F1F9F93A192BF956002848C7 /* PCFDataServicesSpecs */ = {
 			isa = PBXGroup;
 			children = (
+				579B48B31940BA85002F2F26 /* Helpers */,
 				F1F9F93B192BF956002848C7 /* Supporting Files */,
 				F1F9F948192BFA26002848C7 /* PCFDataSignInSpec.m */,
 				F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */,
@@ -224,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F15DD975193CBFFC00CFAC93 /* PCFObjectSpec.m in Sources */,
+				579B48B61940BA9E002F2F26 /* PCFDataTestHelpers.m in Sources */,
 				F15DD973193CBFC400CFAC93 /* PCFObject.m in Sources */,
 				F1F9F949192BFA26002848C7 /* PCFDataSignInSpec.m in Sources */,
 			);

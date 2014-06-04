@@ -134,6 +134,14 @@
     NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"GET"
                                                                                            path:[self URLPath]
                                                                                      parameters:nil];
+    
+    if (!request) {
+        if (error) {
+            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
+        }
+        return NO;
+    }
+    
     NSHTTPURLResponse *response;
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request
                                                  returningResponse:&response
@@ -210,19 +218,6 @@
                                                          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                              failure(error);
                                                          }];
-}
-
-#pragma mark -
-#pragma Dirtiness
-
-- (BOOL)isDirty
-{
-    return _isDirty;
-}
-
-- (BOOL)isDirtyForKey:(NSString *)key
-{
-    return YES;
 }
 
 @end

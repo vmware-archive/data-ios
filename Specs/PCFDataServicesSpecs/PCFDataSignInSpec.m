@@ -13,49 +13,17 @@
 
 #import "PCFDataSignIn+Internal.h"
 #import "PCFDataError.h"
+#import "PCFDataTestConstants.h"
+#import "PCFDataTestHelpers.h"
 
 SPEC_BEGIN(PCFDataSignInSpec)
-
-static NSString *const kTestOAuthToken = @"ya29.HQCrkKW12Yd9ZBoAAABMOFnwSb-LJUDm0MebYgoHls0zVNRrZYpDmpdpylIrEw";
-static NSString *const kTestRefreshToken = @"1/5mSJo631AVmdw1rFUsxofZJnXprvs2-EZ8nLpCYtDJY";
-static NSString *const kTestTokenType = @"Bearer";
-
-static NSString *const kTestOpenIDConnectURL = @"https://testOpenIDConnectURL.com";
-
-static NSString *const kTestClientID = @"TestClientID";
-static NSString *const kTestClientSecret = @"TestClientSecret";
-
-static NSString *const kTestBundleIndentifier = @"com.testbundleID.spec";
 
 void (^resetSharedInstance)(void) = ^{
     [PCFDataSignIn setSharedInstance:nil];
 };
 
-void (^setupForSuccessfulSilentAuth)(void) = ^{
-    AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:@"Bearer"];
-    [cred setRefreshToken:kTestRefreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:60 * 60]];
-    [AFOAuthCredential storeCredential:cred withIdentifier:kPCFOAuthCredentialID];
-    
-    [[[PCFDataSignIn sharedInstance] authClient] stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
-                                            withBlock:^id(NSArray *params) {
-                                                void (^success)(AFOAuthCredential *credential) = params[2];
-                                                AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:kTestTokenType];
-                                                [credential setRefreshToken:kTestRefreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:3600]];
-                                                success(credential);
-                                                return nil;
-                                            }];
-};
-
 void (^setupForFailedSilentAuth)(void) = ^{
     [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
-};
-
-void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>) = ^(id<PCFSignInDelegate> delegate){
-    PCFDataSignIn *instance = [PCFDataSignIn sharedInstance];
-    [instance setOpenIDConnectURL:kTestOpenIDConnectURL];
-    [instance setClientID:kTestClientID];
-    [instance setClientSecret:kTestClientSecret];
-    [instance setDelegate:delegate];
 };
 
 context(@"PCFDataSignIn Specification", ^{
@@ -146,16 +114,18 @@ context(@"PCFDataSignIn Specification", ^{
                 [sharedInstance authenticate];
             });
             
-            it(@"should call delegate |finishedWithAuth:error:| method with a populated AFOAuthCredential object when silent authentication succeeds", ^{
+            it(@"should call delegate 'finishedWithAuth:error:' method with a populated AFOAuthCredential object when silent authentication succeeds", ^{
                 setupForSuccessfulSilentAuth();
                 
                 PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
+                sharedInstance.dataServiceURL = kTestDataServiceURL;
                 [[instanceDelegate shouldEventually] receive:@selector(finishedWithAuth:error:) withArguments:any(), nil];
                 [sharedInstance authenticate];
             });
             
-            it(@"should not call delegate finishedWithAuth:error: method when silent authentication fails", ^{
+            it(@"should not call delegate 'finishedWithAuth:error:' method when silent authentication fails", ^{
                 PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
+                sharedInstance.dataServiceURL = kTestDataServiceURL;
                 
                 setupForFailedSilentAuth();
                 
@@ -206,7 +176,9 @@ context(@"PCFDataSignIn Specification", ^{
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
             setupPCFDataSignInInstance(instanceDelegate);
             
-            [[[PCFDataSignIn sharedInstance] authClient] stub:authSelector withBlock:^id(NSArray *params) {
+            PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
+            sharedInstance.dataServiceURL = kTestDataServiceURL;
+            [[sharedInstance authClient] stub:authSelector withBlock:^id(NSArray *params) {
                 void (^success)(AFOAuthCredential *) = params[3];
                 success(credential);
                 return nil;
@@ -253,7 +225,7 @@ context(@"PCFDataSignIn Specification", ^{
             [[PCFDataSignIn sharedInstance] signOut];
         });
         
-        it(@"|disconnect| should try to revoke OAuth token from the OpenID Connect server", ^{
+        it(@"'disconnect' should try to revoke OAuth token from the OpenID Connect server", ^{
             [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
                                                   withBlock:^id(NSArray *params) {
                                                       AFHTTPRequestOperation *operation = params[0];
