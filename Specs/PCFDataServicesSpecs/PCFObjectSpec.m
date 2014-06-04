@@ -98,6 +98,7 @@ describe(@"PCFObject", ^{
             [[newObject.className should] equal:kTestClassName];
             [[newObject.objectID should] beNil];
             [[theValue(newObject.allKeys.count) should] equal:theValue(0)];
+            [[theValue(newObject.isDirty) should] beTrue];
 
         });
         
@@ -233,14 +234,17 @@ describe(@"PCFObject", ^{
                 });
                 
                 [[theValue([newObject saveSynchronously:nil]) should] beTrue];
+                [[theValue(newObject.isDirty) should] beFalse];
             });
             
             it(@"should populate error object if 'saveSyncronously:' PUT operation fails", ^{
+                BOOL initialDirtyState = newObject.isDirty;
                 stubURLConnectionFail();
                 
                 NSError *error;
                 [[theValue([newObject saveSynchronously:&error]) should] beFalse];
                 [[error shouldNot] beNil];
+                [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
             });
             
             it(@"should have the class name and object ID as the path in the HTTP PUT request", ^{
@@ -252,6 +256,7 @@ describe(@"PCFObject", ^{
                 
                 NSError *error;
                 [[theValue([newObject saveSynchronously:&error]) should] beTrue];
+                [[theValue(newObject.isDirty) should] beFalse];
             });
             
             it(@"should perform asynchronous PUT method call on data service client when 'saveOnSuccess:failure:' selector performed", ^{
@@ -311,6 +316,7 @@ describe(@"PCFObject", ^{
                 
                 it(@"should set success block when performing asynchronous PUT method call on data service", ^{
                     void (^successBlock)(void) = ^{
+                        [[theValue(newObject.isDirty) should] beFalse];
                         blockExecuted = YES;
                     };
                     
@@ -327,12 +333,15 @@ describe(@"PCFObject", ^{
                 });
                 
                 it(@"should set failure block when performing asynchronous PUT method call on data service", ^{
+                    BOOL initialDirtyState = newObject.isDirty;
+                    
                     void (^successBlock)(void) = ^{
                         fail(@"Success block executed unexpectedly");
                     };
                     
                     void (^failureBlock)(NSError *) = ^(NSError *error){
                         blockExecuted = YES;
+                        [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
                     };
                     
                     stubPutAsyncCall(^(NSArray *params){
@@ -365,19 +374,25 @@ describe(@"PCFObject", ^{
             });
             
             [[theValue([newObject fetchSynchronously:nil]) should] beTrue];
+            [[theValue(newObject.isDirty) should] beFalse];
         });
         
 #warning TODO write tests where objectID is not set
         
         it(@"should populate error object if sync GET operation return empty response data", ^{
+            BOOL initialDirtyState = newObject.isDirty;
+            
             stubURLConnectionFail();
 
             NSError *error;
             [[theValue([newObject fetchSynchronously:&error]) should] beFalse];
             [[error shouldNot] beNil];
+            [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
         });
         
         it(@"should populate error object if sync GET operation returns poorly formed JSON", ^{
+            BOOL initialDirtyState = newObject.isDirty;
+            
             stubURLConnectionSuccess(^(NSArray *params){
                 NSURLRequest *request = params[0];
                 [[request.HTTPMethod should] equal:@"GET"];
@@ -387,6 +402,7 @@ describe(@"PCFObject", ^{
             NSError *error;
             [[theValue([newObject fetchSynchronously:&error]) should] beFalse];
             [[error shouldNot] beNil];
+            [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
         });
         
         it(@"should perform GET asynchronously on remote server when async GET selector performed", ^{
@@ -412,9 +428,12 @@ describe(@"PCFObject", ^{
             __block BOOL didCallBlock = NO;
             [newObject fetchOnSuccess:^(PCFObject *object) {
                 didCallBlock = YES;
+                [[object should] equal:newObject];
+                
                 [testResponseObject enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                     [[[newObject objectForKey:key] should] equal:obj];
                 }];
+                [[theValue(newObject.isDirty) should] beFalse];
                 
             } failure:^(NSError *error) {
                 fail(@"Should not have been called");
@@ -423,6 +442,8 @@ describe(@"PCFObject", ^{
         });
         
         it(@"should call failure block if response data is malformed on async GET operation", ^{
+            BOOL initialDirtyState = newObject.isDirty;
+            
             stubGetAsyncCall(^(NSArray *params) {
                 void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
                 successBlock(nil, malformedResponseData);
@@ -435,12 +456,15 @@ describe(@"PCFObject", ^{
             } failure:^(NSError *error) {
                 didCallBlock = YES;
                 [[error shouldNot] beNil];
+                [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
 
             }];
             [[theValue(didCallBlock) should] beTrue];
         });
         
         it(@"should call failure block and populate error if async GET operation fails", ^{
+            BOOL initialDirtyState = newObject.isDirty;
+            
             stubGetAsyncCall(^(NSArray *params) {
                 void (^failBlock)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
                 failBlock(nil, [NSError errorWithDomain:@"Test Domain" code:1 userInfo:nil]);
@@ -453,6 +477,7 @@ describe(@"PCFObject", ^{
             } failure:^(NSError *error) {
                 didCallBlock = YES;
                 [[error shouldNot] beNil];
+                [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
             }];
             [[theValue(didCallBlock) should] beTrue];
         });
@@ -480,14 +505,18 @@ describe(@"PCFObject", ^{
             
             [[theValue([newObject deleteSynchronously:nil]) should] beTrue];
             [[theValue(didCallBlock) should] beTrue];
+            [[theValue(newObject.isDirty) should] beTrue];
         });
         
         it(@"should populate error object if sync DELETE operation fails", ^{
+            BOOL initialDirtyState = newObject.isDirty;
+            
             stubURLConnectionFail();
             
             NSError *error;
             [[theValue([newObject deleteSynchronously:&error]) should] beFalse];
             [[error shouldNot] beNil];
+            [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
         });
         
         it(@"should perform DELETE asynchronously on remote server", ^{
@@ -507,6 +536,7 @@ describe(@"PCFObject", ^{
             
             void (^successBlock)(void) = ^{
                 blockExecuted = YES;
+                [[theValue(newObject.isDirty) should] beTrue];
             };
             
             void (^failureBlock)(NSError *) = ^(NSError *error){
@@ -523,6 +553,7 @@ describe(@"PCFObject", ^{
         });
         
         it(@"should call failure block if async DELETE operation fails", ^{
+            BOOL initialDirtyState = newObject.isDirty;
             __block BOOL blockExecuted;
             
             void (^successBlock)(void) = ^{
@@ -531,6 +562,7 @@ describe(@"PCFObject", ^{
             
             void (^failureBlock)(NSError *) = ^(NSError *error){
                 blockExecuted = YES;
+                [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
             };
             
             stubDeleteAsyncCall(^(NSArray *params){

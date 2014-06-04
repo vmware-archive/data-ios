@@ -104,15 +104,22 @@
                                                  returningResponse:&response
                                                              error:error];
     
-    return responseData ? YES : NO;
+    if (responseData) {
+        self.isDirty = NO;
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void)saveOnSuccess:(void (^)(void))success
               failure:(void (^)(NSError *error))failure
 {
+    __block PCFObject *selfReference = self;
     [[PCFDataSignIn sharedInstance].dataServiceClient putPath:[self URLPath]
                                                    parameters:self.contentsDictionary
                                                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                          selfReference.isDirty = NO;
                                                           success();
                                                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                           failure(error);
@@ -143,6 +150,7 @@
     
     [self.contentsDictionary setValuesForKeysWithDictionary:fetchedContents];
     
+    self.isDirty = NO;
     return YES;
 }
 
@@ -160,6 +168,7 @@
                                                               
                                                           } else {
                                                               [self.contentsDictionary setValuesForKeysWithDictionary:JSON];
+                                                              self.isDirty = NO;
                                                               success(self);
                                                           }
                                                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -180,15 +189,22 @@
                                                  returningResponse:&response
                                                              error:error];
     
-    return responseData ? YES : NO;
+    if (responseData) {
+        self.isDirty = YES;
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void)deleteOnSuccess:(void (^)(void))success
                 failure:(void (^)(NSError *error))failure
 {
+    __block PCFObject *selfReference = self;
     [[PCFDataSignIn sharedInstance].dataServiceClient deletePath:[self URLPath]
                                                       parameters:nil
                                                          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                             selfReference.isDirty = YES;
                                                              success();
                                                              
                                                          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -201,7 +217,7 @@
 
 - (BOOL)isDirty
 {
-    return self.isDirty;
+    return _isDirty;
 }
 
 - (BOOL)isDirtyForKey:(NSString *)key
