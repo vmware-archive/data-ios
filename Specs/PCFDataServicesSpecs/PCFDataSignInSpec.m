@@ -12,6 +12,7 @@
 #import "Kiwi.h"
 
 #import "PCFDataSignIn+Internal.h"
+#import "PCFDataError.h"
 
 SPEC_BEGIN(PCFDataSignInSpec)
 

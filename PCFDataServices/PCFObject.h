@@ -133,23 +133,17 @@
 /** @name Getting an Object from Parse */
 
 /**
- Gets whether the PCFObject has been fetched.
- @result YES if the PCFObject is new or has been fetched.  NO otherwise.
- */
-- (BOOL)isDataAvailable;
-
-/**
  Fetches the PCFObject synchronously with the current data from the server and sets an error if it occurs.
  @param error Pointer to an NSError that will be set if necessary.
  */
-- (void)fetchSynchronously:(NSError **)error;
+- (BOOL)fetchSynchronously:(NSError **)error;
 
 /**
  Fetches the PCFObject asynchronously and executes the given callback block.
  @param success The block to execute when the fetch operation is successful.
  @param failure The block to execute when the fetch operation fails.
  */
-- (void)fetchOnSuccess:(void (^)(void))success
+- (void)fetchOnSuccess:(void (^)(PCFObject *object))success
                failure:(void (^)(NSError *error))failure;
 
 #pragma mark -

@@ -7,8 +7,10 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+
 #import "AFOAuth2Client.h"
 #import "PCFDataSignIn+Internal.h"
+#import "PCFDataError.h"
 
 NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
 NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";

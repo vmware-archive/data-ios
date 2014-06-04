@@ -18,6 +18,52 @@ describe(@"PCFObject", ^{
     static NSString *const kTestClassName = @"TestClass";
     static NSString *const kTestObjectID = @"1234";
     
+    typedef NSData *(^EnqueueBlock)(NSArray *);
+    typedef void (^EnqueueAsyncBlock)(NSArray *);
+    
+    void (^stubURLConnectionSuccess)(EnqueueBlock) = ^(EnqueueBlock block){
+        [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
+                    withBlock:^id(NSArray *params) {
+                        NSData *returnedData = block(params);
+                        return returnedData;
+                    }];
+    };
+    
+    void (^stubURLConnectionFail)() = ^{
+        [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
+                    withBlock:^id(NSArray *params) {
+                        NSValue *value = (NSValue *)params[2];
+                        __autoreleasing NSError **error;
+                        [value getValue:&error];
+                        
+                        if (error) {
+                            *error = [NSError errorWithDomain:@"Fake operation failed fakely" code:13 userInfo:nil];
+                        }
+                        return nil;
+                    }];
+    };
+    
+    void (^stubAsyncCall)(NSString *, EnqueueAsyncBlock) = ^(NSString *method, EnqueueAsyncBlock block){
+        SEL stubSel = NSSelectorFromString([NSString stringWithFormat:@"%@Path:parameters:success:failure:", [method lowercaseString]]);
+        [[PCFDataSignIn sharedInstance].dataServiceClient stub:stubSel
+                                                     withBlock:^id(NSArray *params) {
+                                                         block(params);
+                                                         return nil;
+                                                     }];
+    };
+    
+    void (^stubPutAsyncCall)(EnqueueAsyncBlock) = ^(EnqueueAsyncBlock block){
+        stubAsyncCall(@"PUT", block);
+    };
+    
+    void (^stubGetAsyncCall)(EnqueueAsyncBlock) = ^(EnqueueAsyncBlock block){
+        stubAsyncCall(@"GET", block);
+    };
+    
+    void (^stubDeleteAsyncCall)(EnqueueAsyncBlock) = ^(EnqueueAsyncBlock block){
+        stubAsyncCall(@"DELETE", block);
+    };
+    
     context(@"constructing a new instance of a PCFObject with nil class name", ^{
         it(@"should throw an exception if passed a nil or empty class name", ^{
 #pragma clang diagnostic push
@@ -122,6 +168,12 @@ describe(@"PCFObject", ^{
             [[[newObject objectForKey:key] should] beNil];
         });
         
+        it(@"should not raise an exception if an attempt is made to remove an object that was not set using the 'removeObjectForKey:' selector", ^{
+            [[theBlock(^{
+                [newObject removeObjectForKey:key];
+            }) shouldNot] raise];
+        });
+        
         it(@"should support instance[<key>] syntax for retrieving assigned objects from an instance", ^{
             [newObject setObject:object forKey:key];
             [[newObject[key] should] equal:object];
@@ -146,23 +198,6 @@ describe(@"PCFObject", ^{
             newObject.objectID = kTestObjectID;
         });
         
-        typedef void (^EnqueueBlock)(NSArray *);
-        
-        void (^stubURLConnectionSuccess)(EnqueueBlock) = ^(EnqueueBlock block){
-            [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
-                        withBlock:^id(NSArray *params) {
-                            block(params);
-                            return [NSData data];
-                        }];
-        };
-        
-        void (^stubURLConnectionFail)() = ^{
-            [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
-                        withBlock:^id(NSArray *params) {
-                            return nil;
-                        }];
-        };
-        
         it(@"should throw an exception if dataServiceURL is not set on the 'PCFDataSignIn' sharedInstance", ^{
             [[theBlock(^{ [newObject saveSynchronously:nil]; }) should] raiseWithName:NSObjectNotAvailableException];
         });
@@ -173,22 +208,28 @@ describe(@"PCFObject", ^{
                 [PCFDataSignIn sharedInstance].dataServiceURL = @"http://testurl.com";
             });
             
-            it(@"should perform PUT synchronously on remote server when 'saveSyncronously:' selector performed", ^{
+            it(@"should perform PUT synchronously on remote server when 'saveSynchronously:' selector performed", ^{
+                __block BOOL didCallBlock = NO;
+                
                 stubURLConnectionSuccess(^(NSArray *params){
                     NSURLRequest *request = params[0];
                     [[request.HTTPMethod should] equal:@"PUT"];
+                    didCallBlock = YES;
+                    return [NSData data];
                 });
                 
                 [[theValue([newObject saveSynchronously:nil]) should] beTrue];
+                [[theValue(didCallBlock) should] beTrue];
             });
             
-            it(@"should contain set key value pairs in request body when 'saveSyncronously:' selector performed", ^{
+            it(@"should contain set key value pairs in request body when 'saveSynchronously:' selector performed", ^{
                 stubURLConnectionSuccess(^(NSArray *params){
                     NSURLRequest *request = params[0];
                     NSError *error;
                     id contents = [NSJSONSerialization JSONObjectWithData:request.HTTPBody options:0 error:&error];
                     [[contents should] equal:expectedContents];
                     [[error should] beNil];
+                    return [NSData data];
                 });
                 
                 [[theValue([newObject saveSynchronously:nil]) should] beTrue];
@@ -199,77 +240,310 @@ describe(@"PCFObject", ^{
                 
                 NSError *error;
                 [[theValue([newObject saveSynchronously:&error]) should] beFalse];
+                [[error shouldNot] beNil];
             });
             
             it(@"should have the class name and object ID as the path in the HTTP PUT request", ^{
                 stubURLConnectionSuccess(^(NSArray *params){
                     NSURLRequest *request = params[0];
                     [[[request.URL relativeString] should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                    return [NSData data];
                 });
                 
                 NSError *error;
                 [[theValue([newObject saveSynchronously:&error]) should] beTrue];
             });
             
-            it(@"should perform PUT asyncronously on remote server when 'saveOnSuccess:failure:' selector performed", ^{
-                
+            it(@"should perform asynchronous PUT method call on data service client when 'saveOnSuccess:failure:' selector performed", ^{
+                [[[PCFDataSignIn sharedInstance].dataServiceClient should] receive:@selector(putPath:parameters:success:failure:)];
+                [newObject saveOnSuccess:nil failure:nil];
             });
             
-            it(@"should call success block if PUT operation is successful", ^{
+            it(@"should have the class name and object ID as the path when 'saveOnSuccess:failure:' selector performed", ^{
+                stubPutAsyncCall(^(NSArray *params){
+                    NSString *path = params[0];
+                    [[path should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                });
                 
+                [newObject saveOnSuccess:nil failure:nil];
             });
             
-            it(@"should call failure block if PUT operation fails", ^{
+            it(@"should contain set key value pairs in request body when 'saveOnSuccess:failure:' selector performed", ^{
+                stubPutAsyncCall(^(NSArray *params){
+                    NSDictionary *contents = params[1];
+                    [[contents should] equal:expectedContents];
+                });
+
+                [newObject saveOnSuccess:nil failure:nil];
+            });
+            
+            it(@"should not raise an exception if success or/and failure block are nil", ^{
+                stubPutAsyncCall(^(NSArray *params){
+                });
                 
+                [[theBlock(^{
+                    [newObject saveOnSuccess:nil failure:nil];
+                }) shouldNot] raise];
+                
+                [[theBlock(^{
+                    [newObject saveOnSuccess:nil failure:^(NSError *error) {
+                        NSLog(@"Failure Block");
+                    }];
+                }) shouldNot] raise];
+                
+                [[theBlock(^{
+                    [newObject saveOnSuccess:^{
+                        NSLog(@"Success Block");
+                    } failure:nil];
+                }) shouldNot] raise];
+            });
+            
+            context(@"setting/calling success and failure blocks", ^{
+                __block BOOL blockExecuted;
+                
+                beforeEach(^{
+                    blockExecuted = NO;
+                });
+                
+                afterEach(^{
+                    [[theValue(blockExecuted) should] beTrue];
+                });
+                
+                it(@"should set success block when performing asynchronous PUT method call on data service", ^{
+                    void (^successBlock)(void) = ^{
+                        blockExecuted = YES;
+                    };
+                    
+                    void (^failureBlock)(NSError *) = ^(NSError *error){
+                        fail(@"Failure block executed unexpectedly.");
+                    };
+                    
+                    stubPutAsyncCall(^(NSArray *params){
+                        void (^passedBlockSuccess)(void) = params[2];
+                        passedBlockSuccess();
+                    });
+                    
+                    [newObject saveOnSuccess:successBlock failure:failureBlock];
+                });
+                
+                it(@"should set failure block when performing asynchronous PUT method call on data service", ^{
+                    void (^successBlock)(void) = ^{
+                        fail(@"Success block executed unexpectedly");
+                    };
+                    
+                    void (^failureBlock)(NSError *) = ^(NSError *error){
+                        blockExecuted = YES;
+                    };
+                    
+                    stubPutAsyncCall(^(NSArray *params){
+                        void (^passedBlockFail)(void) = params[3];
+                        passedBlockFail();
+                    });
+                    
+                    [newObject saveOnSuccess:successBlock failure:failureBlock];
+                });
             });
         });
     });
     
     context(@"fetching PCFObject instance from the Data Services server", ^{
-        it(@"should perform GET syncronously on remote server when 'fetchSyncronously:' selector performed", ^{
-            
+        
+        __block PCFObject *newObject;
+        NSData *malformedResponseData = [@"I AM NOT JSON" dataUsingEncoding:NSUTF8StringEncoding];
+        
+        beforeEach(^{
+            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject.objectID = kTestObjectID;
         });
         
-        it(@"should populate error object if 'fetchSyncronously:' GET operation fails", ^{
+        it(@"should perform GET synchronously on remote server when sync selector performed", ^{
+            stubURLConnectionSuccess(^(NSArray *params){
+                NSURLRequest *request = params[0];
+                [[request.HTTPMethod should] equal:@"GET"];
+                [[request.URL.relativePath should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                return [NSJSONSerialization dataWithJSONObject:@{} options:0 error:nil];
+            });
+            
+            [[theValue([newObject fetchSynchronously:nil]) should] beTrue];
         });
         
-        it(@"should perform GET asyncronously on remote server when 'fetchOnSuccess:failure:' selector performed", ^{
-            
+#warning TODO write tests where objectID is not set
+        
+        it(@"should populate error object if sync GET operation return empty response data", ^{
+            stubURLConnectionFail();
+
+            NSError *error;
+            [[theValue([newObject fetchSynchronously:&error]) should] beFalse];
+            [[error shouldNot] beNil];
         });
         
-        it(@"should call success block if 'fetchOnSuccess:failure:' GET operation is successful", ^{
+        it(@"should populate error object if sync GET operation returns poorly formed JSON", ^{
+            stubURLConnectionSuccess(^(NSArray *params){
+                NSURLRequest *request = params[0];
+                [[request.HTTPMethod should] equal:@"GET"];
+                return malformedResponseData;
+            });
             
+            NSError *error;
+            [[theValue([newObject fetchSynchronously:&error]) should] beFalse];
+            [[error shouldNot] beNil];
         });
         
-        it(@"should call failure block if 'fetchOnSuccess:failure:' GET operation fails", ^{
+        it(@"should perform GET asynchronously on remote server when async GET selector performed", ^{
+            __block BOOL didCallBlock = NO;
+            stubGetAsyncCall(^(NSArray *params){
+                NSString *path = params[0];
+                [[path should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                didCallBlock = YES;
+            });
             
+            [newObject fetchOnSuccess:nil failure:nil];
+            [[theValue(didCallBlock) should] beTrue];
+        });
+        
+        it(@"should call success block and populate contents if async GET operation is successful", ^{
+            NSDictionary *testResponseObject = @{ @"KEY" : @"VALUE" };
+            
+            stubGetAsyncCall(^(NSArray *params) {
+                void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                successBlock(nil, [NSJSONSerialization dataWithJSONObject:testResponseObject options:0 error:nil]);
+            });
+            
+            __block BOOL didCallBlock = NO;
+            [newObject fetchOnSuccess:^(PCFObject *object) {
+                didCallBlock = YES;
+                [testResponseObject enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                    [[[newObject objectForKey:key] should] equal:obj];
+                }];
+                
+            } failure:^(NSError *error) {
+                fail(@"Should not have been called");
+            }];
+            [[theValue(didCallBlock) should] beTrue];
+        });
+        
+        it(@"should call failure block if response data is malformed on async GET operation", ^{
+            stubGetAsyncCall(^(NSArray *params) {
+                void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                successBlock(nil, malformedResponseData);
+            });
+            
+            __block BOOL didCallBlock = NO;
+            [newObject fetchOnSuccess:^(PCFObject *object) {
+                fail(@"Should not have been called");
+                
+            } failure:^(NSError *error) {
+                didCallBlock = YES;
+                [[error shouldNot] beNil];
+
+            }];
+            [[theValue(didCallBlock) should] beTrue];
+        });
+        
+        it(@"should call failure block and populate error if async GET operation fails", ^{
+            stubGetAsyncCall(^(NSArray *params) {
+                void (^failBlock)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
+                failBlock(nil, [NSError errorWithDomain:@"Test Domain" code:1 userInfo:nil]);
+            });
+            
+            __block BOOL didCallBlock = NO;
+            [newObject fetchOnSuccess:^(PCFObject *object) {
+                fail(@"Should not have been called");
+                
+            } failure:^(NSError *error) {
+                didCallBlock = YES;
+                [[error shouldNot] beNil];
+            }];
+            [[theValue(didCallBlock) should] beTrue];
         });
     });
     
     context(@"deleting PCFObject instance from the Data Services server", ^{
         
-        it(@"should perform DELETE syncronously on remote server when 'deleteSyncronously:' selector performed", ^{
+        __block PCFObject *newObject;
+        
+        beforeEach(^{
+            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject.objectID = kTestObjectID;
         });
         
-        it(@"should populate error object if 'deleteSyncronously:' DELETE operation fails", ^{
-        });
-        
-        it(@"should perform DELETE asyncronously on remote server when 'delete' selector performed", ^{
+        it(@"should perform DELETE synchronously on remote server", ^{
+            __block BOOL didCallBlock = NO;
             
+            stubURLConnectionSuccess(^(NSArray *params){
+                NSURLRequest *request = params[0];
+                [[request.HTTPMethod should] equal:@"DELETE"];
+                [[request.URL.relativePath should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                didCallBlock = YES;
+                return [NSData data];
+            });
+            
+            [[theValue([newObject deleteSynchronously:nil]) should] beTrue];
+            [[theValue(didCallBlock) should] beTrue];
         });
         
-        it(@"should perform DELETE asyncronously on remote server when 'deleteOnSuccess:failure:' selector performed", ^{
+        it(@"should populate error object if sync DELETE operation fails", ^{
+            stubURLConnectionFail();
             
+            NSError *error;
+            [[theValue([newObject deleteSynchronously:&error]) should] beFalse];
+            [[error shouldNot] beNil];
         });
         
-        it(@"should call success block if 'deleteOnSuccess:failure:' DELETE operation is successful", ^{
+        it(@"should perform DELETE asynchronously on remote server", ^{
+            __block BOOL didCallBlock = NO;
+            stubDeleteAsyncCall(^(NSArray *params){
+                NSString *path = params[0];
+                [[path should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                didCallBlock = YES;
+            });
             
+            [newObject deleteOnSuccess:nil failure:nil];
+            [[theValue(didCallBlock) should] beTrue];
         });
         
-        it(@"should call failure block if 'deleteOnSuccess:failure:' DELETE operation fails", ^{
+        it(@"should call success block if async DELETE operation is successful", ^{
+            __block BOOL blockExecuted;
             
+            void (^successBlock)(void) = ^{
+                blockExecuted = YES;
+            };
+            
+            void (^failureBlock)(NSError *) = ^(NSError *error){
+                fail(@"Failure block executed unexpectedly.");
+            };
+            
+            stubDeleteAsyncCall(^(NSArray *params){
+                void (^passedBlock)(void) = params[2];
+                passedBlock();
+            });
+            
+            [newObject deleteOnSuccess:successBlock failure:failureBlock];
+            [[theValue(blockExecuted) should] beTrue];
+        });
+        
+        it(@"should call failure block if async DELETE operation fails", ^{
+            __block BOOL blockExecuted;
+            
+            void (^successBlock)(void) = ^{
+                fail(@"Success block executed unexpectedly.");
+            };
+            
+            void (^failureBlock)(NSError *) = ^(NSError *error){
+                blockExecuted = YES;
+            };
+            
+            stubDeleteAsyncCall(^(NSArray *params){
+                void (^passedBlockFail)(void) = params[3];
+                passedBlockFail();
+            });
+            
+            [newObject deleteOnSuccess:successBlock failure:failureBlock];
+            [[theValue(blockExecuted) should] beTrue];
         });
     });
+    
+#warning TODO: Test OpenID connect token validity
 });
 
 SPEC_END

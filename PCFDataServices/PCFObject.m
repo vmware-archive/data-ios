@@ -10,13 +10,13 @@
 
 #import "PCFObject.h"
 #import "PCFDataSignIn+Internal.h"
+#import "PCFDataError.h"
 
 @interface PCFObject ()
 
 @property (readwrite) NSString *className;
-
 @property (nonatomic) NSMutableDictionary *contentsDictionary;
-
+@property (nonatomic) BOOL isDirty;
 @end
 
 @implementation PCFObject
@@ -43,6 +43,7 @@
     if (self) {
         self.className = className;
         self.contentsDictionary = [NSMutableDictionary dictionary];
+        self.isDirty = YES;
     }
     return self;
 }
@@ -95,7 +96,6 @@
 
 - (BOOL)saveSynchronously:(NSError **)error
 {
-#warning TODO: Set request URL based on class name and objectID
     NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"PUT"
                                                                                            path:[self URLPath]
                                                                                      parameters:self.contentsDictionary];
@@ -107,34 +107,64 @@
     return responseData ? YES : NO;
 }
 
-- (void)save
-{
-    
-}
-
 - (void)saveOnSuccess:(void (^)(void))success
               failure:(void (^)(NSError *error))failure
 {
-    
+    [[PCFDataSignIn sharedInstance].dataServiceClient putPath:[self URLPath]
+                                                   parameters:self.contentsDictionary
+                                                      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                          success();
+                                                      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                          failure(error);
+                                                      }];
 }
 
 #pragma mark -
 #pragma mark Refresh
 
-- (BOOL)isDataAvailable
+- (BOOL)fetchSynchronously:(NSError **)error
 {
+    NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"GET"
+                                                                                           path:[self URLPath]
+                                                                                     parameters:nil];
+    NSHTTPURLResponse *response;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+                                                 returningResponse:&response
+                                                             error:error];
+    if (!responseData) {
+        return NO;
+    }
+    
+    NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:error];
+    
+    if (!fetchedContents) {
+        return NO;
+    }
+    
+    [self.contentsDictionary setValuesForKeysWithDictionary:fetchedContents];
+    
     return YES;
 }
 
-- (void)fetchSynchronously:(NSError **)error
-{
-    
-}
-
-- (void)fetchOnSuccess:(void (^)(void))success
+- (void)fetchOnSuccess:(void (^)(PCFObject *object))success
                failure:(void (^)(NSError *error))failure
 {
-    
+    [[PCFDataSignIn sharedInstance].dataServiceClient getPath:[self URLPath]
+                                                   parameters:nil
+                                                      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                          NSError *error;
+                                                          id JSON = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+                                                          
+                                                          if (!JSON) {
+                                                              failure(error);
+                                                              
+                                                          } else {
+                                                              [self.contentsDictionary setValuesForKeysWithDictionary:JSON];
+                                                              success(self);
+                                                          }
+                                                      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                          failure(error);
+                                                      }];
 }
 
 #pragma mark -
@@ -142,13 +172,28 @@
 
 - (BOOL)deleteSynchronously:(NSError **)error
 {
-    return YES;
+    NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"DELETE"
+                                                                                           path:[self URLPath]
+                                                                                     parameters:nil];
+    NSHTTPURLResponse *response;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+                                                 returningResponse:&response
+                                                             error:error];
+    
+    return responseData ? YES : NO;
 }
 
 - (void)deleteOnSuccess:(void (^)(void))success
                 failure:(void (^)(NSError *error))failure
 {
-    
+    [[PCFDataSignIn sharedInstance].dataServiceClient deletePath:[self URLPath]
+                                                      parameters:nil
+                                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                             success();
+                                                             
+                                                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                             failure(error);
+                                                         }];
 }
 
 #pragma mark -
@@ -156,7 +201,7 @@
 
 - (BOOL)isDirty
 {
-    return YES;
+    return self.isDirty;
 }
 
 - (BOOL)isDirtyForKey:(NSString *)key
