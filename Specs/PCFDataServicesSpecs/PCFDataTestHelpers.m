@@ -15,14 +15,18 @@
 #import "PCFDataTestConstants.h"
 #import "PCFDataError.h"
 
-void (^setupCredentialInKeychain)(void) = ^{
-    AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:@"Bearer"];
-    [cred setRefreshToken:kTestRefreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:60 * 60]];
+void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger) = ^(NSString *accessToken, NSString *refreshToken, NSInteger expiresIn){
+    AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:accessToken tokenType:@"Bearer"];
+    [cred setRefreshToken:refreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:expiresIn]];
     [AFOAuthCredential storeCredential:cred withIdentifier:kPCFOAuthCredentialID];
 };
 
+void (^setupDefaultCredentialInKeychain)(void) = ^{
+    setupCredentialInKeychain(kTestOAuthToken, kTestRefreshToken, 60 * 60);
+};
+
 void (^setupForSuccessfulSilentAuth)(void) = ^{
-    setupCredentialInKeychain();
+    setupDefaultCredentialInKeychain();
     
     [[[PCFDataSignIn sharedInstance] authClient] stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
                                             withBlock:^id(NSArray *params) {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2CAC853B59E343E78192C50A /* libPods-PCFDataServicesSpecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D99E6EB469C04CF993C9CE49 /* libPods-PCFDataServicesSpecs.a */; };
+		5718CAB519410E3900761429 /* PCFDataIntegrationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAB419410E3900761429 /* PCFDataIntegrationSpec.m */; };
 		579B48B61940BA9E002F2F26 /* PCFDataTestHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 579B48B51940BA9E002F2F26 /* PCFDataTestHelpers.m */; };
 		F15DD973193CBFC400CFAC93 /* PCFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD972193CBFC400CFAC93 /* PCFObject.m */; };
 		F15DD975193CBFFC00CFAC93 /* PCFObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		10F021DF31854ADA85B91F84 /* Pods-PCFDataServicesSpecs.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PCFDataServicesSpecs.xcconfig"; path = "../Pods/Pods-PCFDataServicesSpecs.xcconfig"; sourceTree = "<group>"; };
+		5718CAB419410E3900761429 /* PCFDataIntegrationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataIntegrationSpec.m; sourceTree = "<group>"; };
 		576D2AEA193F9C89000E895C /* PCFDataError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataError.h; sourceTree = "<group>"; };
 		579B48B21940B6E6002F2F26 /* PCFDataTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataTestConstants.h; sourceTree = "<group>"; };
 		579B48B41940BA9E002F2F26 /* PCFDataTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataTestHelpers.h; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				F1F9F93B192BF956002848C7 /* Supporting Files */,
 				F1F9F948192BFA26002848C7 /* PCFDataSignInSpec.m */,
 				F15DD974193CBFFC00CFAC93 /* PCFObjectSpec.m */,
+				5718CAB419410E3900761429 /* PCFDataIntegrationSpec.m */,
 			);
 			path = PCFDataServicesSpecs;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 			files = (
 				F15DD975193CBFFC00CFAC93 /* PCFObjectSpec.m in Sources */,
 				579B48B61940BA9E002F2F26 /* PCFDataTestHelpers.m in Sources */,
+				5718CAB519410E3900761429 /* PCFDataIntegrationSpec.m in Sources */,
 				F15DD973193CBFC400CFAC93 /* PCFObject.m in Sources */,
 				F1F9F949192BFA26002848C7 /* PCFDataSignInSpec.m in Sources */,
 			);

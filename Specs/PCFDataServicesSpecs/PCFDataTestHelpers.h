@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-void (^setupCredentialInKeychain)(void);
+void (^setupDefaultCredentialInKeychain)(void);
+
+void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger expiresIn);
 
 void (^setupForSuccessfulSilentAuth)(void);
 

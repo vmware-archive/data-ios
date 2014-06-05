@@ -617,7 +617,7 @@ describe(@"PCFObject", ^{
             __block NSError *error;
             
             beforeEach(^{
-                setupCredentialInKeychain();
+                setupDefaultCredentialInKeychain();
                 
                 stubURLConnectionWithBlock(^NSData *(NSArray *params){
                     NSValue *value = (NSValue *)params[2];
@@ -668,7 +668,7 @@ describe(@"PCFObject", ^{
             };
 
             beforeEach(^{
-                setupCredentialInKeychain();
+                setupDefaultCredentialInKeychain();
                 client = [PCFDataSignIn sharedInstance].dataServiceClient;
             });
 
@@ -692,7 +692,7 @@ describe(@"PCFObject", ^{
         context(@"synchronous methods", ^{
             
             beforeEach(^{
-                setupCredentialInKeychain();
+                setupDefaultCredentialInKeychain();
                 stubURLConnectionWithBlock(^NSData *(NSArray *params){
                     NSURLRequest *request = params[0];
                     verifyAuthorizationInRequest(request);
