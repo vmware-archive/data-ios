@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+void (^setupCredentialInKeychain)(void);
+
 void (^setupForSuccessfulSilentAuth)(void);
 
 void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>);

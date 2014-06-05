@@ -15,10 +15,14 @@
 #import "PCFDataTestConstants.h"
 #import "PCFDataError.h"
 
-void (^setupForSuccessfulSilentAuth)(void) = ^{
+void (^setupCredentialInKeychain)(void) = ^{
     AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:@"Bearer"];
     [cred setRefreshToken:kTestRefreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:60 * 60]];
     [AFOAuthCredential storeCredential:cred withIdentifier:kPCFOAuthCredentialID];
+};
+
+void (^setupForSuccessfulSilentAuth)(void) = ^{
+    setupCredentialInKeychain();
     
     [[[PCFDataSignIn sharedInstance] authClient] stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
                                             withBlock:^id(NSArray *params) {

@@ -99,6 +99,14 @@
     NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"PUT"
                                                                                            path:[self URLPath]
                                                                                      parameters:self.contentsDictionary];
+    
+    if (!request) {
+        if (error) {
+            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
+        }
+        return NO;
+    }
+    
     NSHTTPURLResponse *response;
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request
                                                  returningResponse:&response
@@ -107,7 +115,12 @@
     if (responseData) {
         self.isDirty = NO;
         return YES;
+        
     } else {
+        if (error) {
+            [self signOutIfRequired:*error];
+            *error = [self failureError:*error];
+        }
         return NO;
     }
 }
@@ -121,8 +134,10 @@
                                                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                           selfReference.isDirty = NO;
                                                           success();
+                                                          
                                                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                          failure(error);
+                                                          [self signOutIfRequired:error];
+                                                          failure([self failureError:error]);
                                                       }];
 }
 
@@ -147,6 +162,9 @@
                                                  returningResponse:&response
                                                              error:error];
     if (!responseData) {
+        if (error) {
+            *error = [self failureError:*error];
+        }
         return NO;
     }
     
@@ -157,9 +175,31 @@
     }
     
     [self.contentsDictionary setValuesForKeysWithDictionary:fetchedContents];
-    
+
     self.isDirty = NO;
     return YES;
+}
+
+- (NSError *)failureError:(NSError *)error
+{
+    if ([self isUnauthorizedAccessError:error]) {
+        return [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
+        
+    } else {
+        return error;
+    }
+}
+
+- (BOOL)isUnauthorizedAccessError:(NSError *)error
+{
+    return error.domain == NSURLErrorDomain && error.code == 401;
+}
+
+- (void)signOutIfRequired:(NSError *)error
+{
+    if ([self isUnauthorizedAccessError:error]) {
+        [[PCFDataSignIn sharedInstance] signOut];
+    }
 }
 
 - (void)fetchOnSuccess:(void (^)(PCFObject *object))success
@@ -180,7 +220,8 @@
                                                               success(self);
                                                           }
                                                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                          failure(error);
+                                                          [self signOutIfRequired:error];
+                                                          failure([self failureError:error]);
                                                       }];
 }
 
@@ -192,6 +233,14 @@
     NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"DELETE"
                                                                                            path:[self URLPath]
                                                                                      parameters:nil];
+    
+    if (!request) {
+        if (error) {
+            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
+        }
+        return NO;
+    }
+    
     NSHTTPURLResponse *response;
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request
                                                  returningResponse:&response
@@ -200,7 +249,12 @@
     if (responseData) {
         self.isDirty = YES;
         return YES;
+        
     } else {
+        if (error) {
+            [self signOutIfRequired:*error];
+            *error = [self failureError:*error];
+        }
         return NO;
     }
 }
@@ -216,7 +270,8 @@
                                                              success();
                                                              
                                                          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                             failure(error);
+                                                             [self signOutIfRequired:error];
+                                                             failure([self failureError:error]);
                                                          }];
 }
 

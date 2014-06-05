@@ -13,6 +13,7 @@
 #import "PCFDataSignIn+Internal.h"
 #import "PCFDataTestConstants.h"
 #import "PCFDataTestHelpers.h"
+#import "PCFDataError.h"
 
 SPEC_BEGIN(PCFObjectSpec)
 
@@ -23,7 +24,7 @@ describe(@"PCFObject", ^{
     typedef NSData *(^EnqueueBlock)(NSArray *);
     typedef void (^EnqueueAsyncBlock)(NSArray *);
     
-    void (^stubURLConnectionSuccess)(EnqueueBlock) = ^(EnqueueBlock block){
+    void (^stubURLConnectionWithBlock)(EnqueueBlock) = ^(EnqueueBlock block){
         [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
                     withBlock:^id(NSArray *params) {
                         NSData *returnedData = block(params);
@@ -32,17 +33,16 @@ describe(@"PCFObject", ^{
     };
     
     void (^stubURLConnectionFail)() = ^{
-        [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
-                    withBlock:^id(NSArray *params) {
-                        NSValue *value = (NSValue *)params[2];
-                        __autoreleasing NSError **error;
-                        [value getValue:&error];
-                        
-                        if (error) {
-                            *error = [NSError errorWithDomain:@"Fake operation failed fakely" code:13 userInfo:nil];
-                        }
-                        return nil;
-                    }];
+        stubURLConnectionWithBlock(^NSData *(NSArray *params){
+            NSValue *value = (NSValue *)params[2];
+            __autoreleasing NSError **error;
+            [value getValue:&error];
+            
+            if (error) {
+                *error = [NSError errorWithDomain:@"Fake operation failed fakely" code:13 userInfo:nil];
+            }
+            return nil;
+        });
     };
     
     void (^stubAsyncCall)(NSString *, EnqueueAsyncBlock) = ^(NSString *method, EnqueueAsyncBlock block){
@@ -203,6 +203,7 @@ describe(@"PCFObject", ^{
         });
         
         it(@"should throw an exception if dataServiceURL is not set on the 'PCFDataSignIn' sharedInstance", ^{
+            [[[[PCFDataSignIn sharedInstance] dataServiceURL] should] beNil];
             [[theBlock(^{ [newObject saveSynchronously:nil]; }) should] raiseWithName:NSObjectNotAvailableException];
         });
         
@@ -217,7 +218,7 @@ describe(@"PCFObject", ^{
             it(@"should perform PUT synchronously on remote server when 'saveSynchronously:' selector performed", ^{
                 __block BOOL didCallBlock = NO;
                 
-                stubURLConnectionSuccess(^(NSArray *params){
+                stubURLConnectionWithBlock(^(NSArray *params){
                     NSURLRequest *request = params[0];
                     [[request.HTTPMethod should] equal:@"PUT"];
                     didCallBlock = YES;
@@ -229,7 +230,7 @@ describe(@"PCFObject", ^{
             });
             
             it(@"should contain set key value pairs in request body when 'saveSynchronously:' selector performed", ^{
-                stubURLConnectionSuccess(^(NSArray *params){
+                stubURLConnectionWithBlock(^(NSArray *params){
                     NSURLRequest *request = params[0];
                     NSError *error;
                     id contents = [NSJSONSerialization JSONObjectWithData:request.HTTPBody options:0 error:&error];
@@ -253,7 +254,7 @@ describe(@"PCFObject", ^{
             });
             
             it(@"should have the class name and object ID as the path in the HTTP PUT request", ^{
-                stubURLConnectionSuccess(^(NSArray *params){
+                stubURLConnectionWithBlock(^(NSArray *params){
                     NSURLRequest *request = params[0];
                     [[[request.URL relativeString] should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
                     return [NSData data];
@@ -350,8 +351,8 @@ describe(@"PCFObject", ^{
                     };
                     
                     stubPutAsyncCall(^(NSArray *params){
-                        void (^passedBlockFail)(void) = params[3];
-                        passedBlockFail();
+                        void (^passedBlockFail)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
+                        passedBlockFail(nil, nil);
                     });
                     
                     [newObject saveOnSuccess:successBlock failure:failureBlock];
@@ -371,7 +372,7 @@ describe(@"PCFObject", ^{
         });
         
         it(@"should perform GET synchronously on remote server when sync selector performed", ^{
-            stubURLConnectionSuccess(^(NSArray *params){
+            stubURLConnectionWithBlock(^(NSArray *params){
                 NSURLRequest *request = params[0];
                 [[request.HTTPMethod should] equal:@"GET"];
                 [[request.URL.relativePath should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
@@ -398,7 +399,7 @@ describe(@"PCFObject", ^{
         it(@"should populate error object if sync GET operation returns poorly formed JSON", ^{
             BOOL initialDirtyState = newObject.isDirty;
             
-            stubURLConnectionSuccess(^(NSArray *params){
+            stubURLConnectionWithBlock(^(NSArray *params){
                 NSURLRequest *request = params[0];
                 [[request.HTTPMethod should] equal:@"GET"];
                 return malformedResponseData;
@@ -500,7 +501,7 @@ describe(@"PCFObject", ^{
         it(@"should perform DELETE synchronously on remote server", ^{
             __block BOOL didCallBlock = NO;
             
-            stubURLConnectionSuccess(^(NSArray *params){
+            stubURLConnectionWithBlock(^(NSArray *params){
                 NSURLRequest *request = params[0];
                 [[request.HTTPMethod should] equal:@"DELETE"];
                 [[request.URL.relativePath should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
@@ -571,8 +572,8 @@ describe(@"PCFObject", ^{
             };
             
             stubDeleteAsyncCall(^(NSArray *params){
-                void (^passedBlockFail)(void) = params[3];
-                passedBlockFail();
+                void (^passedBlockFail)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
+                passedBlockFail(nil, nil);
             });
             
             [newObject deleteOnSuccess:successBlock failure:failureBlock];
@@ -580,7 +581,7 @@ describe(@"PCFObject", ^{
         });
     });
     
-    context(@"OpenID connect token validity on data service client", ^{
+    context(@"OpenID connect token validity on data service", ^{
         __block PCFObject *newObject;
         __block BOOL wasBlockExecuted;
         
@@ -590,6 +591,11 @@ describe(@"PCFObject", ^{
             NSString *token = [request valueForHTTPHeaderField:kAuthorizationHeaderKey];
             [[theValue([token hasPrefix:@"Bearer "]) should] beTrue];
             [[theValue([token hasSuffix:kTestOAuthToken]) should] beTrue];
+        };
+        
+        NSError *(^unauthorizedError)(void) = ^NSError *{
+            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Unauthorized access" };
+            return [NSError errorWithDomain:NSURLErrorDomain code:401 userInfo:userInfo];
         };
 
         beforeEach(^{
@@ -605,15 +611,93 @@ describe(@"PCFObject", ^{
         afterEach(^{
             [[theValue(wasBlockExecuted) should] beTrue];
         });
+        
+        context(@"invalid token synchronous methods", ^{
+            
+            __block NSError *error;
+            
+            beforeEach(^{
+                setupCredentialInKeychain();
+                
+                stubURLConnectionWithBlock(^NSData *(NSArray *params){
+                    NSValue *value = (NSValue *)params[2];
+                    __autoreleasing NSError **error;
+                    [value getValue:&error];
+                    
+                    if (error) {
+                        *error = unauthorizedError();
+                    }
+                    wasBlockExecuted = YES;
+                    return nil;
+                });
+                error = nil;
+            });
+            
+            afterEach(^{
+                [[error.domain should] equal:kPCFDataServicesErrorDomain];
+                [[theValue(error.code) should] equal:theValue(PCFDataServicesAuthorizationRequired)];
+            });
+            
+            it(@"should return an 'Unauthorized access' error on Fetch HTTP requests", ^{
+                [newObject fetchSynchronously:&error];
+            });
+            
+            it(@"should return an 'Unauthorized access' error on Delete HTTP requests", ^{
+                [newObject deleteSynchronously:&error];
+            });
+
+            it(@"should return an 'Unauthorized access' error on Save HTTP requests", ^{
+                [newObject saveSynchronously:&error];
+            });
+            
+        });
+        
+        context(@"invalid token asynchronous methods", ^{
+            
+            __block AFHTTPClient *client;
+
+            id (^asyncPathHandlerBlock)(NSArray*) = ^id(NSArray* params) {
+                void (^failureBlock)(AFHTTPRequestOperation*, NSError*) = params[3];
+                failureBlock(nil, unauthorizedError());
+                return nil;
+            };
+            
+            void (^failureBlock)(NSError*) = ^(NSError *error) {
+                [[theValue(error.code) should] equal:theValue(PCFDataServicesAuthorizationRequired)];
+                wasBlockExecuted = YES;
+            };
+
+            beforeEach(^{
+                setupCredentialInKeychain();
+                client = [PCFDataSignIn sharedInstance].dataServiceClient;
+            });
+
+            it(@"should include Authentication Header Key and Bearer token value for Fetch HTTP requests", ^{
+                [client stub:@selector(getPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject fetchOnSuccess:nil failure:failureBlock];
+            });
+
+            
+            it(@"should include Authentication Header Key and Bearer token value for Delete HTTP requests", ^{
+                [client stub:@selector(deletePath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject deleteOnSuccess:nil failure:failureBlock];
+            });
+            
+            it(@"should include Authentication Header Key and Bearer token value for Save HTTP requests", ^{
+                [client stub:@selector(putPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject saveOnSuccess:nil failure:failureBlock];
+            });
+        });
 
         context(@"synchronous methods", ^{
             
             beforeEach(^{
-                stubURLConnectionSuccess(^NSData *(NSArray *params){
+                setupCredentialInKeychain();
+                stubURLConnectionWithBlock(^NSData *(NSArray *params){
                     NSURLRequest *request = params[0];
                     verifyAuthorizationInRequest(request);
                     wasBlockExecuted = YES;
-                    return nil;
+                    return [NSData data];
                 });
             });
             
@@ -656,7 +740,6 @@ describe(@"PCFObject", ^{
                 [newObject saveOnSuccess:nil failure:nil];
             });
         });
-
     });
 });
 

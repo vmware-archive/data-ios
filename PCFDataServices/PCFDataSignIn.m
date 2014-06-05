@@ -85,18 +85,18 @@ static
 
 - (AFHTTPClient *)dataServiceClient
 {
+    if (!self.dataServiceURL) {
+        @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];
+    }
+    
     if (![self hasAuthInKeychain]) {
         return nil;
     }
     
     if (!_dataServiceClient) {
-        if (self.dataServiceURL) {
-            _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
-            _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
-            [self setAuthorizationHeaderOnClient:_dataServiceClient withCredential:self.credential];
-        } else {
-            @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];
-        }
+        _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
+        _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
+        [self setAuthorizationHeaderOnClient:_dataServiceClient withCredential:self.credential];
     }
     
     return _dataServiceClient;
