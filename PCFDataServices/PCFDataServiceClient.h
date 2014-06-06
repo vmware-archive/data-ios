@@ -10,16 +10,16 @@
 
 @interface PCFDataServiceClient : AFHTTPClient
 
-- (BOOL)putPath:(NSString *)path
-     parameters:(NSDictionary *)parameters
-          error:(NSError **)error;
+- (NSData *)putPath:(NSString *)path
+         parameters:(NSDictionary *)parameters
+              error:(NSError **)error;
 
-- (BOOL)getPath:(NSString *)path
-     parameters:(NSDictionary *)parameters
-          error:(NSError **)error;
+- (NSData *)getPath:(NSString *)path
+         parameters:(NSDictionary *)parameters
+              error:(NSError **)error;
 
-- (BOOL)deletePath:(NSString *)path
-        parameters:(NSDictionary *)parameters
-             error:(NSError **)error;
+- (NSData *)deletePath:(NSString *)path
+            parameters:(NSDictionary *)parameters
+                 error:(NSError **)error;
 
 @end

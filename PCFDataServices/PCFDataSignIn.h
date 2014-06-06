@@ -149,7 +149,9 @@ sourceApplication:(NSString *)sourceApplication
 /// @name Revoking Client Authentication
 ///-------------------------------------
 
-// Removes the OAuth 2.0 token from the keychain.
+/**
+ Removes the OAuth 2.0 token from the keychain.
+ */
 - (void)signOut;
 
 /**
