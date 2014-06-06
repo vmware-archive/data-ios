@@ -14,6 +14,7 @@
 #import "PCFDataTestConstants.h"
 #import "PCFDataTestHelpers.h"
 #import "PCFDataError.h"
+#import "PCFDataServiceClient.h"
 
 SPEC_BEGIN(PCFObjectSpec)
 
@@ -25,16 +26,16 @@ describe(@"PCFObject", ^{
     typedef void (^EnqueueAsyncBlock)(NSArray *);
     
     void (^stubURLConnectionWithBlock)(EnqueueBlock) = ^(EnqueueBlock block){
-        [NSURLConnection stub:@selector(sendSynchronousRequest:returningResponse:error:)
-                    withBlock:^id(NSArray *params) {
-                        NSData *returnedData = block(params);
-                        return returnedData;
-                    }];
+        [[PCFDataSignIn sharedInstance].dataServiceClient stub:@selector(executeRequest:error:)
+                                                     withBlock:^id(NSArray *params) {
+                                                         NSData *returnedData = block(params);
+                                                         return returnedData;
+                                                     }];
     };
     
     void (^stubURLConnectionFail)() = ^{
         stubURLConnectionWithBlock(^NSData *(NSArray *params){
-            NSValue *value = (NSValue *)params[2];
+            NSValue *value = (NSValue *)params[1];
             __autoreleasing NSError **error;
             [value getValue:&error];
             
@@ -386,10 +387,24 @@ describe(@"PCFObject", ^{
 #warning TODO write tests where objectID is not set
         
         it(@"should populate error object if sync GET operation return empty response data", ^{
+            
+            #warning TODO incomplete implementation
+            
             BOOL initialDirtyState = newObject.isDirty;
             
             stubURLConnectionFail();
 
+            NSError *error;
+            [[theValue([newObject fetchSynchronously:&error]) should] beFalse];
+            [[error shouldNot] beNil];
+            [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
+        });
+        
+        it(@"should populate error object if sync GET operation return unacceptable status code", ^{
+            BOOL initialDirtyState = newObject.isDirty;
+            
+            stubURLConnectionFail();
+            
             NSError *error;
             [[theValue([newObject fetchSynchronously:&error]) should] beFalse];
             [[error shouldNot] beNil];
@@ -620,7 +635,7 @@ describe(@"PCFObject", ^{
                 setupDefaultCredentialInKeychain();
                 
                 stubURLConnectionWithBlock(^NSData *(NSArray *params){
-                    NSValue *value = (NSValue *)params[2];
+                    NSValue *value = (NSValue *)params[1];
                     __autoreleasing NSError **error;
                     [value getValue:&error];
                     

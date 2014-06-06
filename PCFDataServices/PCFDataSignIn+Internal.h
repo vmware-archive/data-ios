@@ -8,7 +8,7 @@
 
 #import "PCFDataSignIn.h"
 
-@class AFOAuthCredential;
+@class AFOAuthCredential, PCFDataServiceClient;
 
 @interface PCFDataSignIn ()
 
@@ -17,7 +17,7 @@
 
 - (AFOAuthCredential *)credential;
 
-- (AFHTTPClient *)dataServiceClient;
+- (PCFDataServiceClient *)dataServiceClient;
 
 + (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
 

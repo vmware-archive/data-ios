@@ -11,6 +11,7 @@
 #import "PCFObject.h"
 #import "PCFDataSignIn+Internal.h"
 #import "PCFDataError.h"
+#import "PCFDataServiceClient.h"
 
 @interface PCFObject ()
 
@@ -96,21 +97,7 @@
 
 - (BOOL)saveSynchronously:(NSError **)error
 {
-    NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"PUT"
-                                                                                           path:[self URLPath]
-                                                                                     parameters:self.contentsDictionary];
-    
-    if (!request) {
-        if (error) {
-            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
-        }
-        return NO;
-    }
-    
-    NSHTTPURLResponse *response;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
-                                                 returningResponse:&response
-                                                             error:error];
+   NSData *responseData = [[PCFDataSignIn sharedInstance].dataServiceClient putPath:self.URLPath parameters:self.contentsDictionary error:error];
     
     if (responseData) {
         self.isDirty = NO;
@@ -146,21 +133,8 @@
 
 - (BOOL)fetchSynchronously:(NSError **)error
 {
-    NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"GET"
-                                                                                           path:[self URLPath]
-                                                                                     parameters:nil];
+    NSData *responseData = [[PCFDataSignIn sharedInstance].dataServiceClient getPath:self.URLPath parameters:nil error:error];
     
-    if (!request) {
-        if (error) {
-            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
-        }
-        return NO;
-    }
-    
-    NSHTTPURLResponse *response;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
-                                                 returningResponse:&response
-                                                             error:error];
     if (!responseData) {
         if (error) {
             *error = [self failureError:*error];
@@ -230,21 +204,7 @@
 
 - (BOOL)deleteSynchronously:(NSError **)error
 {
-    NSURLRequest *request = [[PCFDataSignIn sharedInstance].dataServiceClient requestWithMethod:@"DELETE"
-                                                                                           path:[self URLPath]
-                                                                                     parameters:nil];
-    
-    if (!request) {
-        if (error) {
-            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
-        }
-        return NO;
-    }
-    
-    NSHTTPURLResponse *response;
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
-                                                 returningResponse:&response
-                                                             error:error];
+   NSData *responseData = [[PCFDataSignIn sharedInstance].dataServiceClient deletePath:self.URLPath parameters:nil error:error];
     
     if (responseData) {
         self.isDirty = YES;
