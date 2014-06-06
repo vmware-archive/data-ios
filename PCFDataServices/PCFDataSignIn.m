@@ -183,7 +183,7 @@ static
 
 - (void)setCredential:(AFOAuthCredential *)credential
 {
-    [self setAuthorizationHeaderOnClient:self.dataServiceClient withCredential:self.credential];
+    [self setAuthorizationHeaderOnClient:self.dataServiceClient withCredential:credential];
     [self storeCredentialInKeychain:credential];
     [self.delegate finishedWithAuth:credential error:nil];
 }

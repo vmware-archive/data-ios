@@ -46,6 +46,10 @@ static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUAT
     [[PCFDataSignIn sharedInstance] authenticate];
 }
 
+- (IBAction)signOutClicked:(id)sender {
+    [[PCFDataSignIn sharedInstance] signOut];
+}
+
 - (void)finishedWithAuth:(AFOAuthCredential *)auth
                    error:(NSError *)error
 {
@@ -55,7 +59,7 @@ static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUAT
         
     } else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"PCFDataViewController"];
+        UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"PCFDataTableViewController"];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
