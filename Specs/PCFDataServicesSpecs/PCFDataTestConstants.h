@@ -9,8 +9,11 @@
 #ifndef PCFDataServices_Spec_PCFDataTestConstants_h
 #define PCFDataServices_Spec_PCFDataTestConstants_h
 
-static NSString *const kTestOAuthToken = @"ya29.HQCrkKW12Yd9ZBoAAABMOFnwSb-LJUDm0MebYgoHls0zVNRrZYpDmpdpylIrEw";
-static NSString *const kTestRefreshToken = @"1/5mSJo631AVmdw1rFUsxofZJnXprvs2-EZ8nLpCYtDJY";
+static NSString *const kTestAccessToken1 = @"AccessToken1";
+static NSString *const kTestAccessToken2 = @"AccessToken2";
+
+static NSString *const kTestRefreshToken1 = @"REFRESH TOKEN 1";
+static NSString *const kTestRefreshToken2 = @"REFRESH TOKEN 2";
 static NSString *const kTestTokenType = @"Bearer";
 
 static NSString *const kTestOpenIDConnectURL = @"https://testOpenIDConnectURL.com";

@@ -22,7 +22,7 @@ void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger) = ^(NSStrin
 };
 
 void (^setupDefaultCredentialInKeychain)(void) = ^{
-    setupCredentialInKeychain(kTestOAuthToken, kTestRefreshToken, 60 * 60);
+    setupCredentialInKeychain(kTestAccessToken1, kTestRefreshToken1, 60 * 60);
 };
 
 void (^setupForSuccessfulSilentAuth)(void) = ^{
@@ -31,8 +31,8 @@ void (^setupForSuccessfulSilentAuth)(void) = ^{
     [[[PCFDataSignIn sharedInstance] authClient] stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
                                             withBlock:^id(NSArray *params) {
                                                 void (^success)(AFOAuthCredential *credential) = params[2];
-                                                AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:kTestTokenType];
-                                                [credential setRefreshToken:kTestRefreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:3600]];
+                                                AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken2 tokenType:kTestTokenType];
+                                                [credential setRefreshToken:kTestRefreshToken1 expiration:[NSDate dateWithTimeIntervalSinceNow:3600]];
                                                 success(credential);
                                                 return nil;
                                             }];

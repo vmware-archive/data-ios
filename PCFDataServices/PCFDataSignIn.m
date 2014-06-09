@@ -166,6 +166,7 @@ static
                                            refreshToken:savedCredential.refreshToken
                                                 success:^(AFOAuthCredential *credential) {
                                                     [self setCredential:credential];
+                                                    [self.delegate finishedWithAuth:credential error:nil];
                                                 }
                                                 failure:^(NSError *error) {
                                                     [self.delegate finishedWithAuth:nil error:error];
@@ -185,7 +186,6 @@ static
 {
     [self setAuthorizationHeaderOnClient:self.dataServiceClient withCredential:credential];
     [self storeCredentialInKeychain:credential];
-    [self.delegate finishedWithAuth:credential error:nil];
 }
 
 - (void)performOAuthLogin
@@ -234,6 +234,7 @@ sourceApplication:(NSString *)sourceApplication
                                             redirectURI:[self redirectURI]
                                                 success:^(AFOAuthCredential *credential) {
                                                     [self setCredential:credential];
+                                                    [self.delegate finishedWithAuth:credential error:nil];
                                                 }
                                                 failure:^(NSError *error) {
                                                     [self.delegate finishedWithAuth:nil error:error];

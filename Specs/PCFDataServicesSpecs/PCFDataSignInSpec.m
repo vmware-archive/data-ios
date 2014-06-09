@@ -15,6 +15,7 @@
 #import "PCFDataError.h"
 #import "PCFDataTestConstants.h"
 #import "PCFDataTestHelpers.h"
+#import "PCFDataServiceClient.h"
 
 SPEC_BEGIN(PCFDataSignInSpec)
 
@@ -98,10 +99,11 @@ context(@"PCFDataSignIn Specification", ^{
         describe(@"trySilentAuthentication ", ^{
             
             __block NSObject<PCFSignInDelegate> *instanceDelegate;
-            
+            __block PCFDataSignIn *sharedInstance;
             beforeEach(^{
                 instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
                 setupPCFDataSignInInstance(instanceDelegate);
+                sharedInstance = [PCFDataSignIn sharedInstance];
             });
             
             afterEach(^{
@@ -109,7 +111,6 @@ context(@"PCFDataSignIn Specification", ^{
             });
             
             it(@"should try authentication with stored credential before defaulting to sigining in through Mobile Safari", ^{
-                PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
                 [[sharedInstance should] receive:@selector(credential)];
                 [sharedInstance authenticate];
             });
@@ -117,14 +118,12 @@ context(@"PCFDataSignIn Specification", ^{
             it(@"should call delegate 'finishedWithAuth:error:' method with a populated AFOAuthCredential object when silent authentication succeeds", ^{
                 setupForSuccessfulSilentAuth();
                 
-                PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
                 sharedInstance.dataServiceURL = kTestDataServiceURL;
                 [[instanceDelegate shouldEventually] receive:@selector(finishedWithAuth:error:) withArguments:any(), nil];
                 [sharedInstance authenticate];
             });
             
             it(@"should not call delegate 'finishedWithAuth:error:' method when silent authentication fails", ^{
-                PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
                 sharedInstance.dataServiceURL = kTestDataServiceURL;
                 
                 setupForFailedSilentAuth();
@@ -135,7 +134,6 @@ context(@"PCFDataSignIn Specification", ^{
             });
             
             it(@"should open Safari Mobile if silent auth fails to perform authentication", ^{
-                PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
                 setupForFailedSilentAuth();
                 
                 NSString *scopes = [sharedInstance.scopes componentsJoinedByString:@"%%20"];
@@ -144,6 +142,39 @@ context(@"PCFDataSignIn Specification", ^{
                 [[[UIApplication sharedApplication] shouldEventually] receive:@selector(openURL:) withArguments:expectedURL];
                 
                 [sharedInstance authenticate];
+            });
+            
+            it(@"should save new access token credential if silent authentication is successful", ^{
+                sharedInstance.dataServiceURL = kTestDataServiceURL;
+                [[instanceDelegate shouldEventually] receive:@selector(finishedWithAuth:error:) withArguments:any(), nil];
+
+                NSString *accessToken1 = [sharedInstance credential].accessToken;
+                
+                setupForSuccessfulSilentAuth();
+                
+                [sharedInstance trySilentAuthentication];
+                
+                [[[sharedInstance credential].accessToken shouldNot] equal:accessToken1];
+                [[[sharedInstance credential].accessToken should] equal:kTestAccessToken2];
+            });
+            
+            it(@"should update the authorization header on the data services client after successful silent authentication", ^{
+                sharedInstance.dataServiceURL = kTestDataServiceURL;
+                [[instanceDelegate shouldEventually] receive:@selector(finishedWithAuth:error:) withArguments:any(), nil];
+                
+                setupForSuccessfulSilentAuth();
+                [sharedInstance setCredential:sharedInstance.credential];
+                
+                NSString *headerValue1 = [sharedInstance.dataServiceClient defaultValueForHeader:@"Authorization"];
+                [[headerValue1 shouldNot] beNil];
+                
+                [sharedInstance trySilentAuthentication];
+                
+                NSString *headerValue2 = [sharedInstance.dataServiceClient defaultValueForHeader:@"Authorization"];
+                [[headerValue2 shouldNot] beNil];
+                [[headerValue2 shouldNot] equal:headerValue1];
+                
+                [[headerValue2 should] endWithString:kTestAccessToken2];
             });
         });
     });
@@ -156,7 +187,7 @@ context(@"PCFDataSignIn Specification", ^{
             return [NSURL URLWithString:[NSString stringWithFormat:@"%@:/oauth2callback?state=57934744&code=%@", [[NSBundle mainBundle] bundleIdentifier], authCode]];;
         };
         
-        it(@"should parse out the OAuth code from the |application:openURL:sourceApplication:annotation:| callback", ^{
+        it(@"should parse out the OAuth code from the 'application:openURL:sourceApplication:annotation:' callback", ^{
             NSURL *url = redirectURL(authCode);
             
             setupPCFDataSignInInstance(nil);
@@ -167,11 +198,11 @@ context(@"PCFDataSignIn Specification", ^{
             [[PCFDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
         
-        it(@"should call delegate finishedWithAuth:error: with a credential object if authentication is successful", ^{
+        it(@"should call delegate 'finishedWithAuth:error:' with a credential object if authentication is successful", ^{
             NSURL *url = redirectURL(authCode);
             
             NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
-            AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestOAuthToken tokenType:kTestTokenType];
+            AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken1 tokenType:kTestTokenType];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
             setupPCFDataSignInInstance(instanceDelegate);
@@ -187,7 +218,7 @@ context(@"PCFDataSignIn Specification", ^{
             [[PCFDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
         
-        it(@"should call delegate finishedWithAuth:error: method with an error object if authentication fails", ^{
+        it(@"should call delegate 'finishedWithAuth:error:' method with an error object if authentication fails", ^{
             NSURL *url = redirectURL(authCode);
             
             NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];

@@ -19,6 +19,8 @@
 
 - (PCFDataServiceClient *)dataServiceClient;
 
+- (void)setCredential:(AFOAuthCredential *)credential;
+
 + (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
 
 @end

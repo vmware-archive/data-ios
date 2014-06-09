@@ -605,7 +605,7 @@ describe(@"PCFObject", ^{
         void (^verifyAuthorizationInRequest)(NSURLRequest *) = ^(NSURLRequest *request) {
             NSString *token = [request valueForHTTPHeaderField:kAuthorizationHeaderKey];
             [[theValue([token hasPrefix:@"Bearer "]) should] beTrue];
-            [[theValue([token hasSuffix:kTestOAuthToken]) should] beTrue];
+            [[theValue([token hasSuffix:kTestAccessToken1]) should] beTrue];
         };
         
         NSError *(^unauthorizedError)(void) = ^NSError *{
@@ -669,7 +669,7 @@ describe(@"PCFObject", ^{
         
         context(@"invalid token asynchronous methods", ^{
             
-            __block AFHTTPClient *client;
+            __block PCFDataServiceClient *client;
 
             id (^asyncPathHandlerBlock)(NSArray*) = ^id(NSArray* params) {
                 void (^failureBlock)(AFHTTPRequestOperation*, NSError*) = params[3];
