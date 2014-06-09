@@ -66,6 +66,9 @@
 @property NSString *objectID;
 @property NSMutableArray *keyValuePairsArray;
 
+@property (strong, nonatomic) IBOutletCollection(UIBarButtonItem) NSArray *barButtonCollection;
+
+
 @end
 
 @implementation PCFDataTableViewController
@@ -108,10 +111,7 @@
 {
     if (indexPath.row == 0) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
-        
-        if (self.objectID) {
-            [(UITextField *)[cell viewWithTag:1] setText:self.objectID];
-        }
+        [(UITextField *)[cell viewWithTag:1] setText:self.objectID];
 
         return cell;
     }
@@ -132,6 +132,20 @@
     return cell;
 }
 
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row - 1];
+        [self.syncObject removeObjectForKey:arrayObject.keyString];
+        
+        [self.keyValuePairsArray removeObjectAtIndex:indexPath.row - 1];
+        [self.tableView reloadData];
+    }
+}
+
 - (IBAction)fetchButtonClicked:(id)sender
 {
     if (self.objectID) {
@@ -146,8 +160,10 @@
             [self.tableView reloadData];
             
         } failure:^(NSError *error) {
-            UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Fetch Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [view show];
+            if (![sender isKindOfClass:[UITextField class]]) {
+                UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Fetch Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [view show];
+            }
         }];
     }
 }
@@ -189,6 +205,29 @@
     [sender resignFirstResponder];
 }
 
-- (IBAction)deleteButtonClicked:(id)sender {
+- (IBAction)deleteButtonClicked:(id)sender
+{
+    if (self.objectID) {
+        [self.syncObject deleteOnSuccess:^{
+            self.objectID = nil;
+            self.keyValuePairsArray = [NSMutableArray array];
+            [self.tableView reloadData];
+            
+        } failure:^(NSError *error) {
+            UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Delete Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [view show];
+        }];
+    }
+}
+
+- (IBAction)editButtonClicked:(id)sender
+{
+    self.tableView.editing = !self.tableView.editing;
+    
+    [self.barButtonCollection enumerateObjectsUsingBlock:^(UIBarButtonItem *item, NSUInteger idx, BOOL *stop) {
+        if (item != sender) {
+            item.enabled = !self.tableView.editing;
+        }
+    }];
 }
 @end
