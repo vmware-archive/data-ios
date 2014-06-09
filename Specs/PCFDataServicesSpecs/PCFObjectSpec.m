@@ -387,9 +387,6 @@ describe(@"PCFObject", ^{
 #warning TODO write tests where objectID is not set
         
         it(@"should populate error object if sync GET operation return empty response data", ^{
-            
-            #warning TODO incomplete implementation
-            
             BOOL initialDirtyState = newObject.isDirty;
             
             stubURLConnectionFail();
@@ -501,6 +498,115 @@ describe(@"PCFObject", ^{
                 [[theValue(newObject.isDirty) should] equal:theValue(initialDirtyState)];
             }];
             [[theValue(didCallBlock) should] beTrue];
+        });
+        
+        describe(@"merging data during fetch between local and remote contexts", ^{
+            
+            __block NSDictionary *remoteData;
+            
+            __block void (^testAsynchronously)(PCFObject *) = ^(PCFObject *object) {
+                __block BOOL wasBlockExecuted = NO;
+                [object fetchOnSuccess:^(PCFObject *returnedObject) {
+                    wasBlockExecuted = YES;
+                } failure:^(NSError *error) {
+                    fail(@"Failure block executed incorrectly");
+                }];
+                [[theValue(wasBlockExecuted) should] beTrue];
+            };
+            
+            beforeEach(^{
+                stubURLConnectionWithBlock(^NSData *(NSArray *params){
+                    return [NSJSONSerialization dataWithJSONObject:remoteData options:0 error:nil];
+                });
+                
+                [[PCFDataSignIn sharedInstance].dataServiceClient stub:@selector(getPath:parameters:success:failure:) withBlock:^id(NSArray *params) {
+                    void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                    successBlock(nil, [NSJSONSerialization dataWithJSONObject:remoteData options:0 error:nil]);
+                    return nil;
+                }];
+                
+                [newObject setObjectsForKeysWithDictionary:@{
+                                                             @"A" : @"A",
+                                                             @"B" : @"B",
+                                                             @"C" : @"C",
+                                                             }];
+                [[theValue(newObject.isDirty) should] beTrue];
+            });
+            
+            describe(@"overwrite existing values with remote values with the same key", ^{
+                beforeEach(^{
+                    remoteData = @{
+                                   @"A" : @"A*",
+                                   @"B" : @"B*",
+                                   @"C" : @"C*",
+                                   };
+                });
+                
+                afterEach(^{
+                    [[theValue(newObject.allKeys.count) should] equal:theValue(3)];
+                    [[newObject[@"A"] should] equal:@"A*"];
+                    [[newObject[@"B"] should] equal:@"B*"];
+                    [[newObject[@"C"] should] equal:@"C*"];
+                    [[theValue(newObject.isDirty) should] beFalse];
+                });
+                
+                it(@"synchronously", ^{
+                    [newObject fetchSynchronously:nil];
+                });
+                
+                it(@"asynchronously", ^{
+                    testAsynchronously(newObject);
+                });
+            });
+            
+            describe(@"keep local key/values that do not exist remotely", ^{
+                
+                beforeEach(^{
+                    remoteData = @{
+                                   @"A" : @"A*",
+                                   @"B" : @"B*",
+                                   };
+                });
+                
+                afterEach(^{
+                    [[theValue(newObject.allKeys.count) should] equal:theValue(3)];
+                    [[newObject[@"A"] should] equal:@"A*"];
+                    [[newObject[@"B"] should] equal:@"B*"];
+                    [[newObject[@"C"] should] equal:@"C"];
+                    [[theValue(newObject.isDirty) should] beTrue];
+                });
+                
+                it(@"synchronously", ^{
+                    [newObject fetchSynchronously:nil];
+                });
+                
+                it(@"asynchronously", ^{
+                    testAsynchronously(newObject);
+                });
+            });
+            
+            describe(@"keep local key/value if remote data is empty", ^{
+                
+                beforeEach(^{
+                    remoteData = @{};
+                });
+                
+                afterEach(^{
+                    [[theValue(newObject.allKeys.count) should] equal:theValue(3)];
+                    [[newObject[@"A"] should] equal:@"A"];
+                    [[newObject[@"B"] should] equal:@"B"];
+                    [[newObject[@"C"] should] equal:@"C"];
+                    [[theValue(newObject.isDirty) should] beTrue];
+                });
+                
+                it(@"synchronously", ^{
+                    [newObject fetchSynchronously:nil];
+                });
+                
+                it(@"asynchronously", ^{
+                    testAsynchronously(newObject);
+                });
+            });
         });
     });
     
@@ -616,6 +722,11 @@ describe(@"PCFObject", ^{
         beforeEach(^{
             newObject = [PCFObject objectWithClassName:kTestClassName];
             newObject.objectID = kTestObjectID;
+            [newObject setObjectsForKeysWithDictionary:@{
+                                                         @"A" : @"A",
+                                                         @"B" : @"B",
+                                                         @"C" : @"C",
+                                                         }];
 
             PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
             sharedInstance.dataServiceURL = kTestDataServiceURL;
@@ -626,6 +737,14 @@ describe(@"PCFObject", ^{
         afterEach(^{
             [[theValue(wasBlockExecuted) should] beTrue];
         });
+        
+        void (^assertObjectValuesUnaffectedByFetchFailure)(PCFObject *) = ^(PCFObject *object) {
+            [[theValue(object.allKeys.count) should] equal:theValue(3)];
+            [[object[@"A"] should] equal:@"A"];
+            [[object[@"B"] should] equal:@"B"];
+            [[object[@"C"] should] equal:@"C"];
+            [[theValue(object.isDirty) should] beTrue];
+        };
         
         context(@"invalid token synchronous methods", ^{
             
@@ -655,6 +774,8 @@ describe(@"PCFObject", ^{
             
             it(@"should return an 'Unauthorized access' error on Fetch HTTP requests", ^{
                 [newObject fetchSynchronously:&error];
+                
+                assertObjectValuesUnaffectedByFetchFailure(newObject);
             });
             
             it(@"should return an 'Unauthorized access' error on Delete HTTP requests", ^{
@@ -664,7 +785,6 @@ describe(@"PCFObject", ^{
             it(@"should return an 'Unauthorized access' error on Save HTTP requests", ^{
                 [newObject saveSynchronously:&error];
             });
-            
         });
         
         context(@"invalid token asynchronous methods", ^{
@@ -690,6 +810,7 @@ describe(@"PCFObject", ^{
             it(@"should include Authentication Header Key and Bearer token value for Fetch HTTP requests", ^{
                 [client stub:@selector(getPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
                 [newObject fetchOnSuccess:nil failure:failureBlock];
+                assertObjectValuesUnaffectedByFetchFailure(newObject);
             });
 
             

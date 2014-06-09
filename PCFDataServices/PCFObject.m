@@ -131,6 +131,13 @@
 #pragma mark -
 #pragma mark Refresh
 
+- (void)mergeContentsDictionaryWithRemoteValues:(NSDictionary *)remoteValues
+{
+    NSUInteger newKeys = remoteValues.allKeys.count;
+    [self.contentsDictionary setValuesForKeysWithDictionary:remoteValues];
+    self.isDirty = self.contentsDictionary.allKeys.count > newKeys;
+}
+
 - (BOOL)fetchSynchronously:(NSError **)error
 {
     NSData *responseData = [[PCFDataSignIn sharedInstance].dataServiceClient getPath:self.URLPath parameters:nil error:error];
@@ -148,9 +155,7 @@
         return NO;
     }
     
-    [self.contentsDictionary setValuesForKeysWithDictionary:fetchedContents];
-
-    self.isDirty = NO;
+    [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
     return YES;
 }
 
@@ -183,14 +188,13 @@
                                                    parameters:nil
                                                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                           NSError *error;
-                                                          id JSON = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+                                                          NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
                                                           
-                                                          if (!JSON) {
+                                                          if (!fetchedContents) {
                                                               failure(error);
                                                               
                                                           } else {
-                                                              [self.contentsDictionary setValuesForKeysWithDictionary:JSON];
-                                                              self.isDirty = NO;
+                                                              [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
                                                               success(self);
                                                           }
                                                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
