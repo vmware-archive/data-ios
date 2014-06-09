@@ -63,91 +63,6 @@
             </objects>
             <point key="canvasLocation" x="925" y="327"/>
         </scene>
-        <!--Data View Controller - Data Entry-->
-        <scene sceneID="7DK-jv-6Ff">
-            <objects>
-                <viewController storyboardIdentifier="PCFDataViewController" title="Data Entry" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PrU-QF-LT4" customClass="PCFDataViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="tAA-rK-7iG"/>
-                        <viewControllerLayoutGuide type="bottom" id="UDv-mv-nfZ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="mdd-uC-YR8">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uIS-86-hra">
-                                <rect key="frame" x="62" y="99" width="196" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Object ID" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J7A-wI-2bc">
-                                <rect key="frame" x="124" y="70" width="73" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1MT-Uu-Kdl">
-                                <rect key="frame" x="62" y="168" width="196" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Key" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mt5-e2-NMo">
-                                <rect key="frame" x="145" y="139" width="30" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5xQ-9B-CB4">
-                                <rect key="frame" x="62" y="239" width="196" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Value" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CWc-he-kmS">
-                                <rect key="frame" x="139" y="210" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vyG-lW-Mfc">
-                                <rect key="frame" x="143" y="278" width="34" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Save">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="saveButtonClicked:" destination="PrU-QF-LT4" eventType="touchUpInside" id="Zyt-kc-Hy7"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6vB-VP-LRk">
-                                <rect key="frame" x="141" y="324" width="39" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Fetch">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="fetchButtonClicked:" destination="PrU-QF-LT4" eventType="touchUpInside" id="fMO-qV-qoz"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <connections>
-                        <outlet property="keyTextField" destination="1MT-Uu-Kdl" id="XYV-m2-Rt1"/>
-                        <outlet property="objectIDTextField" destination="uIS-86-hra" id="PTc-RW-wG4"/>
-                        <outlet property="valueTextField" destination="5xQ-9B-CB4" id="KqS-vx-RZB"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EVz-aJ-sUA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1380" y="327"/>
-        </scene>
         <!--Data Table View Controller - Data Services-->
         <scene sceneID="Aln-E4-WbE">
             <objects>
@@ -156,22 +71,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="LhZ-bW-MS2">
-                            <rect key="frame" x="0.0" y="216" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <items>
-                                <barButtonItem title="Fetch" id="fPn-e4-Auv">
-                                    <connections>
-                                        <action selector="fetchButtonClicked:" destination="4Nf-dA-qhs" id="1ga-wc-qh3"/>
-                                    </connections>
-                                </barButtonItem>
-                                <barButtonItem title="Save" id="GcE-mS-1oF">
-                                    <connections>
-                                        <action selector="saveButtonClicked:" destination="4Nf-dA-qhs" id="RmT-IZ-a7Y"/>
-                                    </connections>
-                                </barButtonItem>
-                            </items>
-                        </toolbar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="objectIDCell" rowHeight="44" id="Sjy-Rl-nPr">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
@@ -190,12 +89,15 @@
                                             <rect key="frame" x="112" y="7" width="188" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                            <connections>
+                                                <action selector="objectIDReturned:" destination="4Nf-dA-qhs" eventType="editingDidEndOnExit" id="9TT-Gr-aEz"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="keyValueCell" rowHeight="86" id="cwB-rE-7kw">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="keyValueCell" rowHeight="86" id="cwB-rE-7kw" customClass="PCFTableViewCell">
                                 <rect key="frame" x="0.0" y="130" width="320" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cwB-rE-7kw" id="NJy-TI-Mhq">
@@ -213,6 +115,9 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
+                                            <connections>
+                                                <action selector="didEndExit:" destination="cwB-rE-7kw" eventType="editingDidEndOnExit" id="kqi-gC-4DN"/>
+                                            </connections>
                                         </textField>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Value" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVX-Lb-cka">
                                             <rect key="frame" x="20" y="49" width="42" height="21"/>
@@ -225,9 +130,16 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
+                                            <connections>
+                                                <action selector="didEndExit:" destination="cwB-rE-7kw" eventType="editingDidEndOnExit" id="rEe-xH-7yh"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="keyTextField" destination="wRv-ej-PM7" id="ws6-Fi-Cne"/>
+                                    <outlet property="valueTextField" destination="th9-h5-wv7" id="fP2-be-2K3"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -235,11 +147,37 @@
                             <outlet property="delegate" destination="4Nf-dA-qhs" id="LZd-1J-Mbk"/>
                         </connections>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem systemItem="add" id="l6v-29-Aph">
+                            <connections>
+                                <action selector="addButtonClicked:" destination="4Nf-dA-qhs" id="dBT-at-TLa"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="SE0-02-xhS"/>
+                        <barButtonItem systemItem="save" id="PvP-FB-p3m">
+                            <connections>
+                                <action selector="saveButtonClicked:" destination="4Nf-dA-qhs" id="qpt-tb-uew"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="IBa-jw-8d0"/>
+                        <barButtonItem systemItem="refresh" id="kKw-mH-pJm">
+                            <connections>
+                                <action selector="fetchButtonClicked:" destination="4Nf-dA-qhs" id="Uv4-Yk-DFp"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="PkW-na-zBh"/>
+                        <barButtonItem systemItem="trash" id="IeA-fS-rB1">
+                            <connections>
+                                <action selector="deleteButtonClicked:" destination="4Nf-dA-qhs" id="17m-k6-owD"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oUm-sG-nz7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1380" y="998"/>
+            <point key="canvasLocation" x="1375" y="327"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
