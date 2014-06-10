@@ -98,30 +98,10 @@
     return [NSString stringWithFormat:@"%@/%@", self.className, self.objectID];
 }
 
-- (void)saveOnSuccess:(void (^)(void))success
+- (void)saveOnSuccess:(void (^)(PCFObject *object))success
               failure:(void (^)(NSError *error))failure
 {
-    NSError *error;
-    AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:&error];
-    
-    if (!client) {
-        if (failure) {
-            failure(error);
-        }
-        return;
-    }
-    
-    __block PCFObject *selfReference = self;
-    [client putPath:[self URLPath]
-         parameters:self.contentsDictionary
-            success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                selfReference.isDirty = NO;
-                success();
-                
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [self signOutIfRequired:error];
-                failure([self failureError:error]);
-            }];
+    [self performMethod:@"PUT" parameters:self.contentsDictionary onSuccess:success failure:failure];
 }
 
 #pragma mark -
@@ -134,10 +114,15 @@
     self.isDirty = self.contentsDictionary.allKeys.count > newKeys;
 }
 
+- (NSError *)authorizationRequiredError
+{
+    return [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
+}
+
 - (NSError *)failureError:(NSError *)error
 {
     if ([self isUnauthorizedAccessError:error]) {
-        return [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:nil];
+        return [self authorizationRequiredError];
         
     } else {
         return error;
@@ -159,41 +144,42 @@
 - (void)fetchOnSuccess:(void (^)(PCFObject *object))success
                failure:(void (^)(NSError *error))failure
 {
-    NSError *error;
-    AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:&error];
-    
-    if (!client) {
-        if (failure) {
-            failure(error);
-        }
-        return;
-    }
-    
-    [client getPath:[self URLPath]
-         parameters:nil
-            success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSError *error;
-                NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
-                
-                if (!fetchedContents) {
-                    failure(error);
-                    
-                } else {
-                    [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
-                    success(self);
-                }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [self signOutIfRequired:error];
-                failure([self failureError:error]);
-            }];
+    [self performMethod:@"GET" parameters:nil onSuccess:success failure:failure];
 }
 
 #pragma mark -
 #pragma mark Delete
 
-- (void)deleteOnSuccess:(void (^)(void))success
+- (void)deleteOnSuccess:(void (^)(PCFObject *object))success
                 failure:(void (^)(NSError *error))failure
 {
+    [self performMethod:@"DELETE" parameters:nil onSuccess:success failure:failure];
+}
+
+#pragma mark -
+#pragma mark HTTP Methods
+
+- (void)performMethod:(NSString *)method
+           parameters:(NSDictionary *)parameters
+            onSuccess:(void (^)(PCFObject *object))success
+              failure:(void (^)(NSError *error))failure
+{
+    [self performMethod:method withNumberOfAttempts:2 parameters:parameters onSuccess:success failure:failure];
+}
+
+- (void)performMethod:(NSString *)method
+ withNumberOfAttempts:(NSInteger)attempts
+           parameters:(NSDictionary *)parameters
+            onSuccess:(void (^)(PCFObject *object))success
+              failure:(void (^)(NSError *error))failure
+{
+    if (attempts <= 0) {
+        if (failure) {
+            failure([self authorizationRequiredError]);
+        }
+        return;
+    }
+    
     NSError *error;
     AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:&error];
     
@@ -204,17 +190,60 @@
         return;
     }
     
-    __block PCFObject *selfReference = self;
-    [client deletePath:[self URLPath]
-            parameters:nil
-               success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                   selfReference.isDirty = YES;
-                   success();
-                   
-               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                   [self signOutIfRequired:error];
-                   failure([self failureError:error]);
-               }];
+    void (^successBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
+#warning - TODO: Add back in dirty flag logic
+//        self.isDirty = YES;
+        
+        if (success) {
+            success(self);
+        }
+    };
+    
+    void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = ^(AFHTTPRequestOperation *operation, NSError *error){
+        if ([self isUnauthorizedAccessError:error]) {
+            [[PCFDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(AFOAuthCredential *credential) {
+                [self performMethod:method withNumberOfAttempts:attempts-1 parameters:parameters onSuccess:success failure:failure];
+                
+            } failure:^(NSError *error) {
+                failure([self failureError:error]);
+            }];
+            
+        } else {
+            [self signOutIfRequired:error];
+            
+            if (failure) {
+                failure([self failureError:error]);
+            }
+        }
+    };
+    
+    if ([method isEqualToString:@"DELETE"]) {
+        [client deletePath:[self URLPath] parameters:parameters success:successBlock failure:failureBlock];
+        
+    } else if ([method isEqualToString:@"PUT"]) {
+        [client putPath:[self URLPath] parameters:parameters success:successBlock failure:failureBlock];
+        
+    } else if ([method isEqualToString:@"GET"]) {
+        void (^fetchSuccessBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSError *error;
+            NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+            
+            if (!fetchedContents) {
+                if (failure) {
+                    failure(error);
+                }
+                
+            } else {
+                [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
+                
+                if (success) {
+                    success(self);
+                }
+            }
+        };
+        
+        [client getPath:[self URLPath] parameters:parameters success:fetchSuccessBlock failure:failureBlock];
+    }
 }
 
 @end

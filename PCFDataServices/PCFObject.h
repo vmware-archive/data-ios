@@ -117,7 +117,7 @@
  @param success The block to execute when the save operation is successful.
  @param failure The block to execute when the save operation fails.
  */
-- (void)saveOnSuccess:(void (^)(void))success
+- (void)saveOnSuccess:(void (^)(PCFObject *object))success
               failure:(void (^)(NSError *error))failure;
 
 #pragma mark -
@@ -145,7 +145,7 @@
  @param success The block to execute if the delete operation is successful.
  @param failure The block to execute if the delete operation fails.
  */
-- (void)deleteOnSuccess:(void (^)(void))success
+- (void)deleteOnSuccess:(void (^)(PCFObject *object))success
                 failure:(void (^)(NSError *error))failure;
 
 #pragma mark -

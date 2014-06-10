@@ -148,6 +148,13 @@ static
 
 - (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
 {
+    [self authenticateWithInteractiveOption:interactive success:nil failure:nil];
+}
+
+- (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
+                                  success:(void (^)(AFOAuthCredential *credential))success
+                                  failure:(void (^)(NSError *error))failure
+{
     if (!self.clientID) {
         [self callDelegateWithErrorCode:PCFDataServicesNoClientIDError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client ID" }];
         return NO;
@@ -168,10 +175,18 @@ static
         [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath
                                            refreshToken:savedCredential.refreshToken
                                                 success:^(AFOAuthCredential *credential) {
+                                                    if(success) {
+                                                        success(credential);
+                                                    }
+                                                    
                                                     [self setCredential:credential];
                                                     [self.delegate finishedWithAuth:credential error:nil];
                                                 }
                                                 failure:^(NSError *error) {
+                                                    if (failure) {
+                                                        failure(error);
+                                                    }
+                                                    
                                                     [self.delegate finishedWithAuth:nil error:error];
                                                 }];
         return YES;

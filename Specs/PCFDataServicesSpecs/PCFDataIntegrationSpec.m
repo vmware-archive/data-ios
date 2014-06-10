@@ -48,7 +48,7 @@ describe(@"PCF Data Service Integration Tests", ^{
         });
         
         it(@"should work asynchronously", ^{
-            [obj1 saveOnSuccess:^{
+            [obj1 saveOnSuccess:^(PCFObject *object) {
                 [[theValue(obj1.isDirty) should] beFalse];
                 obj2 = [PCFObject objectWithClassName:kTestClassName];
                 obj2.objectID = kTestObjectID;
@@ -57,10 +57,10 @@ describe(@"PCF Data Service Integration Tests", ^{
                     [[theValue(obj2.isDirty) should] beFalse];
                     [[obj2[kTestObjectKey] should] equal:obj1[kTestObjectKey]];
                         
-                    [obj1 deleteOnSuccess:^{
+                    [obj1 deleteOnSuccess:^(PCFObject *object) {
                         [[theValue(obj1.isDirty) should] beTrue];
                         
-                        [obj2 deleteOnSuccess:^{
+                        [obj2 deleteOnSuccess:^(PCFObject *object) {
                             fail(@"Delete should have failed with same objectID as obj1");
                         } failure:^(NSError *error) {
                             [[error shouldNot] beNil];

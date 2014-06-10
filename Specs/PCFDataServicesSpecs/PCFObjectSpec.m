@@ -65,14 +65,14 @@ describe(@"PCFObject no Auth in keychain", ^{
     });
     
     it(@"should populate and return error on delete", ^{
-        [newObject deleteOnSuccess:^{
+        [newObject deleteOnSuccess:^(PCFObject *object){
             fail(@"Should not be called");
             
         } failure:failblock];
     });
     
     it(@"should populate and return error on save", ^{
-        [newObject saveOnSuccess:^{
+        [newObject saveOnSuccess:^(PCFObject *object){
             fail(@"Should not be called");
             
         } failure:failblock];
@@ -287,7 +287,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 }) shouldNot] raise];
                 
                 [[theBlock(^{
-                    [newObject saveOnSuccess:^{
+                    [newObject saveOnSuccess:^(PCFObject *object){
                         NSLog(@"Success Block");
                     } failure:nil];
                 }) shouldNot] raise];
@@ -305,7 +305,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 });
                 
                 it(@"should set success block when performing asynchronous PUT method call on data service", ^{
-                    void (^successBlock)(void) = ^{
+                    void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
                         [[theValue(newObject.isDirty) should] beFalse];
                         blockExecuted = YES;
                     };
@@ -325,7 +325,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 it(@"should set failure block when performing asynchronous PUT method call on data service", ^{
                     BOOL initialDirtyState = newObject.isDirty;
                     
-                    void (^successBlock)(void) = ^{
+                    void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
                         fail(@"Success block executed unexpectedly");
                     };
                     
@@ -553,7 +553,7 @@ describe(@"PCFObject Auth in keychain", ^{
         it(@"should call success block if async DELETE operation is successful", ^{
             __block BOOL blockExecuted;
             
-            void (^successBlock)(void) = ^{
+            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
                 blockExecuted = YES;
                 [[theValue(newObject.isDirty) should] beTrue];
             };
@@ -575,7 +575,7 @@ describe(@"PCFObject Auth in keychain", ^{
             BOOL initialDirtyState = newObject.isDirty;
             __block BOOL blockExecuted;
             
-            void (^successBlock)(void) = ^{
+            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
                 fail(@"Success block executed unexpectedly.");
             };
             
@@ -598,17 +598,36 @@ describe(@"PCFObject Auth in keychain", ^{
         __block PCFObject *newObject;
         __block BOOL wasBlockExecuted;
         
-        static NSString *const kAuthorizationHeaderKey = @"Authorization";
+        __block AFHTTPClient *client;
+        __block BOOL wasAuthBlockExecuted;
         
-        void (^verifyAuthorizationInRequest)(NSURLRequest *) = ^(NSURLRequest *request) {
-            NSString *token = [request valueForHTTPHeaderField:kAuthorizationHeaderKey];
-            [[theValue([token hasPrefix:@"Bearer "]) should] beTrue];
-            [[theValue([token hasSuffix:kTestAccessToken1]) should] beTrue];
-        };
+        __block NSInteger failureCount;
         
         NSError *(^unauthorizedError)(void) = ^NSError *{
             NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Unauthorized access" };
             return [NSError errorWithDomain:NSURLErrorDomain code:401 userInfo:userInfo];
+        };
+        
+        id (^asyncPathHandlerBlock)(NSArray *) = ^id(NSArray *params) {
+            if (failureCount > 0) {
+                failureCount--;
+                
+                void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = params[3];
+                failureBlock(nil, unauthorizedError());
+                
+            } else {
+                void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                successBlock(nil, nil);
+            }
+            return nil;
+        };
+        
+        void (^assertObjectValuesUnaffectedByFetchFailure)(PCFObject *) = ^(PCFObject *object) {
+            [[theValue(object.allKeys.count) should] equal:theValue(3)];
+            [[object[@"A"] should] equal:@"A"];
+            [[object[@"B"] should] equal:@"B"];
+            [[object[@"C"] should] equal:@"C"];
+            [[theValue(object.isDirty) should] beTrue];
         };
 
         beforeEach(^{
@@ -628,26 +647,10 @@ describe(@"PCFObject Auth in keychain", ^{
         
         afterEach(^{
             [[theValue(wasBlockExecuted) should] beTrue];
+            assertObjectValuesUnaffectedByFetchFailure(newObject);
         });
         
-        void (^assertObjectValuesUnaffectedByFetchFailure)(PCFObject *) = ^(PCFObject *object) {
-            [[theValue(object.allKeys.count) should] equal:theValue(3)];
-            [[object[@"A"] should] equal:@"A"];
-            [[object[@"B"] should] equal:@"B"];
-            [[object[@"C"] should] equal:@"C"];
-            [[theValue(object.isDirty) should] beTrue];
-        };
-        
-        context(@"invalid token asynchronous methods", ^{
-            
-            __block AFHTTPClient *client;
-
-            id (^asyncPathHandlerBlock)(NSArray*) = ^id(NSArray* params) {
-                void (^failureBlock)(AFHTTPRequestOperation*, NSError*) = params[3];
-                failureBlock(nil, unauthorizedError());
-                return nil;
-            };
-            
+        context(@"invalid token", ^{
             void (^failureBlock)(NSError*) = ^(NSError *error) {
                 [[theValue(error.code) should] equal:theValue(PCFDataServicesAuthorizationRequired)];
                 wasBlockExecuted = YES;
@@ -655,15 +658,28 @@ describe(@"PCFObject Auth in keychain", ^{
 
             beforeEach(^{
                 setupDefaultCredentialInKeychain();
-                client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+                
+                PCFDataSignIn *signIn = [PCFDataSignIn sharedInstance];
+                [signIn.authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
+                              withBlock:^id(NSArray *params) {
+                                  wasAuthBlockExecuted = YES;
+                                  void (^failure)(NSError *) = params[3];
+                                  failure(unauthorizedError());
+                                  return nil;
+                              }];
+                
+                client = [signIn dataServiceClient:nil];
+                [[client shouldNot] beNil];
+                
+                wasAuthBlockExecuted = NO;
+                
+                failureCount = 2;
             });
-
-            it(@"should attempt a token refresh and then call failure block on Fetch HTTP requests", ^{
-                [client stub:@selector(getPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
-                [newObject fetchOnSuccess:nil failure:failureBlock];
+            
+            afterEach(^{
+                [[theValue(wasAuthBlockExecuted) should] beTrue];
                 assertObjectValuesUnaffectedByFetchFailure(newObject);
             });
-
             
             it(@"should attempt a token refresh and then call failure block on Delete HTTP requests", ^{
                 [client stub:@selector(deletePath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
@@ -674,33 +690,101 @@ describe(@"PCFObject Auth in keychain", ^{
                 [client stub:@selector(putPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
                 [newObject saveOnSuccess:nil failure:failureBlock];
             });
+            
+            it(@"should attempt a token refresh and then call failure block on Fetch HTTP requests", ^{
+                [client stub:@selector(getPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject fetchOnSuccess:nil failure:failureBlock];
+            });
         });
         
-        context(@"asynchronous methods", ^{
+        context(@"valid token", ^{
+            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+                wasBlockExecuted = YES;
+            };
             
             beforeEach(^{
-                AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+                setupDefaultCredentialInKeychain();
                 
-                [client stub:@selector(enqueueHTTPRequestOperation:)
-                   withBlock:^id(NSArray *params) {
-                       AFHTTPRequestOperation *operation = params[0];
-                       verifyAuthorizationInRequest(operation.request);
-                       wasBlockExecuted = YES;
-                       return nil;
-                   }];
+                PCFDataSignIn *signIn = [PCFDataSignIn sharedInstance];
+                [signIn.authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
+                              withBlock:^id(NSArray *params) {
+                                  wasAuthBlockExecuted = YES;
+                                  void (^success)() = params[2];
+                                  success();
+                                  return nil;
+                              }];
+                
+                client = [signIn dataServiceClient:nil];
+                [[client shouldNot] beNil];
+                
+                wasAuthBlockExecuted = NO;
+                
+                failureCount = 1;
             });
             
-            it(@"should include Authentication Header Key and Bearer token value for Fetch HTTP requests", ^{
-                [newObject fetchOnSuccess:nil failure:nil];
+            afterEach(^{
+                [[theValue(wasAuthBlockExecuted) should] beTrue];
             });
             
-            it(@"should include Authentication Header Key and Bearer token value for Delete HTTP requests", ^{
-                [newObject deleteOnSuccess:nil failure:nil];
+            it(@"should attempt a token refresh and then call failure block on Fetch HTTP requests", ^{
+                [client stub:@selector(getPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject fetchOnSuccess:successBlock failure:nil];
             });
             
-            it(@"should include Authentication Header Key and Bearer token value for Save HTTP requests", ^{
-                [newObject saveOnSuccess:nil failure:nil];
+            it(@"should attempt a token refresh and then call success block on Delete HTTP requests", ^{
+                [client stub:@selector(deletePath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject deleteOnSuccess:successBlock failure:nil];
             });
+            
+            it(@"should attempt a token refresh and then call success block on Save HTTP requests", ^{
+                [client stub:@selector(putPath:parameters:success:failure:) withBlock:asyncPathHandlerBlock];
+                [newObject saveOnSuccess:successBlock failure:nil];
+            });
+        });
+    });
+    
+    context(@"Authentication Header Key and Bearer token value", ^{
+        __block PCFObject *newObject;
+        __block BOOL wasBlockExecuted;
+        
+        static NSString *const kAuthorizationHeaderKey = @"Authorization";
+        
+        void (^verifyAuthorizationInRequest)(NSURLRequest *) = ^(NSURLRequest *request) {
+            NSString *token = [request valueForHTTPHeaderField:kAuthorizationHeaderKey];
+            [[theValue([token hasPrefix:@"Bearer "]) should] beTrue];
+            [[theValue([token hasSuffix:kTestAccessToken1]) should] beTrue];
+        };
+        
+        beforeEach(^{
+            AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+            [[PCFDataSignIn sharedInstance] setCredential:[PCFDataSignIn sharedInstance].credential];
+            
+            [client stub:@selector(enqueueHTTPRequestOperation:)
+               withBlock:^id(NSArray *params) {
+                   AFHTTPRequestOperation *operation = params[0];
+                   verifyAuthorizationInRequest(operation.request);
+                   wasBlockExecuted = YES;
+                   return nil;
+               }];
+            
+            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject.objectID = kTestObjectID;
+        });
+        
+        afterEach(^{
+            [[theValue(wasBlockExecuted) should] beTrue];
+        });
+        
+        it(@"should be included for Fetch HTTP requests", ^{
+            [newObject fetchOnSuccess:nil failure:nil];
+        });
+        
+        it(@"should be included for Delete HTTP requests", ^{
+            [newObject deleteOnSuccess:nil failure:nil];
+        });
+        
+        it(@"should be included for Save HTTP requests", ^{
+            [newObject saveOnSuccess:nil failure:nil];
         });
     });
 });

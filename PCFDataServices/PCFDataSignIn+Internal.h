@@ -21,6 +21,10 @@
 
 - (void)setCredential:(AFOAuthCredential *)credential;
 
+- (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
+                                  success:(void (^)(AFOAuthCredential *credential))success
+                                  failure:(void (^)(NSError *error))failure;
+
 + (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
 
 @end
