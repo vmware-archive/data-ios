@@ -113,13 +113,6 @@
 ///--------------------------------------
 
 /**
- Saves the PCFObject synchronously and sets an error if it occurs.
- @param error Pointer to an NSError that will be set if necessary.
- @result Returns whether the save succeeded.
- */
-- (BOOL)saveSynchronously:(NSError **)error;
-
-/**
  Saves the PCFObject asynchronously and executes the given callback block.
  @param success The block to execute when the save operation is successful.
  @param failure The block to execute when the save operation fails.
@@ -131,12 +124,6 @@
 #pragma mark Fetch
 
 /** @name Getting an Object from Parse */
-
-/**
- Fetches the PCFObject synchronously with the current data from the server and sets an error if it occurs.
- @param error Pointer to an NSError that will be set if necessary.
- */
-- (BOOL)fetchSynchronously:(NSError **)error;
 
 /**
  Fetches the PCFObject asynchronously and executes the given callback block.
@@ -152,13 +139,6 @@
 ///------------------------------------------
 /// @name Removing an Object from Data Server
 ///------------------------------------------
-
-/**
- Deletes the PCFObject synchronously and sets an error if it occurs.
- @param error Pointer to an NSError that will be set if necessary.
- @result Returns whether the delete succeeded.
- */
-- (BOOL)deleteSynchronously:(NSError **)error;
 
 /**
  Deletes the PCFObject asynchronously and executes the given callback block.

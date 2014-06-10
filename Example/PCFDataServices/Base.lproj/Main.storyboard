@@ -31,9 +31,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L4K-1z-nQT">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L4K-1z-nQT">
                                 <rect key="frame" x="118" y="269" width="84" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="CYw-o6-Upm"/>
+                                    <constraint firstAttribute="width" constant="84" id="zPy-eU-TzU"/>
+                                </constraints>
                                 <state key="normal" title="Sign In Now">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -41,9 +45,13 @@
                                     <action selector="signInClick:" destination="zqa-7g-eAL" eventType="touchUpInside" id="Myj-DX-Ufo"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sq9-yf-g7j">
-                                <rect key="frame" x="137" y="518" width="56" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sq9-yf-g7j">
+                                <rect key="frame" x="132" y="321" width="56" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="56" id="ELS-e8-dZ6"/>
+                                    <constraint firstAttribute="height" constant="30" id="c4V-LT-OxO"/>
+                                </constraints>
                                 <state key="normal" title="Log Out">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -53,6 +61,12 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Sq9-yf-g7j" firstAttribute="top" secondItem="L4K-1z-nQT" secondAttribute="bottom" constant="22" id="YHG-Vh-6h1"/>
+                            <constraint firstItem="L4K-1z-nQT" firstAttribute="leading" secondItem="irq-oZ-a1w" secondAttribute="leading" constant="118" id="aQB-l3-awE"/>
+                            <constraint firstItem="L4K-1z-nQT" firstAttribute="centerX" secondItem="Sq9-yf-g7j" secondAttribute="centerX" id="fI6-7U-A3e"/>
+                            <constraint firstItem="L4K-1z-nQT" firstAttribute="top" secondItem="Gb6-Oe-Jr9" secondAttribute="bottom" constant="205" id="vtj-G5-Aob"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Pivotal Sign In" id="9tm-hA-WMc"/>
                     <connections>

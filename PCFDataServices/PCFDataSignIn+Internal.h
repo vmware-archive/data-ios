@@ -17,7 +17,7 @@
 
 - (AFOAuthCredential *)credential;
 
-- (PCFDataServiceClient *)dataServiceClient;
+- (AFHTTPClient *)dataServiceClient:(NSError **)error;
 
 - (void)setCredential:(AFOAuthCredential *)credential;
 

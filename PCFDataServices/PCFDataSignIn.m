@@ -11,7 +11,7 @@
 #import "AFOAuth2Client.h"
 #import "PCFDataSignIn+Internal.h"
 #import "PCFDataError.h"
-#import "PCFDataServiceClient.h"
+
 
 NSString *const kPCFOAuthCredentialID = @"PCFDataServicesOAuthCredential";
 NSString *const kPCFDataServicesErrorDomain = @"PCFDataServicesError";
@@ -28,7 +28,7 @@ static
 @interface PCFDataSignIn ()
 
 @property (nonatomic) AFOAuth2Client *authClient;
-@property (nonatomic) PCFDataServiceClient *dataServiceClient;
+@property (nonatomic) AFHTTPClient *dataServiceClient;
 
 @end
 
@@ -84,18 +84,21 @@ static
     return _authClient;
 }
 
-- (PCFDataServiceClient *)dataServiceClient
+- (AFHTTPClient *)dataServiceClient:(NSError **)error
 {
     if (!self.dataServiceURL) {
         @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];
     }
     
     if (![self hasAuthInKeychain]) {
+        if (error) {
+            *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesAuthorizationRequired userInfo:@{ NSLocalizedDescriptionKey : @"No credentials found. Authentication required." }];
+        }
         return nil;
     }
     
     if (!_dataServiceClient) {
-        _dataServiceClient = [PCFDataServiceClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
+        _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
         _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
         [self setAuthorizationHeaderOnClient:_dataServiceClient withCredential:self.credential];
     }

@@ -15,7 +15,7 @@
 #import "PCFDataError.h"
 #import "PCFDataTestConstants.h"
 #import "PCFDataTestHelpers.h"
-#import "PCFDataServiceClient.h"
+
 
 SPEC_BEGIN(PCFDataSignInSpec)
 
@@ -165,12 +165,13 @@ context(@"PCFDataSignIn Specification", ^{
                 setupForSuccessfulSilentAuth();
                 [sharedInstance setCredential:sharedInstance.credential];
                 
-                NSString *headerValue1 = [sharedInstance.dataServiceClient defaultValueForHeader:@"Authorization"];
+                AFHTTPClient *client = [sharedInstance dataServiceClient:nil];
+                NSString *headerValue1 = [client defaultValueForHeader:@"Authorization"];
                 [[headerValue1 shouldNot] beNil];
                 
                 [sharedInstance trySilentAuthentication];
                 
-                NSString *headerValue2 = [sharedInstance.dataServiceClient defaultValueForHeader:@"Authorization"];
+                NSString *headerValue2 = [client defaultValueForHeader:@"Authorization"];
                 [[headerValue2 shouldNot] beNil];
                 [[headerValue2 shouldNot] equal:headerValue1];
                 

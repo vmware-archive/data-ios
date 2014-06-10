@@ -23,12 +23,6 @@
          location = "group:PCFDataError.h">
       </FileRef>
       <FileRef
-         location = "group:PCFDataServiceClient.h">
-      </FileRef>
-      <FileRef
-         location = "group:PCFDataServiceClient.m">
-      </FileRef>
-      <FileRef
          location = "group:PCFDataServices.h">
       </FileRef>
    </Group>

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1AFA377B07AC42BAA0E2B2A4 /* libPods-PCFDataServices Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE95FB68F0640759F313BE6 /* libPods-PCFDataServices Example.a */; };
 		5718CABC19423DBB00761429 /* PCFSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CABB19423DBB00761429 /* PCFSignInViewController.m */; };
-		5718CABF19423E1B00761429 /* PCFDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CABE19423E1B00761429 /* PCFDataViewController.m */; };
 		5718CAC219425D9800761429 /* PCFDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAC119425D9800761429 /* PCFDataTableViewController.m */; };
 		F1B601C51925257200B65371 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1B601C31925257200B65371 /* InfoPlist.strings */; };
 		F1B601C71925257200B65371 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B601C61925257200B65371 /* main.m */; };
@@ -21,8 +20,6 @@
 /* Begin PBXFileReference section */
 		5718CABA19423DBB00761429 /* PCFSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFSignInViewController.h; sourceTree = "<group>"; };
 		5718CABB19423DBB00761429 /* PCFSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFSignInViewController.m; sourceTree = "<group>"; };
-		5718CABD19423E1B00761429 /* PCFDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataViewController.h; sourceTree = "<group>"; };
-		5718CABE19423E1B00761429 /* PCFDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataViewController.m; sourceTree = "<group>"; };
 		5718CAC019425D9800761429 /* PCFDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataTableViewController.h; sourceTree = "<group>"; };
 		5718CAC119425D9800761429 /* PCFDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataTableViewController.m; sourceTree = "<group>"; };
 		66997FFC642446149BED3F9A /* Pods-PCFDataServices Example.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PCFDataServices Example.xcconfig"; path = "../Pods/Pods-PCFDataServices Example.xcconfig"; sourceTree = "<group>"; };
@@ -63,8 +60,6 @@
 			children = (
 				5718CABA19423DBB00761429 /* PCFSignInViewController.h */,
 				5718CABB19423DBB00761429 /* PCFSignInViewController.m */,
-				5718CABD19423E1B00761429 /* PCFDataViewController.h */,
-				5718CABE19423E1B00761429 /* PCFDataViewController.m */,
 				5718CAC019425D9800761429 /* PCFDataTableViewController.h */,
 				5718CAC119425D9800761429 /* PCFDataTableViewController.m */,
 			);
@@ -215,7 +210,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5718CAC219425D9800761429 /* PCFDataTableViewController.m in Sources */,
-				5718CABF19423E1B00761429 /* PCFDataViewController.m in Sources */,
 				5718CABC19423DBB00761429 /* PCFSignInViewController.m in Sources */,
 				F1B601CB1925257200B65371 /* PCFAppDelegate.m in Sources */,
 				F1B601C71925257200B65371 /* main.m in Sources */,

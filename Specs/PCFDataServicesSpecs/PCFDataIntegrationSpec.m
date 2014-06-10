@@ -39,44 +39,12 @@ describe(@"PCF Data Service Integration Tests", ^{
         
         __block PCFObject *obj1;
         __block PCFObject *obj2;
-        __block NSError *error;
         
         beforeEach(^{
             obj1 = [PCFObject objectWithClassName:kTestClassName];
             obj1.objectID = kTestObjectID;
             obj1[kTestObjectKey] = kTestObjectValue;
             [[theValue(obj1.isDirty) should] beTrue];
-        });
-        
-        it(@"should work synchronously", ^{
-            if (![obj1 saveSynchronously:&error]) {
-                fail(@"Saved failed (error: '%@')", error);
-                
-            } else {
-                [[theValue(obj1.isDirty) should] beFalse];
-                obj2 = [PCFObject objectWithClassName:kTestClassName];
-                obj2.objectID = kTestObjectID;
-                
-                if (![obj2 fetchSynchronously:&error]){
-                    fail(@"Delete failed (error: '%@')", error);
-                    
-                } else {
-                    [[theValue(obj2.isDirty) should] beFalse];
-                    [[obj2[kTestObjectKey] should] equal:obj1[kTestObjectKey]];
-                    
-                    if (![obj1 deleteSynchronously:&error]) {
-                        fail(@"Delete failed (error: '%@')", error);
-                        
-                    } else {
-                        [[theValue(obj1.isDirty) should] beTrue];
-                    }
-                    
-                    //Delete obj with same objectID should fail
-                    if ([obj2 deleteSynchronously:&error]) {
-                        fail(@"Delete failed (error: '%@')", error);
-                    }
-                }
-            }
         });
         
         it(@"should work asynchronously", ^{
