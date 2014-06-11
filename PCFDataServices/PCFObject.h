@@ -148,13 +148,4 @@
 - (void)deleteOnSuccess:(void (^)(PCFObject *object))success
                 failure:(void (^)(NSError *error))failure;
 
-#pragma mark -
-#pragma Dirtiness
-
-/**
- Gets whether any key-value pair in this object (or its children) has been added/updated/removed and not saved yet.
- @result Returns whether this object has been altered and not saved yet.
- */
-- (BOOL)isDirty;
-
 @end

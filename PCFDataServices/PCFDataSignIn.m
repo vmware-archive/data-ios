@@ -149,7 +149,7 @@ static
 
 - (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
 {
-    [self authenticateWithInteractiveOption:interactive success:nil failure:nil];
+    return [self authenticateWithInteractiveOption:interactive success:nil failure:nil];
 }
 
 - (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
@@ -173,20 +173,26 @@ static
     
     AFOAuthCredential *savedCredential = [self credential];
     if (savedCredential) {
-        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath refreshToken:savedCredential.refreshToken success:^(AFOAuthCredential *credential) {
+        
+        void (^failureBlock)(NSError *) = ^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+            
+            [self.delegate finishedWithAuth:nil error:error];
+        };
+        
+        void (^successBlock)(AFOAuthCredential *) = ^(AFOAuthCredential *credential) {
             if(success) {
                 success(credential);
             }
             
             [self setCredential:credential];
             [self.delegate finishedWithAuth:credential error:nil];
-        } failure:^(NSError *error) {
-            if (failure) {
-                failure(error);
-            }
-            
-            [self.delegate finishedWithAuth:nil error:error];
-        }];
+        };
+        
+        NSLog(@"Xxxxxxxxxxxxx REACH #1 xxxxxxxxxxxxxxxxx");
+        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath refreshToken:savedCredential.refreshToken success:successBlock failure:failureBlock];
         return YES;
     }
     

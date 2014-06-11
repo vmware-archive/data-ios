@@ -31,12 +31,12 @@ context(@"PCFDataSignIn Specification", ^{
     
     __block AFOAuthCredential *credential;
     
-    beforeAll(^{
-        [[NSBundle mainBundle] stub:@selector(bundleIdentifier) andReturn:kTestBundleIndentifier];
-    });
-    
     beforeEach(^{
         resetSharedInstance();
+        
+        [[NSBundle mainBundle] stub:@selector(bundleIdentifier) withBlock:^id(NSArray *params) {
+            return kTestBundleIndentifier;
+        }];
         
         stubKeychain(credential);
     });

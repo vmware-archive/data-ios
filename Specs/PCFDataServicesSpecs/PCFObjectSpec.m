@@ -315,8 +315,8 @@ describe(@"PCFObject Auth in keychain", ^{
                     };
                     
                     stubPutAsyncCall(^(NSArray *params){
-                        void (^passedBlockSuccess)(void) = params[2];
-                        passedBlockSuccess();
+                        void (^passedBlockSuccess)(AFHTTPRequestOperation *, NSError *) = params[2];
+                        passedBlockSuccess(nil, nil);
                     });
                     
                     [newObject saveOnSuccess:successBlock failure:failureBlock];
@@ -548,8 +548,8 @@ describe(@"PCFObject Auth in keychain", ^{
             };
             
             stubDeleteAsyncCall(^(NSArray *params){
-                void (^passedBlock)(void) = params[2];
-                passedBlock();
+                void (^passedBlock)(AFHTTPRequestOperation *, NSError *) = params[2];
+                passedBlock(nil, nil);
             });
             
             [newObject deleteOnSuccess:successBlock failure:failureBlock];
@@ -695,7 +695,7 @@ describe(@"PCFObject Auth in keychain", ^{
                               withBlock:^id(NSArray *params) {
                                   wasAuthBlockExecuted = YES;
                                   void (^success)() = params[2];
-                                  success();
+                                  success(nil);
                                   return nil;
                               }];
                 
