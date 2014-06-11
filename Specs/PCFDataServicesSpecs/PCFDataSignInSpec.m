@@ -38,20 +38,7 @@ context(@"PCFDataSignIn Specification", ^{
     beforeEach(^{
         resetSharedInstance();
         
-        //Stub out AFOAuthCredential as the Keychain is not available in a testing environment.
-        [AFOAuthCredential stub:@selector(storeCredential:withIdentifier:) withBlock:^id(NSArray *params) {
-            credential = params[0];
-            return @YES;
-        }];
-        
-        [AFOAuthCredential stub:@selector(deleteCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
-            credential = nil;
-            return @YES;
-        }];
-        
-        [AFOAuthCredential stub:@selector(retrieveCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
-            return credential;
-        }];
+        stubKeychain(credential);
     });
     
     afterEach(^{

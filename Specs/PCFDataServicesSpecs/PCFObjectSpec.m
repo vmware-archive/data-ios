@@ -46,6 +46,8 @@ describe(@"PCFObject no Auth in keychain", ^{
     };
     
     beforeEach(^{
+        stubKeychain(nil);
+        
         [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
         newObject = [PCFObject objectWithClassName:kTestClassName];
         PCFDataSignIn *signIn = [PCFDataSignIn sharedInstance];
@@ -94,6 +96,8 @@ describe(@"PCFObject Auth in keychain", ^{
     };
     
     beforeEach(^{
+        stubKeychain(nil);
+        
         [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
         setupDefaultCredentialInKeychain();
     });

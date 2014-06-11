@@ -15,3 +15,5 @@ void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger expiresIn);
 void (^setupForSuccessfulSilentAuth)(void);
 
 void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>);
+
+void (^stubKeychain)(AFOAuthCredential *);

@@ -29,6 +29,8 @@ describe(@"PCF Data Service Integration Tests", ^{
     static NSString *const kTestObjectValue = @"Rob likes cats!";
     
     beforeEach(^{
+        stubKeychain(nil);
+        
         setupCredentialInKeychain(access_token, refresh_token, expires_in);
         
         setupPCFDataSignInInstance(nil);

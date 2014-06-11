@@ -27,15 +27,15 @@ void (^setupDefaultCredentialInKeychain)(void) = ^{
 
 void (^setupForSuccessfulSilentAuth)(void) = ^{
     setupDefaultCredentialInKeychain();
-    
-    [[[PCFDataSignIn sharedInstance] authClient] stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
-                                            withBlock:^id(NSArray *params) {
-                                                void (^success)(AFOAuthCredential *credential) = params[2];
-                                                AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken2 tokenType:kTestTokenType];
-                                                [credential setRefreshToken:kTestRefreshToken1 expiration:[NSDate dateWithTimeIntervalSinceNow:3600]];
-                                                success(credential);
-                                                return nil;
-                                            }];
+    AFOAuth2Client *authClient = [[PCFDataSignIn sharedInstance] authClient];
+    [authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
+           withBlock:^id(NSArray *params) {
+               void (^success)(AFOAuthCredential *credential) = params[2];
+               AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken2 tokenType:kTestTokenType];
+               [credential setRefreshToken:kTestRefreshToken1 expiration:[NSDate dateWithTimeIntervalSinceNow:3600]];
+               success(credential);
+               return nil;
+           }];
 };
 
 void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>) = ^(id<PCFSignInDelegate> delegate){
@@ -44,4 +44,24 @@ void (^setupPCFDataSignInInstance)(id<PCFSignInDelegate>) = ^(id<PCFSignInDelega
     [instance setClientID:kTestClientID];
     [instance setClientSecret:kTestClientSecret];
     [instance setDelegate:delegate];
+};
+
+void (^stubKeychain)(AFOAuthCredential *) = ^(AFOAuthCredential *credential){
+    
+    __block AFOAuthCredential *blockCredential = credential;
+    
+    //Stub out AFOAuthCredential as the Keychain is not available in a testing environment.
+    [AFOAuthCredential stub:@selector(storeCredential:withIdentifier:) withBlock:^id(NSArray *params) {
+        blockCredential = params[0];
+        return @YES;
+    }];
+    
+    [AFOAuthCredential stub:@selector(deleteCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
+        blockCredential = nil;
+        return @YES;
+    }];
+    
+    [AFOAuthCredential stub:@selector(retrieveCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
+        return blockCredential;
+    }];
 };

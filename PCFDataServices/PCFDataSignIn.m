@@ -173,23 +173,20 @@ static
     
     AFOAuthCredential *savedCredential = [self credential];
     if (savedCredential) {
-        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath
-                                           refreshToken:savedCredential.refreshToken
-                                                success:^(AFOAuthCredential *credential) {
-                                                    if(success) {
-                                                        success(credential);
-                                                    }
-                                                    
-                                                    [self setCredential:credential];
-                                                    [self.delegate finishedWithAuth:credential error:nil];
-                                                }
-                                                failure:^(NSError *error) {
-                                                    if (failure) {
-                                                        failure(error);
-                                                    }
-                                                    
-                                                    [self.delegate finishedWithAuth:nil error:error];
-                                                }];
+        [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath refreshToken:savedCredential.refreshToken success:^(AFOAuthCredential *credential) {
+            if(success) {
+                success(credential);
+            }
+            
+            [self setCredential:credential];
+            [self.delegate finishedWithAuth:credential error:nil];
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+            
+            [self.delegate finishedWithAuth:nil error:error];
+        }];
         return YES;
     }
     
