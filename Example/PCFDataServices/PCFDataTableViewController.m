@@ -9,6 +9,7 @@
 #import <PCFDataServices/PCFDataServices.h>
 
 #import "PCFDataTableViewController.h"
+#import "PCFShowJSONViewController.h"
 
 #pragma mark - PCFArrayObject
 
@@ -214,13 +215,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)saveButtonClicked:(id)sender
 {
-    self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
-    [self.keyValuePairsArray enumerateObjectsUsingBlock:^(PCFArrayObject *obj, NSUInteger idx, BOOL *stop) {
-        if (idx > 0 && obj.keyString.length > 0) {
-            self.syncObject[obj.keyString] = obj.valueString;
-        }
-    }];
-    
+    [self populateSyncObject];
     [self.syncObject saveOnSuccess:^(PCFObject *object){
         UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Save Success" message:@"Save was successful." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [view show];
@@ -286,4 +281,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         }
     }];
 }
+
+- (void)populateSyncObject
+{
+    self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
+    [self.keyValuePairsArray enumerateObjectsUsingBlock:^(PCFArrayObject *obj, NSUInteger idx, BOOL *stop) {
+        if (idx > 0 && obj.keyString.length > 0) {
+            self.syncObject[obj.keyString] = obj.valueString;
+        }
+    }];
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    [self populateSyncObject];
+    NSDictionary *dict = [self.syncObject performSelector:@selector(contentsDictionary)];
+    NSString *formattedString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    [(PCFShowJSONViewController *)[segue destinationViewController] setFormattedJSON:formattedString];
+}
+
 @end
