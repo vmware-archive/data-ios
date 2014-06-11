@@ -32,6 +32,27 @@
     return newObj;
 }
 
++ (instancetype)objectWithCollectionName:(NSString *)name objectID:(NSString *)objectID
+{
+    PCFArrayObject *newObj = [[self alloc] init];
+    if (newObj) {
+        newObj.keyString = name;
+        newObj.valueString = objectID;
+    }
+    
+    return newObj;
+}
+
+- (NSString *)collectionName
+{
+    return self.keyString;
+}
+
+- (NSString *)objectID
+{
+    return self.valueString;
+}
+
 @end
 
 #pragma mark - PCFTableViewCell
@@ -62,9 +83,9 @@
 
 @interface PCFDataTableViewController ()
 
-@property PCFObject *syncObject;
-@property NSString *objectID;
+@property (nonatomic)  PCFObject *syncObject;
 @property NSMutableArray *keyValuePairsArray;
+
 
 @property (strong, nonatomic) IBOutletCollection(UIBarButtonItem) NSArray *barButtonCollection;
 
@@ -77,8 +98,19 @@
     [super viewDidLoad];
     
     self.navigationController.toolbarHidden = NO;
-    self.syncObject = [PCFObject objectWithClassName:@"objects"];
-    self.keyValuePairsArray = [NSMutableArray array];
+    self.keyValuePairsArray = [NSMutableArray arrayWithObject:[PCFArrayObject objectWithCollectionName:@"objects" objectID:@"1234"]];
+}
+
+- (PCFObject *)syncObject
+{
+    if (self.keyValuePairsArray[0] && [self.keyValuePairsArray[0] collectionName] && [self.keyValuePairsArray[0] collectionName].length > 0) {
+        if (!_syncObject || ![_syncObject.className isEqualToString:[self.keyValuePairsArray[0] collectionName]]) {
+            _syncObject = [PCFObject objectWithClassName:[self.keyValuePairsArray[0] collectionName]];
+        }
+        return _syncObject;
+    }
+    
+    return nil;
 }
 
 #pragma mark - Table view data source
@@ -90,16 +122,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        return 44.0f;
-    } else {
-        return 86.0f;
-    }
+    return 86.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.keyValuePairsArray.count + 1;
+    return self.keyValuePairsArray.count;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -109,16 +137,24 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
-        [(UITextField *)[cell viewWithTag:1] setText:self.objectID];
+        PCFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
+        
+        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        cell.arrayObject = arrayObject;
+        
+        [cell.keyTextField setText:arrayObject.collectionName];
+        [cell.keyTextField setDelegate:cell];
+        
+        [cell.valueTextField setText:arrayObject.objectID];
+        [cell.valueTextField setDelegate:cell];
 
         return cell;
     }
 
     PCFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"keyValueCell" forIndexPath:indexPath];
 
-    if (indexPath.row -1 < self.keyValuePairsArray.count) {
-        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row-1];
+    if (indexPath.row < self.keyValuePairsArray.count) {
+        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         cell.arrayObject = arrayObject;
 
         [cell.keyTextField setText:arrayObject.keyString];
@@ -137,22 +173,30 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row - 1];
+        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         [self.syncObject removeObjectForKey:arrayObject.keyString];
         
-        [self.keyValuePairsArray removeObjectAtIndex:indexPath.row - 1];
+        [self.keyValuePairsArray removeObjectAtIndex:indexPath.row];
         
         [self.tableView reloadData];
     }
 }
 
+- (void)resetKeyValuePairsArray
+{
+    if (self.keyValuePairsArray.count > 1) {
+        [self.keyValuePairsArray removeObjectsInRange:NSMakeRange(1, self.keyValuePairsArray.count - 1)];
+    }
+}
+
 - (IBAction)fetchButtonClicked:(id)sender
 {
-    if (self.objectID) {
-        self.syncObject.objectID = self.objectID;
+    if (self.syncObject && [self.keyValuePairsArray[0] objectID]) {
+        self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
         
         [self.syncObject fetchOnSuccess:^(PCFObject *object) {
-            self.keyValuePairsArray = [NSMutableArray array];
+            [self resetKeyValuePairsArray];
+            
             [object.allKeys enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
                 [self.keyValuePairsArray addObject:[PCFArrayObject objectWithKey:key value:object[key]]];
             }];
@@ -170,9 +214,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)saveButtonClicked:(id)sender
 {
+    self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
     [self.keyValuePairsArray enumerateObjectsUsingBlock:^(PCFArrayObject *obj, NSUInteger idx, BOOL *stop) {
-        
-        if (obj.keyString.length > 0) {
+        if (idx > 0 && obj.keyString.length > 0) {
             self.syncObject[obj.keyString] = obj.valueString;
         }
     }];
@@ -191,14 +235,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.keyValuePairsArray addObject:[PCFArrayObject objectWithKey:@"" value:@""]];
     [self.tableView reloadData];
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.keyValuePairsArray.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.keyValuePairsArray.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 - (IBAction)objectIDReturned:(UITextField *)sender
 {
-    self.objectID = sender.text;
+    [self.keyValuePairsArray[0] setValueString:sender.text];
     
-    if (self.keyValuePairsArray.count == 0) {
+    if ([self.keyValuePairsArray[0] collectionName] && self.keyValuePairsArray.count == 1) {
+        [self fetchButtonClicked:sender];
+        
+    }
+    [sender resignFirstResponder];
+}
+
+- (IBAction)collectionNameReturned:(UITextField *)sender
+{
+    [self.keyValuePairsArray[0] setKeyString:sender.text];
+    
+    if ([self.keyValuePairsArray[0] objectID] && self.keyValuePairsArray.count == 1) {
         [self fetchButtonClicked:sender];
         
     }
@@ -207,10 +262,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)deleteButtonClicked:(id)sender
 {
-    if (self.objectID) {
+    self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
+    
+    if ([self.keyValuePairsArray[0] objectID]) {
         [self.syncObject deleteOnSuccess:^(PCFObject *object){
-            self.objectID = nil;
-            self.keyValuePairsArray = [NSMutableArray array];
+            [self resetKeyValuePairsArray];
             [self.tableView reloadData];
             
         } failure:^(NSError *error) {            
