@@ -79,17 +79,6 @@
     self.navigationController.toolbarHidden = NO;
     self.syncObject = [PCFObject objectWithClassName:@"objects"];
     self.keyValuePairsArray = [NSMutableArray array];
-    
-    UILabel *dirtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, 44)];
-    dirtyLabel.textAlignment = NSTextAlignmentRight;
-    dirtyLabel.text = @"Dirty";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:dirtyLabel];
-    [self updateDirtyLabel];
-}
-
-- (void)updateDirtyLabel
-{
-    [(UILabel *)self.navigationItem.rightBarButtonItem.customView setTextColor:self.syncObject.isDirty ? [UIColor redColor] : [UIColor lightGrayColor]];
 }
 
 #pragma mark - Table view data source
@@ -152,7 +141,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         [self.syncObject removeObjectForKey:arrayObject.keyString];
         
         [self.keyValuePairsArray removeObjectAtIndex:indexPath.row - 1];
-        [self updateDirtyLabel];
         
         [self.tableView reloadData];
     }
@@ -169,12 +157,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                 [self.keyValuePairsArray addObject:[PCFArrayObject objectWithKey:key value:object[key]]];
             }];
 
-            [self updateDirtyLabel];
             [self.tableView reloadData];
             
         } failure:^(NSError *error) {
-            [self updateDirtyLabel];
-            
             if (![sender isKindOfClass:[UITextField class]]) {
                 UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Fetch Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [view show];
@@ -192,13 +177,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         }
     }];
     
-    [self.syncObject saveOnSuccess:^{
-        [self updateDirtyLabel];
+    [self.syncObject saveOnSuccess:^(PCFObject *object){
         UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Save Success" message:@"Save was successful." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [view show];
         
     } failure:^(NSError *error) {
-        [self updateDirtyLabel];
         UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Save Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [view show];
     }];
@@ -207,8 +190,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)addButtonClicked:(id)sender
 {
     [self.keyValuePairsArray addObject:[PCFArrayObject objectWithKey:@"" value:@""]];
-    [self updateDirtyLabel];
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.keyValuePairsArray.count inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [self.tableView reloadData];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.keyValuePairsArray.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 - (IBAction)objectIDReturned:(UITextField *)sender
@@ -225,15 +208,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)deleteButtonClicked:(id)sender
 {
     if (self.objectID) {
-        [self.syncObject deleteOnSuccess:^{
+        [self.syncObject deleteOnSuccess:^(PCFObject *object){
             self.objectID = nil;
             self.keyValuePairsArray = [NSMutableArray array];
-            [self updateDirtyLabel];
             [self.tableView reloadData];
             
-        } failure:^(NSError *error) {
-            [self updateDirtyLabel];
-            
+        } failure:^(NSError *error) {            
             UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Delete Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [view show];
         }];

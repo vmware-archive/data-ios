@@ -99,6 +99,7 @@ static
     
     if (!_dataServiceClient) {
         _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
+        
         _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
         [self setAuthorizationHeaderOnClient:_dataServiceClient withCredential:self.credential];
     }

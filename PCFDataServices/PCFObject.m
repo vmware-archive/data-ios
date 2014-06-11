@@ -17,7 +17,7 @@
 
 @property (readwrite) NSString *className;
 @property (nonatomic) NSMutableDictionary *contentsDictionary;
-@property (nonatomic) BOOL isDirty;
+
 @end
 
 @implementation PCFObject
@@ -44,7 +44,6 @@
     if (self) {
         self.className = className;
         self.contentsDictionary = [NSMutableDictionary dictionary];
-        self.isDirty = YES;
     }
     return self;
 }
@@ -65,19 +64,16 @@
 - (void)setObject:(id)object forKey:(NSString *)key
 {
     self.contentsDictionary[key] = object;
-#pragma warning - Must set dirty flag
 }
 
 - (void)setObjectsForKeysWithDictionary:(NSDictionary *)dictionary
 {
     [self.contentsDictionary addEntriesFromDictionary:dictionary];
-#pragma warning - Must set dirty flag
 }
 
 - (void)removeObjectForKey:(NSString *)key
 {
     [self.contentsDictionary removeObjectForKey:key];
-#pragma warning - Must set dirty flag
 }
 
 - (id)objectForKeyedSubscript:(NSString *)key
@@ -111,7 +107,6 @@
 {
     NSUInteger newKeys = remoteValues.allKeys.count;
     [self.contentsDictionary setValuesForKeysWithDictionary:remoteValues];
-    self.isDirty = self.contentsDictionary.allKeys.count > newKeys;
 }
 
 - (NSError *)authorizationRequiredError
@@ -191,9 +186,6 @@
     }
     
     void (^successBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
-#warning - TODO: Add back in dirty flag logic
-//        self.isDirty = YES;
-        
         if (success) {
             success(self);
         }
@@ -225,20 +217,24 @@
         
     } else if ([method isEqualToString:@"GET"]) {
         void (^fetchSuccessBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSError *error;
-            NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
-            
-            if (!fetchedContents) {
-                if (failure) {
+            if (responseObject) {
+                NSError *error;
+                NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+                
+                if (fetchedContents) {
+                    [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
+                    
+                    if (success) {
+                        success(self);
+                    }
+
+                } else if (failure) {
                     failure(error);
                 }
-                
-            } else {
-                [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
-                
-                if (success) {
-                    success(self);
-                }
+            } else if (failure) {
+                NSDictionary *userInfo = operation ? @{ @"HTTPRequestOperation" : operation } : nil;
+                NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesEmptyResponseData userInfo:userInfo];
+                failure(error);
             }
         };
         

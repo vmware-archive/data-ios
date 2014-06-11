@@ -44,25 +44,24 @@ describe(@"PCF Data Service Integration Tests", ^{
             obj1 = [PCFObject objectWithClassName:kTestClassName];
             obj1.objectID = kTestObjectID;
             obj1[kTestObjectKey] = kTestObjectValue;
-            [[theValue(obj1.isDirty) should] beTrue];
         });
         
         it(@"should work asynchronously", ^{
+            __block BOOL blocksWereExecuted = NO;
+            
             [obj1 saveOnSuccess:^(PCFObject *object) {
-                [[theValue(obj1.isDirty) should] beFalse];
                 obj2 = [PCFObject objectWithClassName:kTestClassName];
                 obj2.objectID = kTestObjectID;
                 
                 [obj2 fetchOnSuccess:^(PCFObject *object) {
-                    [[theValue(obj2.isDirty) should] beFalse];
                     [[obj2[kTestObjectKey] should] equal:obj1[kTestObjectKey]];
                         
                     [obj1 deleteOnSuccess:^(PCFObject *object) {
-                        [[theValue(obj1.isDirty) should] beTrue];
                         
                         [obj2 deleteOnSuccess:^(PCFObject *object) {
                             fail(@"Delete should have failed with same objectID as obj1");
                         } failure:^(NSError *error) {
+                            blocksWereExecuted = YES;
                             [[error shouldNot] beNil];
                         }];
                         
@@ -77,6 +76,8 @@ describe(@"PCF Data Service Integration Tests", ^{
             } failure:^(NSError *error) {
                 fail(@"Saved failed (error: '%@')", error);
             }];
+            
+            [[expectFutureValue(theValue(blocksWereExecuted)) shouldEventually] beTrue];
         });
     });
 });
