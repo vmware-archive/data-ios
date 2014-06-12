@@ -9,6 +9,7 @@
 #import <Kiwi/Kiwi.h>
 #import <AFNetworking/AFNetworking.h>
 #import "AFOAuth2Client.h"
+#import "AFHTTPClient+PCFMethods.h"
 
 #import "PCFObject+Internal.h"
 #import "PCFDataSignIn+Internal.h"
@@ -360,7 +361,7 @@ describe(@"PCFObject Auth in keychain", ^{
             NSDictionary *testResponseObject = @{ @"KEY" : @"VALUE" };
             
             stubGetAsyncCall(^(NSArray *params) {
-                void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                HTTPSuccessBlock successBlock = params[2];
                 successBlock(nil, [NSJSONSerialization dataWithJSONObject:testResponseObject options:0 error:nil]);
             });
             
@@ -379,7 +380,7 @@ describe(@"PCFObject Auth in keychain", ^{
         
         it(@"should call failure block if response data is malformed on GET operation", ^{
             stubGetAsyncCall(^(NSArray *params) {
-                void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                HTTPSuccessBlock successBlock = params[2];
                 successBlock(nil, malformedResponseData);
             });
             
@@ -394,7 +395,7 @@ describe(@"PCFObject Auth in keychain", ^{
         
         it(@"should call failure block and populate error if GET operation fails", ^{
             stubGetAsyncCall(^(NSArray *params) {
-                void (^failBlock)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
+                HTTPFailureBlock failBlock = params[3];
                 failBlock(nil, [NSError errorWithDomain:@"Test Domain" code:1 userInfo:nil]);
             });
             
@@ -473,6 +474,17 @@ describe(@"PCFObject Auth in keychain", ^{
                                  @"A" : @"A",
                                  @"B" : @"B",
                                  @"C" : @"C",
+                                 };
+                testAsynchronously(newObject);
+            });
+            
+            it(@"should merge in nested dictionaries", ^{
+                remoteData =   @{ @"KEY": @{ @"SUB1" : @"VALUE1", @"SUB2" : @"VALUE2" } };
+                expectedData = @{
+                                 @"A" : @"A",
+                                 @"B" : @"B",
+                                 @"C" : @"C",
+                                 @"KEY": @{ @"SUB1" : @"VALUE1", @"SUB2" : @"VALUE2" }
                                  };
                 testAsynchronously(newObject);
             });
@@ -572,8 +584,8 @@ describe(@"PCFObject Auth in keychain", ^{
             };
             
             stubDeleteAsyncCall(^(NSArray *params){
-                void (^passedBlock)(AFHTTPRequestOperation *, NSError *) = params[2];
-                passedBlock(nil, nil);
+                HTTPSuccessBlock successBlock = params[2];
+                successBlock(nil, nil);
             });
             
             [newObject deleteOnSuccess:successBlock failure:failureBlock];
@@ -589,8 +601,8 @@ describe(@"PCFObject Auth in keychain", ^{
             };
             
             stubDeleteAsyncCall(^(NSArray *params){
-                void (^passedBlockFail)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
-                passedBlockFail(nil, nil);
+                HTTPSuccessBlock successBlock = params[3];
+                successBlock(nil, nil);
             });
             
             [newObject deleteOnSuccess:successBlock failure:failureBlock];
@@ -775,6 +787,78 @@ describe(@"PCFObject Auth in keychain", ^{
         
         it(@"should be included for Save HTTP requests", ^{
             [newObject saveOnSuccess:nil failure:nil];
+        });
+    });
+    
+    context(@"saving and getting complex data structures", ^{
+        __block PCFObject *newObject;
+        __block NSDictionary *expectedDictionary;
+        __block NSData *savedRequestData;
+        __block BOOL wasPutBlockExecuted;
+        __block BOOL wasGetBlockExecuted;
+        __block BOOL wasSaveOnSuccessBlockExecuted;
+        
+        beforeEach(^{
+            [PCFDataSignIn setSharedInstance:nil];
+            
+            [[PCFDataSignIn sharedInstance] setDataServiceURL:kTestDataServiceURL];
+            [[PCFDataSignIn sharedInstance] setCredential:[PCFDataSignIn sharedInstance].credential];
+
+            AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+            
+            [client stub:@selector(enqueueHTTPRequestOperation:)
+               withBlock:^id(NSArray *params) {
+                   AFHTTPRequestOperation *operation = params[0];
+                   NSError *error;
+                   savedRequestData = operation.request.HTTPBody;
+                   NSDictionary *requestDictionary = [NSJSONSerialization JSONObjectWithData:savedRequestData options:0 error:&error];
+                   [[error should] beNil];
+                   [[requestDictionary should] equal:expectedDictionary];
+                   
+                   operation.completionBlock();
+                   wasPutBlockExecuted = YES;
+                   return nil;
+               }];
+            
+            stubGetAsyncCall(^(NSArray *params){
+                HTTPSuccessBlock successBlock = params[2];
+                wasGetBlockExecuted = YES;
+                successBlock(nil, savedRequestData);
+            });
+            
+            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject.objectID = kTestObjectID;
+            
+            wasPutBlockExecuted = NO;
+            wasGetBlockExecuted = NO;
+            wasSaveOnSuccessBlockExecuted = NO;
+        });
+        
+        afterEach(^{
+            [[expectFutureValue(theValue(wasPutBlockExecuted)) shouldEventually] beTrue];
+            [[expectFutureValue(theValue(wasGetBlockExecuted)) shouldEventually] beTrue];
+            [[expectFutureValue(theValue(wasSaveOnSuccessBlockExecuted)) shouldEventually] beTrue];
+        });
+        
+        it(@"should pass a single key/value pair in the request", ^{
+            expectedDictionary = @{ @"TACO" : @"CAT" };
+            [newObject setObject:@"CAT" forKey:@"TACO"];
+            
+            [newObject saveOnSuccess:^(PCFObject *object) {
+                // NOTE - this block run AFTER the fetch is completed since it is asynchronous
+                wasSaveOnSuccessBlockExecuted = YES;
+            } failure:^(NSError *error) {
+                fail(@"Should not have failed");
+            }];
+
+            PCFObject *fetchedObject = [PCFObject objectWithClassName:kTestClassName];
+            fetchedObject.objectID = kTestObjectID;
+            
+            [fetchedObject fetchOnSuccess:^(PCFObject *object) {
+                assertObjectEqual(self, expectedDictionary, object);
+            } failure:^(NSError *error) {
+                fail(@"Should not have failed");
+            }];
         });
     });
 });
