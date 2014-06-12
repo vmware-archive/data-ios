@@ -346,8 +346,6 @@ describe(@"PCFObject Auth in keychain", ^{
             [[theValue(wasBlockExecuted) should] beTrue];
         });
         
-#warning TODO write tests where objectID is not set
-        
         it(@"should perform GET on remote server when GET selector performed", ^{
             stubGetAsyncCall(^(NSArray *params){
                 NSString *path = params[0];
@@ -481,7 +479,7 @@ describe(@"PCFObject Auth in keychain", ^{
         });
     });
     
-    context(@"deleting PCFObject instance from the Data Services server", ^{
+    context(@"attempting operations without an object ID set", ^{
         
         __block PCFObject *newObject;
         __block BOOL wasBlockExecuted = NO;
@@ -495,7 +493,7 @@ describe(@"PCFObject Auth in keychain", ^{
         afterEach(^{
             [[theValue(wasBlockExecuted) should] beTrue];
         });
-
+        
         context(@"objectID not set", ^{
             
             void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
@@ -509,7 +507,7 @@ describe(@"PCFObject Auth in keychain", ^{
             };
             
             it(@"should fail while deleting on the remote server", ^{
-
+                
                 stubDeleteAsyncCall(^(NSArray *params){
                     fail(@"block should not have been called");
                 });
@@ -525,7 +523,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 
                 [newObject fetchOnSuccess:successBlock failure:failureBlock];
             });
-
+            
             it(@"should fail while saving on the remote server", ^{
                 
                 stubPutAsyncCall(^(NSArray *params){
@@ -535,57 +533,67 @@ describe(@"PCFObject Auth in keychain", ^{
                 [newObject saveOnSuccess:successBlock failure:failureBlock];
             });
         });
+    });
+    
+    context(@"deleting PCFObject instance from the Data Services server", ^{
         
-        context(@"objectID set", ^{
+        __block PCFObject *newObject;
+        __block BOOL wasBlockExecuted = NO;
+        
+        beforeEach(^{
+            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject.objectID = kTestObjectID;
             
-            beforeEach(^{
-                newObject.objectID = kTestObjectID;
+            wasBlockExecuted = NO;
+        });
+        
+        afterEach(^{
+            [[theValue(wasBlockExecuted) should] beTrue];
+        });
+
+        it(@"should perform DELETE on remote server", ^{
+            
+            stubDeleteAsyncCall(^(NSArray *params){
+                NSString *path = params[0];
+                [[path should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
+                wasBlockExecuted = YES;
             });
             
-            it(@"should perform DELETE on remote server", ^{
-                
-                stubDeleteAsyncCall(^(NSArray *params){
-                    NSString *path = params[0];
-                    [[path should] endWithString:[NSString stringWithFormat:@"%@/%@", kTestClassName, kTestObjectID]];
-                    wasBlockExecuted = YES;
-                });
-                
-                [newObject deleteOnSuccess:nil failure:nil];
+            [newObject deleteOnSuccess:nil failure:nil];
+        });
+        
+        it(@"should call success block if DELETE operation is successful", ^{
+            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+                wasBlockExecuted = YES;
+            };
+            
+            void (^failureBlock)(NSError *) = ^(NSError *error){
+                fail(@"Failure block executed unexpectedly.");
+            };
+            
+            stubDeleteAsyncCall(^(NSArray *params){
+                void (^passedBlock)(AFHTTPRequestOperation *, NSError *) = params[2];
+                passedBlock(nil, nil);
             });
             
-            it(@"should call success block if DELETE operation is successful", ^{
-                void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
-                    wasBlockExecuted = YES;
-                };
-                
-                void (^failureBlock)(NSError *) = ^(NSError *error){
-                    fail(@"Failure block executed unexpectedly.");
-                };
-                
-                stubDeleteAsyncCall(^(NSArray *params){
-                    void (^passedBlock)(AFHTTPRequestOperation *, NSError *) = params[2];
-                    passedBlock(nil, nil);
-                });
-                
-                [newObject deleteOnSuccess:successBlock failure:failureBlock];
+            [newObject deleteOnSuccess:successBlock failure:failureBlock];
+        });
+        
+        it(@"should call failure block if DELETE operation fails", ^{
+            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+                fail(@"Success block executed unexpectedly.");
+            };
+            
+            void (^failureBlock)(NSError *) = ^(NSError *error){
+                wasBlockExecuted = YES;
+            };
+            
+            stubDeleteAsyncCall(^(NSArray *params){
+                void (^passedBlockFail)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
+                passedBlockFail(nil, nil);
             });
             
-            it(@"should call failure block if DELETE operation fails", ^{
-                void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
-                    fail(@"Success block executed unexpectedly.");
-                };
-                
-                void (^failureBlock)(NSError *) = ^(NSError *error){
-                    wasBlockExecuted = YES;
-                };
-                
-                stubDeleteAsyncCall(^(NSArray *params){
-                    void (^passedBlockFail)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
-                    passedBlockFail(nil, nil);
-                });
-                
-                [newObject deleteOnSuccess:successBlock failure:failureBlock];
-            });
+            [newObject deleteOnSuccess:successBlock failure:failureBlock];
         });
     });
     
