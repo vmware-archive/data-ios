@@ -23,7 +23,7 @@ static NSString *const refresh_token = @"1/mxmcGA9RRJary4uGXK0couhmT0iYSenz9biDj
 
 describe(@"PCF Data Service Integration Tests", ^{
     
-    static NSString *const kTestClassName = @"objects";
+    static NSString *const kTestClassName = @"ios_integration_spec_object";
     static NSString *const kTestObjectID = @"1234";
     static NSString *const kTestObjectKey = @"RobField";
     static NSString *const kTestObjectValue = @"Rob likes cats!";

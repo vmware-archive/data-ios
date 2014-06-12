@@ -14,6 +14,7 @@
 #import "PCFDataTestHelpers.h"
 #import "PCFDataTestConstants.h"
 #import "PCFDataError.h"
+#import "PCFObject+Internal.h"
 
 void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger) = ^(NSString *accessToken, NSString *refreshToken, NSInteger expiresIn){
     AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:accessToken tokenType:@"Bearer"];
@@ -64,4 +65,43 @@ void (^stubKeychain)(AFOAuthCredential *) = ^(AFOAuthCredential *credential){
     [AFOAuthCredential stub:@selector(retrieveCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
         return blockCredential;
     }];
+};
+
+NSError *(^unauthorizedError)(void) = ^NSError *{
+    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Unauthorized access" };
+    return [NSError errorWithDomain:NSURLErrorDomain code:401 userInfo:userInfo];
+};
+
+void (^assertObjectEqual)(id, NSDictionary *, PCFObject *) = ^(id self, NSDictionary *expectedDictionary, PCFObject *object) {
+    [[object.contentsDictionary should] equal:expectedDictionary];
+};
+
+void (^verifyAuthorizationInRequest)(id, NSURLRequest *) = ^(id self, NSURLRequest *request) {
+    static NSString *const kAuthorizationHeaderKey = @"Authorization";
+    NSString *token = [request valueForHTTPHeaderField:kAuthorizationHeaderKey];
+    [[theValue([token hasPrefix:@"Bearer "]) should] beTrue];
+    [[theValue([token hasSuffix:kTestAccessToken1]) should] beTrue];
+};
+
+void (^stubAsyncCall)(NSString *, NSError **, EnqueueAsyncBlock) = ^(NSString *method, NSError **error, EnqueueAsyncBlock block){
+    SEL stubSel = NSSelectorFromString([NSString stringWithFormat:@"%@Path:parameters:success:failure:", [method lowercaseString]]);
+    AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:error];
+    
+    [client stub:stubSel
+       withBlock:^id(NSArray *params) {
+           block(params);
+           return nil;
+       }];
+};
+
+void (^stubPutAsyncCall)(EnqueueAsyncBlock) = ^(EnqueueAsyncBlock block){
+    stubAsyncCall(@"PUT", nil, block);
+};
+
+void (^stubGetAsyncCall)(EnqueueAsyncBlock) = ^(EnqueueAsyncBlock block){
+    stubAsyncCall(@"GET", nil, block);
+};
+
+void (^stubDeleteAsyncCall)(EnqueueAsyncBlock) = ^(EnqueueAsyncBlock block){
+    stubAsyncCall(@"DELETE", nil, block);
 };

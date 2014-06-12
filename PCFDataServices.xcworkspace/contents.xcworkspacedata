@@ -25,6 +25,9 @@
       <FileRef
          location = "group:PCFDataServices.h">
       </FileRef>
+      <FileRef
+         location = "group:PCFObject+Internal.h">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Specs/PCFDataServices Spec.xcodeproj">

@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, PCFDataServicesErrorCode) {
     PCFDataServicesEmptyResponseData,
     PCFDataServicesMissingAccessToken,
     PCFDataServicesAuthorizationRequired,
+    PCFDataServicesObjectIDRequired,
 };
 
 #endif

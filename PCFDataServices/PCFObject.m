@@ -8,15 +8,30 @@
 
 #import <AFNetworking/AFNetworking.h>
 
-#import "PCFObject.h"
+#import "PCFObject+Internal.h"
 #import "PCFDataSignIn+Internal.h"
 #import "PCFDataError.h"
 
 
+#define FAIL_AND_RETURN_WITH_CODE(errorcode) \
+    FAIL_AND_RETURN([NSError errorWithDomain:kPCFDataServicesErrorDomain code:(errorcode) userInfo:nil])
+
+#define FAIL_AND_RETURN(error) \
+    if (failure) { \
+        failure((error)); \
+    } \
+    return;
+
+#define SUCCEED_AND_RETURN(object) \
+    if (success) { \
+        success((object)); \
+    } \
+    return;
+
 @interface PCFObject ()
 
 @property (readwrite) NSString *className;
-@property (nonatomic) NSMutableDictionary *contentsDictionary;
+@property (nonatomic, readwrite) NSMutableDictionary *contentsDictionary;
 
 @end
 
@@ -105,7 +120,6 @@
 
 - (void)mergeContentsDictionaryWithRemoteValues:(NSDictionary *)remoteValues
 {
-    NSUInteger newKeys = remoteValues.allKeys.count;
     [self.contentsDictionary setValuesForKeysWithDictionary:remoteValues];
 }
 
@@ -168,27 +182,23 @@
             onSuccess:(void (^)(PCFObject *object))success
               failure:(void (^)(NSError *error))failure
 {
+    if (!self.objectID || self.objectID.length <= 0) {
+        FAIL_AND_RETURN_WITH_CODE(PCFDataServicesObjectIDRequired);
+    }
+    
     if (attempts <= 0) {
-        if (failure) {
-            failure([self authorizationRequiredError]);
-        }
-        return;
+        FAIL_AND_RETURN_WITH_CODE(PCFDataServicesAuthorizationRequired);
     }
     
     NSError *error;
     AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:&error];
     
     if (!client) {
-        if (failure) {
-            failure(error);
-        }
-        return;
+        FAIL_AND_RETURN(error);
     }
     
     void (^successBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
-        if (success) {
-            success(self);
-        }
+        SUCCEED_AND_RETURN(self);
     };
     
     void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = ^(AFHTTPRequestOperation *operation, NSError *error){
@@ -197,15 +207,13 @@
                 [self performMethod:method withNumberOfAttempts:attempts-1 parameters:parameters onSuccess:success failure:failure];
                 
             } failure:^(NSError *error) {
-                failure([self failureError:error]);
+                FAIL_AND_RETURN([self failureError:error]);
             }];
             
         } else {
             [self signOutIfRequired:error];
             
-            if (failure) {
-                failure([self failureError:error]);
-            }
+            FAIL_AND_RETURN([self failureError:error]);
         }
     };
     
@@ -223,18 +231,15 @@
                 
                 if (fetchedContents) {
                     [self mergeContentsDictionaryWithRemoteValues:fetchedContents];
+                    SUCCEED_AND_RETURN(self);
                     
-                    if (success) {
-                        success(self);
-                    }
-
-                } else if (failure) {
-                    failure(error);
+                } else {
+                    FAIL_AND_RETURN(error);
                 }
-            } else if (failure) {
+            } else {
                 NSDictionary *userInfo = operation ? @{ @"HTTPRequestOperation" : operation } : nil;
                 NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain code:PCFDataServicesEmptyResponseData userInfo:userInfo];
-                failure(error);
+                FAIL_AND_RETURN(error);
             }
         };
         
