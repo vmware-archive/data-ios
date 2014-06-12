@@ -12,5 +12,6 @@
 #import "PCFDataError.h"
 #import "PCFDataSignIn.h"
 #import "PCFObject.h"
+#import "AFHTTPClient+PCFMethods.h"
 
 #endif
