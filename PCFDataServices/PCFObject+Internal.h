@@ -10,4 +10,6 @@
 
 @interface PCFObject (Internal)
 
+@property (nonatomic, readonly) NSMutableDictionary *contentsDictionary;
+
 @end

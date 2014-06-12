@@ -498,23 +498,41 @@ describe(@"PCFObject Auth in keychain", ^{
 
         context(@"objectID not set", ^{
             
+            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+                fail(@"Failure block executed unexpectedly.");
+            };
+            
+            void (^failureBlock)(NSError *) = ^(NSError *error){
+                [[error.domain should] equal:kPCFDataServicesErrorDomain];
+                [[theValue(error.code) should] equal:theValue(PCFDataServicesObjectIDRequired)];
+                wasBlockExecuted = YES;
+            };
+            
             it(@"should fail while deleting on the remote server", ^{
-
-                void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
-                    fail(@"Failure block executed unexpectedly.");
-                };
-                
-                void (^failureBlock)(NSError *) = ^(NSError *error){
-                    [[error.domain should] equal:kPCFDataServicesErrorDomain];
-                    [[theValue(error.code) should] equal:theValue(PCFDataServicesObjectIDRequired)];
-                    wasBlockExecuted = YES;
-                };
 
                 stubDeleteAsyncCall(^(NSArray *params){
                     fail(@"block should not have been called");
                 });
                 
                 [newObject deleteOnSuccess:successBlock failure:failureBlock];
+            });
+            
+            it(@"should fail while fetching on the remote server", ^{
+                
+                stubGetAsyncCall(^(NSArray *params){
+                    fail(@"block should not have been called");
+                });
+                
+                [newObject fetchOnSuccess:successBlock failure:failureBlock];
+            });
+
+            it(@"should fail while saving on the remote server", ^{
+                
+                stubPutAsyncCall(^(NSArray *params){
+                    fail(@"block should not have been called");
+                });
+                
+                [newObject saveOnSuccess:successBlock failure:failureBlock];
             });
         });
         
