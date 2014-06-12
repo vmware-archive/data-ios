@@ -7,6 +7,7 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+#import "AFHTTPClient+PCFMethods.h"
 
 #import "PCFObject+Internal.h"
 #import "PCFDataSignIn+Internal.h"
@@ -197,34 +198,23 @@
         FAIL_AND_RETURN(error);
     }
     
-    void (^successBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
-        SUCCEED_AND_RETURN(self);
-    };
+    HTTPSuccessBlock successBlock = [self successBlockForMethod:method success:success failure:failure];
+    HTTPFailureBlock failureBlock = [self failureBlockForMethod:method withNumberOfAttempts:attempts parameters:parameters success:success failure:failure];
     
-    void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = ^(AFHTTPRequestOperation *operation, NSError *error){
-        if ([self isUnauthorizedAccessError:error]) {
-            [[PCFDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(AFOAuthCredential *credential) {
-                [self performMethod:method withNumberOfAttempts:attempts-1 parameters:parameters onSuccess:success failure:failure];
-                
-            } failure:^(NSError *error) {
-                FAIL_AND_RETURN([self failureError:error]);
-            }];
-            
-        } else {
-            [self signOutIfRequired:error];
-            
-            FAIL_AND_RETURN([self failureError:error]);
-        }
-    };
-    
-    if ([method isEqualToString:@"DELETE"]) {
-        [client deletePath:[self URLPath] parameters:parameters success:successBlock failure:failureBlock];
-        
-    } else if ([method isEqualToString:@"PUT"]) {
-        [client putPath:[self URLPath] parameters:parameters success:successBlock failure:failureBlock];
+    [client method:method path:[self URLPath] parameters:parameters success:successBlock failure:failureBlock];
+}
+
+- (HTTPSuccessBlock)successBlockForMethod:(NSString *)method
+                                  success:(void (^)(PCFObject *object))success
+                                  failure:(void (^)(NSError *error))failure
+{
+    if ([method isEqualToString:@"DELETE"] || [method isEqualToString:@"PUT"]) {
+        return ^(AFHTTPRequestOperation *operation, id responseObject) {
+            SUCCEED_AND_RETURN(self);
+        };
         
     } else if ([method isEqualToString:@"GET"]) {
-        void (^fetchSuccessBlock)(AFHTTPRequestOperation *, id) = ^(AFHTTPRequestOperation *operation, id responseObject) {
+        return ^(AFHTTPRequestOperation *operation, id responseObject) {
             if (responseObject) {
                 NSError *error;
                 NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
@@ -243,8 +233,32 @@
             }
         };
         
-        [client getPath:[self URLPath] parameters:parameters success:fetchSuccessBlock failure:failureBlock];
+    } else {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Invalid HTTP method name" userInfo:nil];
     }
+}
+
+- (HTTPFailureBlock)failureBlockForMethod:(NSString *)method
+                     withNumberOfAttempts:(NSInteger)attempts
+                               parameters:(NSDictionary *)parameters
+                                  success:(void (^)(PCFObject *object))success
+                                  failure:(void (^)(NSError *error))failure
+{
+    return ^(AFHTTPRequestOperation *operation, NSError *error){
+        if ([self isUnauthorizedAccessError:error]) {
+            [[PCFDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(AFOAuthCredential *credential) {
+                [self performMethod:method withNumberOfAttempts:attempts-1 parameters:parameters onSuccess:success failure:failure];
+                
+            } failure:^(NSError *error) {
+                FAIL_AND_RETURN([self failureError:error]);
+            }];
+            
+        } else {
+            [self signOutIfRequired:error];
+            
+            FAIL_AND_RETURN([self failureError:error]);
+        }
+    };
 }
 
 @end
