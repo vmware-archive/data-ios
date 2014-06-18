@@ -203,6 +203,12 @@ describe(@"PCFObject Auth in keychain", ^{
             newObject[key] = object;
             [[[newObject objectForKey:key] should] equal:object];
         });
+        
+        it(@"should support setting NSData as a value", ^{
+            NSData *objectData = [object dataUsingEncoding:NSUTF8StringEncoding];
+            [newObject setObject:objectData forKey:key];
+            [[[newObject objectForKey:key] should] equal:objectData];
+        });
     });
     
     context(@"saving PCFObject instance to the Data Services server", ^{
