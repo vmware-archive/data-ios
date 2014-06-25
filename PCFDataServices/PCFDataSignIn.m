@@ -119,7 +119,7 @@ static
     if (!bundleIdentifier) {
         bundleIdentifier = [NSString stringWithFormat:@"%@:/oauth2callback", [[NSBundle mainBundle] bundleIdentifier]];
     }
-    return bundleIdentifier;
+    return [bundleIdentifier lowercaseString];
 }
 
 - (BOOL)hasAuthInKeychain
@@ -191,7 +191,6 @@ static
             [self.delegate finishedWithAuth:credential error:nil];
         };
         
-        NSLog(@"Xxxxxxxxxxxxx REACH #1 xxxxxxxxxxxxxxxxx");
         [self.authClient authenticateUsingOAuthWithPath:kPCFOAuthTokenPath refreshToken:savedCredential.refreshToken success:successBlock failure:failureBlock];
         return YES;
     }
