@@ -1,5 +1,5 @@
 //
-//  PCFDataSignIn.h
+//  PMSSDataSignIn.h
 //  
 //
 //  Created by DX123-XL on 2014-05-20.
@@ -11,9 +11,9 @@
 @class AFOAuthCredential, AFOAuth2Client;
 
 /**
- The 'PCFSignInDelegate' protocol is adopted by an object that manages the OpenID Connect authorization process.
+ The 'PMSSSignInDelegate' protocol is adopted by an object that manages the OpenID Connect authorization process.
  */
-@protocol PCFSignInDelegate <NSObject>
+@protocol PMSSSignInDelegate <NSObject>
 
 /**
  The authorization has finished and is successful if 'error' is 'nil'.
@@ -30,7 +30,7 @@
 
 @end
 
-@interface PCFDataSignIn : NSObject
+@interface PMSSDataSignIn : NSObject
 
 ///----------------------------------------
 /// @name Getting Locally Stored Credential
@@ -64,8 +64,8 @@
 @property(nonatomic, copy) NSString *openIDConnectURL;
 
 /**
- The PCF Data Service URL endpoint
- Must be set for PCFObject fetch/save/delete to work.
+ The PMSS Data Service URL endpoint
+ Must be set for PMSSObject fetch/save/delete to work.
  */
 @property(nonatomic, copy) NSString *dataServiceURL;
 
@@ -82,14 +82,14 @@
 /**
  The object to be notified when authentication is finished.
  */
-@property(nonatomic, weak) id<PCFSignInDelegate> delegate;
+@property(nonatomic, weak) id<PMSSSignInDelegate> delegate;
 
 /**
- Returns a shared PCFDataSignIn instance.
+ Returns a shared PMSSDataSignIn instance.
  
- @return The PCFDataSignIn shared instance
+ @return The PMSSDataSignIn shared instance
  */
-+ (PCFDataSignIn *)sharedInstance;
++ (PMSSDataSignIn *)sharedInstance;
 
 /**
  Checks whether the user has either currently signed in or has previous
@@ -132,7 +132,7 @@
 /**
  This method should be called from the 'UIApplicationDelegate's
  'application:openURL:sourceApplication:annotation'. Returns 'YES' if
- 'PCFDataSignIn' handled this URL.
+ 'PMSSDataSignIn' handled this URL.
  
  @param url The redirect URI defined on the OpenID Connect server to return to the application from the Safari Browser
  @param sourceApplication  The bundle ID of the app that is requesting your app to open the URL (url).

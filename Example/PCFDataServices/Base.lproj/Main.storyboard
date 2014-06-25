@@ -22,7 +22,7 @@
         <!--Sign In View Controller - Pivotal Sign In-->
         <scene sceneID="YJl-ui-bua">
             <objects>
-                <viewController id="zqa-7g-eAL" customClass="PCFSignInViewController" sceneMemberID="viewController">
+                <viewController id="zqa-7g-eAL" customClass="PMSSSignInViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Gb6-Oe-Jr9"/>
                         <viewControllerLayoutGuide type="bottom" id="qN6-fO-Gca"/>
@@ -81,13 +81,13 @@
         <!--Data Table View Controller - Data Services-->
         <scene sceneID="Aln-E4-WbE">
             <objects>
-                <tableViewController storyboardIdentifier="PCFDataTableViewController" title="Data Services" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4Nf-dA-qhs" customClass="PCFDataTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="PMSSDataTableViewController" title="Data Services" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4Nf-dA-qhs" customClass="PMSSDataTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" allowsSelectionDuringEditing="YES" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ylG-fC-1I5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="objectIDCell" rowHeight="86" id="Sjy-Rl-nPr" customClass="PCFTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="objectIDCell" rowHeight="86" id="Sjy-Rl-nPr" customClass="PMSSTableViewCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Sjy-Rl-nPr" id="65j-CS-PpF">
@@ -143,7 +143,7 @@
                                     <outlet property="valueTextField" destination="91I-ky-yiq" id="2tg-yV-khH"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="keyValueCell" rowHeight="86" id="cwB-rE-7kw" customClass="PCFTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="keyValueCell" rowHeight="86" id="cwB-rE-7kw" customClass="PMSSTableViewCell">
                                 <rect key="frame" x="0.0" y="172" width="320" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cwB-rE-7kw" id="NJy-TI-Mhq">
@@ -260,7 +260,7 @@
         <!--ShowJSON View Controller-->
         <scene sceneID="e6S-kj-4Az">
             <objects>
-                <viewController id="Rq5-S6-RUT" customClass="PCFShowJSONViewController" sceneMemberID="viewController">
+                <viewController id="Rq5-S6-RUT" customClass="PMSSShowJSONViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="VRg-mD-YZg"/>
                         <viewControllerLayoutGuide type="bottom" id="Fj0-ls-Nen"/>

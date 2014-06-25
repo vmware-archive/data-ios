@@ -1,16 +1,16 @@
 //
-//  PCFDataSignIn+Internal.h
-//  PCFDataServices Spec
+//  PMSSDataSignIn+Internal.h
+//  PMSSDataServices Spec
 //
 //  Created by DX123-XL on 2014-05-21.
 //
 //
 
-#import "PCFDataSignIn.h"
+#import "PMSSDataSignIn.h"
 
-@class AFOAuthCredential, PCFDataServiceClient;
+@class AFOAuthCredential, PMSSDataServiceClient;
 
-@interface PCFDataSignIn ()
+@interface PMSSDataSignIn ()
 
 // The client used to make the OAuth requests to the OpenID connect server.
 - (AFOAuth2Client *)authClient;
@@ -25,6 +25,6 @@
                                   success:(void (^)(AFOAuthCredential *credential))success
                                   failure:(void (^)(NSError *error))failure;
 
-+ (void)setSharedInstance:(PCFDataSignIn *)sharedInstance;
++ (void)setSharedInstance:(PMSSDataSignIn *)sharedInstance;
 
 @end

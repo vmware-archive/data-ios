@@ -1,14 +1,14 @@
 //
-//  AFHTTPClient+PCFMethods.m
+//  AFHTTPClient+PMSSMethods.m
 //  
 //
 //  Created by Elliott Garcea on 2014-06-12.
 //
 //
 
-#import "AFHTTPClient+PCFMethods.h"
+#import "AFHTTPClient+PMSSMethods.h"
 
-@implementation AFHTTPClient (PCFMethods)
+@implementation AFHTTPClient (PMSSMethods)
 
 - (void)method:(NSString *)method
           path:(NSString *)path

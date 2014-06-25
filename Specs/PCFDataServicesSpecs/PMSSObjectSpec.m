@@ -1,6 +1,6 @@
 //
-//  PCFObjectSpec.m
-//  PCFDataServices Spec
+//  PMSSObjectSpec.m
+//  PMSSDataServices Spec
 //
 //  Created by DX123-XL on 2014-06-02.
 //  Copyright 2014 Pivotal. All rights reserved.
@@ -9,38 +9,38 @@
 #import <Kiwi/Kiwi.h>
 #import <AFNetworking/AFNetworking.h>
 #import "AFOAuth2Client.h"
-#import "AFHTTPClient+PCFMethods.h"
+#import "AFHTTPClient+PMSSMethods.h"
 
-#import "PCFObject+Internal.h"
-#import "PCFDataSignIn+Internal.h"
-#import "PCFDataTestConstants.h"
-#import "PCFDataTestHelpers.h"
-#import "PCFDataError.h"
+#import "PMSSObject+Internal.h"
+#import "PMSSDataSignIn+Internal.h"
+#import "PMSSDataTestConstants.h"
+#import "PMSSDataTestHelpers.h"
+#import "PMSSDataError.h"
 
-SPEC_BEGIN(PCFObjectSpec)
+SPEC_BEGIN(PMSSObjectSpec)
 
 static NSString *const kTestClassName = @"TestClass";
 static NSString *const kTestObjectID = @"1234";
 
-describe(@"PCFObject no Auth in keychain", ^{
-    __block PCFObject *newObject;
+describe(@"PMSSObject no Auth in keychain", ^{
+    __block PMSSObject *newObject;
     __block BOOL wasBlockExecuted;
     
     void (^failblock)(NSError *) = ^(NSError *error){
         [[error shouldNot] beNil];
-        [[theValue(error.code) should] equal:theValue(PCFDataServicesAuthorizationRequired)];
+        [[theValue(error.code) should] equal:theValue(PMSSDataServicesAuthorizationRequired)];
         wasBlockExecuted = YES;
     };
     
     beforeEach(^{
         stubKeychain(nil);
         
-        [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
+        [AFOAuthCredential deleteCredentialWithIdentifier:kPMSSOAuthCredentialID];
         
-        newObject = [PCFObject objectWithClassName:kTestClassName];
+        newObject = [PMSSObject objectWithClassName:kTestClassName];
         newObject.objectID = kTestObjectID;
         
-        PCFDataSignIn *signIn = [PCFDataSignIn sharedInstance];
+        PMSSDataSignIn *signIn = [PMSSDataSignIn sharedInstance];
         signIn.dataServiceURL = kTestDataServiceURL;
         wasBlockExecuted = NO;
     });
@@ -50,37 +50,37 @@ describe(@"PCFObject no Auth in keychain", ^{
     });
     
     it(@"should populate and return error on fetch", ^{
-        [newObject fetchOnSuccess:^(PCFObject *object) {
+        [newObject fetchOnSuccess:^(PMSSObject *object) {
             fail(@"Should not be called");
             
         } failure:failblock];
     });
     
     it(@"should populate and return error on delete", ^{
-        [newObject deleteOnSuccess:^(PCFObject *object){
+        [newObject deleteOnSuccess:^(PMSSObject *object){
             fail(@"Should not be called");
             
         } failure:failblock];
     });
     
     it(@"should populate and return error on save", ^{
-        [newObject saveOnSuccess:^(PCFObject *object){
+        [newObject saveOnSuccess:^(PMSSObject *object){
             fail(@"Should not be called");
             
         } failure:failblock];
     });
 });
 
-describe(@"PCFObject Auth in keychain", ^{
+describe(@"PMSSObject Auth in keychain", ^{
     
     beforeEach(^{
         stubKeychain(nil);
         
-        [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
+        [AFOAuthCredential deleteCredentialWithIdentifier:kPMSSOAuthCredentialID];
         setupDefaultCredentialInKeychain();
     });
     
-    context(@"constructing a new instance of a PCFObject with nil class name", ^{
+    context(@"constructing a new instance of a PMSSObject with nil class name", ^{
         typedef void (^AssertBlock)(void);
         void (^assertRaiseInvalidArgumentException)(AssertBlock) = ^(AssertBlock block){
             [[theBlock(block) should] raiseWithName:NSInvalidArgumentException];
@@ -91,25 +91,25 @@ describe(@"PCFObject Auth in keychain", ^{
 #pragma clang diagnostic ignored "-Wunused"
             
             //nil call param
-            assertRaiseInvalidArgumentException(^{[PCFObject objectWithClassName:nil];});
-            assertRaiseInvalidArgumentException(^{[PCFObject objectWithClassName:nil dictionary:nil];});
-            assertRaiseInvalidArgumentException(^{[[PCFObject alloc] initWithClassName:nil];});
+            assertRaiseInvalidArgumentException(^{[PMSSObject objectWithClassName:nil];});
+            assertRaiseInvalidArgumentException(^{[PMSSObject objectWithClassName:nil dictionary:nil];});
+            assertRaiseInvalidArgumentException(^{[[PMSSObject alloc] initWithClassName:nil];});
             
             //empty class param
-            assertRaiseInvalidArgumentException(^{[PCFObject objectWithClassName:@""];});
-            assertRaiseInvalidArgumentException(^{[PCFObject objectWithClassName:@"" dictionary:nil];});
-            assertRaiseInvalidArgumentException(^{[[PCFObject alloc] initWithClassName:@""];});
+            assertRaiseInvalidArgumentException(^{[PMSSObject objectWithClassName:@""];});
+            assertRaiseInvalidArgumentException(^{[PMSSObject objectWithClassName:@"" dictionary:nil];});
+            assertRaiseInvalidArgumentException(^{[[PMSSObject alloc] initWithClassName:@""];});
             
             //NSNull class param
-            assertRaiseInvalidArgumentException(^{[PCFObject objectWithClassName:(id)[NSNull null]];});
-            assertRaiseInvalidArgumentException(^{[PCFObject objectWithClassName:(id)[NSNull null] dictionary:nil];});
-            assertRaiseInvalidArgumentException(^{[[PCFObject alloc] initWithClassName:(id)[NSNull null]];});
+            assertRaiseInvalidArgumentException(^{[PMSSObject objectWithClassName:(id)[NSNull null]];});
+            assertRaiseInvalidArgumentException(^{[PMSSObject objectWithClassName:(id)[NSNull null] dictionary:nil];});
+            assertRaiseInvalidArgumentException(^{[[PMSSObject alloc] initWithClassName:(id)[NSNull null]];});
 #pragma clang diagnostic pop
         });
     });
     
-    context(@"constructing an empty new instance of a PCFObject", ^{
-        __block PCFObject *newObject;
+    context(@"constructing an empty new instance of a PMSSObject", ^{
+        __block PMSSObject *newObject;
         
         beforeEach(^{
             newObject = nil;
@@ -121,30 +121,30 @@ describe(@"PCFObject Auth in keychain", ^{
             [[theValue(newObject.allKeys.count) should] equal:theValue(0)];
         });
         
-        it(@"should create a new empty PCFObject instance with the 'objectWithClassName' selector", ^{
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+        it(@"should create a new empty PMSSObject instance with the 'objectWithClassName' selector", ^{
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
         });
         
-        it(@"should create a new empty PCFObject instance with the 'objectWithClassName:dictionary:' selector with nil dictionary", ^{
-            newObject = [PCFObject objectWithClassName:kTestClassName dictionary:nil];
+        it(@"should create a new empty PMSSObject instance with the 'objectWithClassName:dictionary:' selector with nil dictionary", ^{
+            newObject = [PMSSObject objectWithClassName:kTestClassName dictionary:nil];
         });
         
-        it(@"should create a new empty PCFObject instance with the 'initWithClassName:' selector", ^{
-            newObject = [[PCFObject alloc] initWithClassName:kTestClassName];
+        it(@"should create a new empty PMSSObject instance with the 'initWithClassName:' selector", ^{
+            newObject = [[PMSSObject alloc] initWithClassName:kTestClassName];
         });
     });
     
-    context(@"constructing a new populated instance of a PCFObject", ^{
+    context(@"constructing a new populated instance of a PMSSObject", ^{
         NSDictionary *keyValuePairs = @{
                                         @"TestKey1" : @"TestValue1",
                                         @"TestKey2" : @[@"ArrayValue1", @"ArrayValue2", @"ArrayValue3"],
                                         @"TestKey3" : @{@"DictKey1" : @"DictValue1", @"DictKey2" : @"DictValue2", @"DictKey3" : @"DictValue3"},
                                         };
 
-        it(@"should create a new populated PCFObject instance with the objectID property set when passed as a parameter", ^{
+        it(@"should create a new populated PMSSObject instance with the objectID property set when passed as a parameter", ^{
             NSString *testObjectID = @"TestObjectID";
             NSDictionary *keyValuePairs = @{ @"objectID" : @"TestObjectID" };
-            PCFObject *newObject = [PCFObject objectWithClassName:kTestClassName dictionary:keyValuePairs];
+            PMSSObject *newObject = [PMSSObject objectWithClassName:kTestClassName dictionary:keyValuePairs];
             newObject.objectID = testObjectID;
             
             [[newObject.className should] equal:kTestClassName];
@@ -152,15 +152,15 @@ describe(@"PCFObject Auth in keychain", ^{
             [[theValue(newObject.allKeys.count) should] equal:theValue(keyValuePairs.count)];
         });
         
-        it(@"should create a new populated PCFObject instance with set Key Value pairs from dictionary with 'objectWithClassName:dictionary:' selector", ^{
-            PCFObject *newObject = [PCFObject objectWithClassName:kTestClassName dictionary:keyValuePairs];
+        it(@"should create a new populated PMSSObject instance with set Key Value pairs from dictionary with 'objectWithClassName:dictionary:' selector", ^{
+            PMSSObject *newObject = [PMSSObject objectWithClassName:kTestClassName dictionary:keyValuePairs];
             
             [[newObject.className should] equal:kTestClassName];
             [[theValue(newObject.allKeys.count) should] equal:theValue(keyValuePairs.allKeys.count)];
         });
         
         it(@"should set object to key when initialized with 'objectWithClassName:dictionary:' selector", ^{
-            PCFObject *newObject = [PCFObject objectWithClassName:kTestClassName dictionary:keyValuePairs];
+            PMSSObject *newObject = [PMSSObject objectWithClassName:kTestClassName dictionary:keyValuePairs];
             
             [keyValuePairs enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                 [[[newObject objectForKey:key] should] equal:obj];
@@ -168,13 +168,13 @@ describe(@"PCFObject Auth in keychain", ^{
         });
     });
     
-    context(@"getting and setting PCFObject properties", ^{
-        __block PCFObject *newObject;
+    context(@"getting and setting PMSSObject properties", ^{
+        __block PMSSObject *newObject;
         static NSString *key = @"TestKey";
         static NSString *object = @"TestObject";
 
         beforeEach(^{
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
         });
         
         it(@"should set object with 'setObject:forKey:' and return the set object with 'objectForKey:' selector", ^{
@@ -211,26 +211,26 @@ describe(@"PCFObject Auth in keychain", ^{
         });
     });
     
-    context(@"saving PCFObject instance to the Data Services server", ^{
-        __block PCFObject *newObject;
+    context(@"saving PMSSObject instance to the Data Services server", ^{
+        __block PMSSObject *newObject;
         __block NSDictionary *expectedContents;
         
         static NSString *key = @"TestKey";
         static NSString *object = @"TestObject";
         
         beforeEach(^{
-            [PCFDataSignIn setSharedInstance:nil];
+            [PMSSDataSignIn setSharedInstance:nil];
             expectedContents = @{ key : object };
-            newObject = [PCFObject objectWithClassName:kTestClassName dictionary:expectedContents];
+            newObject = [PMSSObject objectWithClassName:kTestClassName dictionary:expectedContents];
             newObject.objectID = kTestObjectID;
         });
         
-        it(@"should throw an exception if dataServiceURL is not set on the 'PCFDataSignIn' sharedInstance", ^{
-            [[[[PCFDataSignIn sharedInstance] dataServiceURL] should] beNil];
+        it(@"should throw an exception if dataServiceURL is not set on the 'PMSSDataSignIn' sharedInstance", ^{
+            [[[[PMSSDataSignIn sharedInstance] dataServiceURL] should] beNil];
             [[theBlock(^{ [newObject saveOnSuccess:nil failure:nil]; }) should] raiseWithName:NSObjectNotAvailableException];
         });
         
-        context(@"Properly setup PCFDataSignIn sharedInstance", ^{
+        context(@"Properly setup PMSSDataSignIn sharedInstance", ^{
             
             typedef void(^NoRaiseBlock)(void);
             void (^shouldNotRaise)(NoRaiseBlock) = ^(NoRaiseBlock block){
@@ -238,13 +238,13 @@ describe(@"PCFObject Auth in keychain", ^{
             };
             
             beforeEach(^{
-                setupPCFDataSignInInstance(nil);
+                setupPMSSDataSignInInstance(nil);
                 setupForSuccessfulSilentAuth();
-                [PCFDataSignIn sharedInstance].dataServiceURL = @"http://testurl.com";
+                [PMSSDataSignIn sharedInstance].dataServiceURL = @"http://testurl.com";
             });
             
             it(@"should perform PUT method call on data service client when 'saveOnSuccess:failure:' selector performed", ^{
-                AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+                AFHTTPClient *client = [[PMSSDataSignIn sharedInstance] dataServiceClient:nil];
                 [[client should] receive:@selector(putPath:parameters:success:failure:)];
                 [newObject saveOnSuccess:nil failure:nil];
             });
@@ -281,7 +281,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 });
                 
                 shouldNotRaise(^{
-                    [newObject saveOnSuccess:^(PCFObject *object){
+                    [newObject saveOnSuccess:^(PMSSObject *object){
                         NSLog(@"Success Block");
                     } failure:nil];
                 });
@@ -299,7 +299,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 });
                 
                 it(@"should set success block when performing PUT method call on data service", ^{
-                    void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+                    void (^successBlock)(PMSSObject *object) = ^(PMSSObject *object){
                         blockExecuted = YES;
                     };
                     
@@ -316,7 +316,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 });
                 
                 it(@"should set failure block when performing PUT method call on data service", ^{
-                    void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+                    void (^successBlock)(PMSSObject *object) = ^(PMSSObject *object){
                         fail(@"Success block executed unexpectedly");
                     };
                     
@@ -335,15 +335,15 @@ describe(@"PCFObject Auth in keychain", ^{
         });
     });
     
-    context(@"fetching PCFObject instance from the Data Services server", ^{
+    context(@"fetching PMSSObject instance from the Data Services server", ^{
         
-        __block PCFObject *newObject;
+        __block PMSSObject *newObject;
         __block BOOL wasBlockExecuted = NO;
         
         NSData *malformedResponseData = [@"I AM NOT JSON" dataUsingEncoding:NSUTF8StringEncoding];
         
         beforeEach(^{
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
             newObject.objectID = kTestObjectID;
             
             wasBlockExecuted = NO;
@@ -371,7 +371,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 successBlock(nil, [NSJSONSerialization dataWithJSONObject:testResponseObject options:0 error:nil]);
             });
             
-            [newObject fetchOnSuccess:^(PCFObject *object) {
+            [newObject fetchOnSuccess:^(PMSSObject *object) {
                 wasBlockExecuted = YES;
                 [[object should] equal:newObject];
                 
@@ -390,7 +390,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 successBlock(nil, malformedResponseData);
             });
             
-            [newObject fetchOnSuccess:^(PCFObject *object) {
+            [newObject fetchOnSuccess:^(PMSSObject *object) {
                 fail(@"Should not have been called");
                 
             } failure:^(NSError *error) {
@@ -405,7 +405,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 failBlock(nil, [NSError errorWithDomain:@"Test Domain" code:1 userInfo:nil]);
             });
             
-            [newObject fetchOnSuccess:^(PCFObject *object) {
+            [newObject fetchOnSuccess:^(PMSSObject *object) {
                 fail(@"Should not have been called");
                 
             } failure:^(NSError *error) {
@@ -419,8 +419,8 @@ describe(@"PCFObject Auth in keychain", ^{
             __block NSDictionary *remoteData;
             __block NSDictionary *expectedData;
             
-            __block void (^testAsynchronously)(PCFObject *) = ^(PCFObject *object) {
-                [object fetchOnSuccess:^(PCFObject *returnedObject) {
+            __block void (^testAsynchronously)(PMSSObject *) = ^(PMSSObject *object) {
+                [object fetchOnSuccess:^(PMSSObject *returnedObject) {
                     wasBlockExecuted = YES;
                     
                 } failure:^(NSError *error) {
@@ -429,7 +429,7 @@ describe(@"PCFObject Auth in keychain", ^{
             };
             
             beforeEach(^{
-                AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+                AFHTTPClient *client = [[PMSSDataSignIn sharedInstance] dataServiceClient:nil];
                 [client stub:@selector(getPath:parameters:success:failure:) withBlock:^id(NSArray *params) {
                     void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
                     successBlock(nil, [NSJSONSerialization dataWithJSONObject:remoteData options:0 error:nil]);
@@ -499,11 +499,11 @@ describe(@"PCFObject Auth in keychain", ^{
     
     context(@"attempting operations without an object ID set", ^{
         
-        __block PCFObject *newObject;
+        __block PMSSObject *newObject;
         __block BOOL wasBlockExecuted = NO;
         
         beforeEach(^{
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
             
             wasBlockExecuted = NO;
         });
@@ -514,13 +514,13 @@ describe(@"PCFObject Auth in keychain", ^{
         
         context(@"objectID not set", ^{
             
-            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+            void (^successBlock)(PMSSObject *object) = ^(PMSSObject *object){
                 fail(@"Failure block executed unexpectedly.");
             };
             
             void (^failureBlock)(NSError *) = ^(NSError *error){
-                [[error.domain should] equal:kPCFDataServicesErrorDomain];
-                [[theValue(error.code) should] equal:theValue(PCFDataServicesObjectIDRequired)];
+                [[error.domain should] equal:kPMSSDataServicesErrorDomain];
+                [[theValue(error.code) should] equal:theValue(PMSSDataServicesObjectIDRequired)];
                 wasBlockExecuted = YES;
             };
             
@@ -553,13 +553,13 @@ describe(@"PCFObject Auth in keychain", ^{
         });
     });
     
-    context(@"deleting PCFObject instance from the Data Services server", ^{
+    context(@"deleting PMSSObject instance from the Data Services server", ^{
         
-        __block PCFObject *newObject;
+        __block PMSSObject *newObject;
         __block BOOL wasBlockExecuted = NO;
         
         beforeEach(^{
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
             newObject.objectID = kTestObjectID;
             
             wasBlockExecuted = NO;
@@ -581,7 +581,7 @@ describe(@"PCFObject Auth in keychain", ^{
         });
         
         it(@"should call success block if DELETE operation is successful", ^{
-            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+            void (^successBlock)(PMSSObject *object) = ^(PMSSObject *object){
                 wasBlockExecuted = YES;
             };
             
@@ -598,7 +598,7 @@ describe(@"PCFObject Auth in keychain", ^{
         });
         
         it(@"should call failure block if DELETE operation fails", ^{
-            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+            void (^successBlock)(PMSSObject *object) = ^(PMSSObject *object){
                 fail(@"Success block executed unexpectedly.");
             };
             
@@ -616,7 +616,7 @@ describe(@"PCFObject Auth in keychain", ^{
     });
     
     context(@"OpenID connect token validity on data service", ^{
-        __block PCFObject *newObject;
+        __block PMSSObject *newObject;
         __block AFHTTPClient *client;
         __block BOOL wasBlockExecuted;
         __block BOOL wasAuthBlockExecuted;
@@ -646,14 +646,14 @@ describe(@"PCFObject Auth in keychain", ^{
         });
 
         beforeEach(^{
-            [PCFDataSignIn setSharedInstance:nil];
+            [PMSSDataSignIn setSharedInstance:nil];
             
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
             [newObject setObjectID:kTestObjectID];
             [newObject setObjectsForKeysWithDictionary:expectedDictionary];
 
-            setupPCFDataSignInInstance(nil);
-            PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
+            setupPMSSDataSignInInstance(nil);
+            PMSSDataSignIn *sharedInstance = [PMSSDataSignIn sharedInstance];
             sharedInstance.dataServiceURL = kTestDataServiceURL;
             
             wasBlockExecuted = NO;
@@ -666,13 +666,13 @@ describe(@"PCFObject Auth in keychain", ^{
         
         typedef id (^AuthStubBlock)(NSArray *params);
         void (^stubAuthClient)(AuthStubBlock) = ^(AuthStubBlock block){
-            [[PCFDataSignIn sharedInstance].authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
+            [[PMSSDataSignIn sharedInstance].authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
                                                   withBlock:block];
         };
         
         context(@"invalid token", ^{
             void (^failureBlock)(NSError*) = ^(NSError *error) {
-                [[theValue(error.code) should] equal:theValue(PCFDataServicesAuthorizationRequired)];
+                [[theValue(error.code) should] equal:theValue(PMSSDataServicesAuthorizationRequired)];
                 wasBlockExecuted = YES;
             };
 
@@ -686,7 +686,7 @@ describe(@"PCFObject Auth in keychain", ^{
                     return nil;
                 });
                 
-                client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+                client = [[PMSSDataSignIn sharedInstance] dataServiceClient:nil];
                 [[client shouldNot] beNil];
                 
                 wasAuthBlockExecuted = NO;
@@ -716,7 +716,7 @@ describe(@"PCFObject Auth in keychain", ^{
         });
         
         context(@"valid token", ^{
-            void (^successBlock)(PCFObject *object) = ^(PCFObject *object){
+            void (^successBlock)(PMSSObject *object) = ^(PMSSObject *object){
                 wasBlockExecuted = YES;
             };
             
@@ -730,7 +730,7 @@ describe(@"PCFObject Auth in keychain", ^{
                     return nil;
                 });
                 
-                client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+                client = [[PMSSDataSignIn sharedInstance] dataServiceClient:nil];
                 [[client shouldNot] beNil];
                 
                 wasAuthBlockExecuted = NO;
@@ -760,12 +760,12 @@ describe(@"PCFObject Auth in keychain", ^{
     });
     
     context(@"Authentication Header Key and Bearer token value", ^{
-        __block PCFObject *newObject;
+        __block PMSSObject *newObject;
         __block BOOL wasBlockExecuted;
         
         beforeEach(^{
-            AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
-            [[PCFDataSignIn sharedInstance] setCredential:[PCFDataSignIn sharedInstance].credential];
+            AFHTTPClient *client = [[PMSSDataSignIn sharedInstance] dataServiceClient:nil];
+            [[PMSSDataSignIn sharedInstance] setCredential:[PMSSDataSignIn sharedInstance].credential];
             
             [client stub:@selector(enqueueHTTPRequestOperation:)
                withBlock:^id(NSArray *params) {
@@ -775,7 +775,7 @@ describe(@"PCFObject Auth in keychain", ^{
                    return nil;
                }];
             
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
             newObject.objectID = kTestObjectID;
         });
         
@@ -797,7 +797,7 @@ describe(@"PCFObject Auth in keychain", ^{
     });
     
     context(@"saving and getting complex data structures", ^{
-        __block PCFObject *newObject;
+        __block PMSSObject *newObject;
         __block NSDictionary *expectedDictionary;
         __block NSData *savedRequestData;
         __block BOOL wasPutBlockExecuted;
@@ -805,12 +805,12 @@ describe(@"PCFObject Auth in keychain", ^{
         __block BOOL wasSaveOnSuccessBlockExecuted;
         
         beforeEach(^{
-            [PCFDataSignIn setSharedInstance:nil];
+            [PMSSDataSignIn setSharedInstance:nil];
             
-            [[PCFDataSignIn sharedInstance] setDataServiceURL:kTestDataServiceURL];
-            [[PCFDataSignIn sharedInstance] setCredential:[PCFDataSignIn sharedInstance].credential];
+            [[PMSSDataSignIn sharedInstance] setDataServiceURL:kTestDataServiceURL];
+            [[PMSSDataSignIn sharedInstance] setCredential:[PMSSDataSignIn sharedInstance].credential];
 
-            AFHTTPClient *client = [[PCFDataSignIn sharedInstance] dataServiceClient:nil];
+            AFHTTPClient *client = [[PMSSDataSignIn sharedInstance] dataServiceClient:nil];
             
             [client stub:@selector(enqueueHTTPRequestOperation:)
                withBlock:^id(NSArray *params) {
@@ -832,7 +832,7 @@ describe(@"PCFObject Auth in keychain", ^{
                 successBlock(nil, savedRequestData);
             });
             
-            newObject = [PCFObject objectWithClassName:kTestClassName];
+            newObject = [PMSSObject objectWithClassName:kTestClassName];
             newObject.objectID = kTestObjectID;
             
             wasPutBlockExecuted = NO;
@@ -850,17 +850,17 @@ describe(@"PCFObject Auth in keychain", ^{
             expectedDictionary = @{ @"TACO" : @"CAT" };
             [newObject setObject:@"CAT" forKey:@"TACO"];
             
-            [newObject saveOnSuccess:^(PCFObject *object) {
+            [newObject saveOnSuccess:^(PMSSObject *object) {
                 // NOTE - this block run AFTER the fetch is completed since it is asynchronous
                 wasSaveOnSuccessBlockExecuted = YES;
             } failure:^(NSError *error) {
                 fail(@"Should not have failed");
             }];
 
-            PCFObject *fetchedObject = [PCFObject objectWithClassName:kTestClassName];
+            PMSSObject *fetchedObject = [PMSSObject objectWithClassName:kTestClassName];
             fetchedObject.objectID = kTestObjectID;
             
-            [fetchedObject fetchOnSuccess:^(PCFObject *object) {
+            [fetchedObject fetchOnSuccess:^(PMSSObject *object) {
                 assertObjectEqual(self, expectedDictionary, object);
             } failure:^(NSError *error) {
                 fail(@"Should not have failed");

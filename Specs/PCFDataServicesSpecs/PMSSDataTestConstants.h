@@ -1,13 +1,13 @@
 //
-//  PCFDataTestConstants.h
-//  PCFDataServices Spec
+//  PMSSDataTestConstants.h
+//  PMSSDataServices Spec
 //
 //  Created by Elliott Garcea on 2014-06-05.
 //
 //
 
-#ifndef PCFDataServices_Spec_PCFDataTestConstants_h
-#define PCFDataServices_Spec_PCFDataTestConstants_h
+#ifndef PMSSDataServices_Spec_PMSSDataTestConstants_h
+#define PMSSDataServices_Spec_PMSSDataTestConstants_h
 
 static NSString *const kTestAccessToken1 = @"AccessToken1";
 static NSString *const kTestAccessToken2 = @"AccessToken2";

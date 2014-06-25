@@ -5,34 +5,34 @@
       location = "group:PCFDataServices"
       name = "PCFDataServices">
       <FileRef
-         location = "group:PCFDataSignIn+Internal.h">
+         location = "group:PMSSDataSignIn+Internal.h">
       </FileRef>
       <FileRef
-         location = "group:PCFDataSignIn.h">
+         location = "group:PMSSDataSignIn.h">
       </FileRef>
       <FileRef
-         location = "group:PCFDataSignIn.m">
+         location = "group:PMSSDataSignIn.m">
       </FileRef>
       <FileRef
-         location = "group:PCFObject.h">
+         location = "group:PMSSObject.h">
       </FileRef>
       <FileRef
-         location = "group:PCFObject.m">
+         location = "group:PMSSObject.m">
       </FileRef>
       <FileRef
-         location = "group:PCFDataError.h">
+         location = "group:PMSSDataError.h">
       </FileRef>
       <FileRef
-         location = "group:PCFDataServices.h">
+         location = "group:PMSSDataServices.h">
       </FileRef>
       <FileRef
-         location = "group:PCFObject+Internal.h">
+         location = "group:PMSSObject+Internal.h">
       </FileRef>
       <FileRef
-         location = "group:AFHTTPClient+PCFMethods.h">
+         location = "group:AFHTTPClient+PMSSMethods.h">
       </FileRef>
       <FileRef
-         location = "group:AFHTTPClient+PCFMethods.m">
+         location = "group:AFHTTPClient+PMSSMethods.m">
       </FileRef>
    </Group>
    <FileRef

@@ -1,20 +1,20 @@
 //
-//  PCFShowJSONViewController.m
-//  PCFDataServices Example
+//  PMSSShowJSONViewController.m
+//  PMSSDataServices Example
 //
 //  Created by Elliott Garcea on 2014-06-11.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PCFShowJSONViewController.h"
+#import "PMSSShowJSONViewController.h"
 
-@interface PCFShowJSONViewController ()
+@interface PMSSShowJSONViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextView *showJSONTextView;
 
 @end
 
-@implementation PCFShowJSONViewController
+@implementation PMSSShowJSONViewController
 
 - (void)viewDidLoad
 {

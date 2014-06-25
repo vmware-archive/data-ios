@@ -1,16 +1,16 @@
 //
-//  PCFAppDelegate.m
-//  PCFDataServices
+//  PMSSAppDelegate.m
+//  PMSSDataServices
 //
 //  Created by DX123-XL on 2014-05-15.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PCFDataSignIn.h"
+#import "PMSSDataSignIn.h"
 
-#import "PCFAppDelegate.h"
+#import "PMSSAppDelegate.h"
 
-@implementation PCFAppDelegate
+@implementation PMSSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -50,7 +50,7 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
-    return [[PCFDataSignIn sharedInstance] handleURL:url
+    return [[PMSSDataSignIn sharedInstance] handleURL:url
                                    sourceApplication:sourceApplication
                                           annotation:annotation];
 }

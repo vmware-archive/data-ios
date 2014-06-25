@@ -1,30 +1,30 @@
 //
-//  PCFDataTableViewController.m
-//  PCFDataServices Example
+//  PMSSDataTableViewController.m
+//  PMSSDataServices Example
 //
 //  Created by Elliott Garcea on 2014-06-06.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PCFDataServices/PCFDataServices.h>
+#import <PCFDataServices/PMSSDataServices.h>
 
-#import "PCFDataTableViewController.h"
-#import "PCFShowJSONViewController.h"
+#import "PMSSDataTableViewController.h"
+#import "PMSSShowJSONViewController.h"
 
-#pragma mark - PCFArrayObject
+#pragma mark - PMSSArrayObject
 
-@interface PCFArrayObject : NSObject
+@interface PMSSArrayObject : NSObject
 
 @property NSString *keyString;
 @property NSString *valueString;
 
 @end
 
-@implementation PCFArrayObject
+@implementation PMSSArrayObject
 
 + (instancetype)objectWithKey:(NSString *)key value:(NSString *)value
 {
-    PCFArrayObject *newObj = [[self alloc] init];
+    PMSSArrayObject *newObj = [[self alloc] init];
     if (newObj) {
         newObj.keyString = key;
         newObj.valueString = value;
@@ -35,7 +35,7 @@
 
 + (instancetype)objectWithCollectionName:(NSString *)name objectID:(NSString *)objectID
 {
-    PCFArrayObject *newObj = [[self alloc] init];
+    PMSSArrayObject *newObj = [[self alloc] init];
     if (newObj) {
         newObj.keyString = name;
         newObj.valueString = objectID;
@@ -56,17 +56,17 @@
 
 @end
 
-#pragma mark - PCFTableViewCell
+#pragma mark - PMSSTableViewCell
 
-@interface PCFTableViewCell : UITableViewCell <UITextFieldDelegate>
+@interface PMSSTableViewCell : UITableViewCell <UITextFieldDelegate>
 
-@property PCFArrayObject *arrayObject;
+@property PMSSArrayObject *arrayObject;
 @property (weak, nonatomic) IBOutlet UITextField *keyTextField;
 @property (weak, nonatomic) IBOutlet UITextField *valueTextField;
 
 @end
 
-@implementation PCFTableViewCell
+@implementation PMSSTableViewCell
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
@@ -80,11 +80,11 @@
 
 @end
 
-#pragma mark - PCFDataTableViewController
+#pragma mark - PMSSDataTableViewController
 
-@interface PCFDataTableViewController ()
+@interface PMSSDataTableViewController ()
 
-@property (nonatomic)  PCFObject *syncObject;
+@property (nonatomic)  PMSSObject *syncObject;
 @property NSMutableArray *keyValuePairsArray;
 
 
@@ -92,21 +92,21 @@
 
 @end
 
-@implementation PCFDataTableViewController
+@implementation PMSSDataTableViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.navigationController.toolbarHidden = NO;
-    self.keyValuePairsArray = [NSMutableArray arrayWithObject:[PCFArrayObject objectWithCollectionName:@"objects" objectID:@"1234"]];
+    self.keyValuePairsArray = [NSMutableArray arrayWithObject:[PMSSArrayObject objectWithCollectionName:@"objects" objectID:@"1234"]];
 }
 
-- (PCFObject *)syncObject
+- (PMSSObject *)syncObject
 {
     if (self.keyValuePairsArray[0] && [self.keyValuePairsArray[0] collectionName] && [self.keyValuePairsArray[0] collectionName].length > 0) {
         if (!_syncObject || ![_syncObject.className isEqualToString:[self.keyValuePairsArray[0] collectionName]]) {
-            _syncObject = [PCFObject objectWithClassName:[self.keyValuePairsArray[0] collectionName]];
+            _syncObject = [PMSSObject objectWithClassName:[self.keyValuePairsArray[0] collectionName]];
         }
         return _syncObject;
     }
@@ -138,9 +138,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        PCFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
+        PMSSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
         
-        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        PMSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         cell.arrayObject = arrayObject;
         
         [cell.keyTextField setText:arrayObject.collectionName];
@@ -152,10 +152,10 @@
         return cell;
     }
 
-    PCFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"keyValueCell" forIndexPath:indexPath];
+    PMSSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"keyValueCell" forIndexPath:indexPath];
 
     if (indexPath.row < self.keyValuePairsArray.count) {
-        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        PMSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         cell.arrayObject = arrayObject;
 
         [cell.keyTextField setText:arrayObject.keyString];
@@ -174,7 +174,7 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        PCFArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        PMSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         [self.syncObject removeObjectForKey:arrayObject.keyString];
         
         [self.keyValuePairsArray removeObjectAtIndex:indexPath.row];
@@ -195,11 +195,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     if (self.syncObject && [self.keyValuePairsArray[0] objectID]) {
         self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
         
-        [self.syncObject fetchOnSuccess:^(PCFObject *object) {
+        [self.syncObject fetchOnSuccess:^(PMSSObject *object) {
             [self resetKeyValuePairsArray];
             
             [object.allKeys enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
-                [self.keyValuePairsArray addObject:[PCFArrayObject objectWithKey:key value:object[key]]];
+                [self.keyValuePairsArray addObject:[PMSSArrayObject objectWithKey:key value:object[key]]];
             }];
 
             [self.tableView reloadData];
@@ -216,7 +216,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)saveButtonClicked:(id)sender
 {
     [self populateSyncObject];
-    [self.syncObject saveOnSuccess:^(PCFObject *object){
+    [self.syncObject saveOnSuccess:^(PMSSObject *object){
         UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Save Success" message:@"Save was successful." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [view show];
         
@@ -228,7 +228,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)addButtonClicked:(id)sender
 {
-    [self.keyValuePairsArray addObject:[PCFArrayObject objectWithKey:@"" value:@""]];
+    [self.keyValuePairsArray addObject:[PMSSArrayObject objectWithKey:@"" value:@""]];
     [self.tableView reloadData];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.keyValuePairsArray.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
@@ -260,7 +260,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
     
     if ([self.keyValuePairsArray[0] objectID]) {
-        [self.syncObject deleteOnSuccess:^(PCFObject *object){
+        [self.syncObject deleteOnSuccess:^(PMSSObject *object){
             [self resetKeyValuePairsArray];
             [self.tableView reloadData];
             
@@ -285,7 +285,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)populateSyncObject
 {
     self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
-    [self.keyValuePairsArray enumerateObjectsUsingBlock:^(PCFArrayObject *obj, NSUInteger idx, BOOL *stop) {
+    [self.keyValuePairsArray enumerateObjectsUsingBlock:^(PMSSArrayObject *obj, NSUInteger idx, BOOL *stop) {
         if (idx > 0 && obj.keyString.length > 0) {
             self.syncObject[obj.keyString] = obj.valueString;
         }
@@ -299,7 +299,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [self populateSyncObject];
     NSDictionary *dict = [self.syncObject performSelector:@selector(contentsDictionary)];
     NSString *formattedString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
-    [(PCFShowJSONViewController *)[segue destinationViewController] setFormattedJSON:formattedString];
+    [(PMSSShowJSONViewController *)[segue destinationViewController] setFormattedJSON:formattedString];
 }
 
 @end

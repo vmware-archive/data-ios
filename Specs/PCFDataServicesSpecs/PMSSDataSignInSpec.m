@@ -1,6 +1,6 @@
 //
-//  PCFDataSignInSpec.m
-//  PCFDataServices Spec
+//  PMSSDataSignInSpec.m
+//  PMSSDataServices Spec
 //
 //  Created by DX123-XL on 2014-05-20.
 //
@@ -11,23 +11,23 @@
 
 #import "Kiwi.h"
 
-#import "PCFDataSignIn+Internal.h"
-#import "PCFDataError.h"
-#import "PCFDataTestConstants.h"
-#import "PCFDataTestHelpers.h"
+#import "PMSSDataSignIn+Internal.h"
+#import "PMSSDataError.h"
+#import "PMSSDataTestConstants.h"
+#import "PMSSDataTestHelpers.h"
 
 
-SPEC_BEGIN(PCFDataSignInSpec)
+SPEC_BEGIN(PMSSDataSignInSpec)
 
 void (^resetSharedInstance)(void) = ^{
-    [PCFDataSignIn setSharedInstance:nil];
+    [PMSSDataSignIn setSharedInstance:nil];
 };
 
 void (^setupForFailedSilentAuth)(void) = ^{
-    [AFOAuthCredential deleteCredentialWithIdentifier:kPCFOAuthCredentialID];
+    [AFOAuthCredential deleteCredentialWithIdentifier:kPMSSOAuthCredentialID];
 };
 
-context(@"PCFDataSignIn Specification", ^{
+context(@"PMSSDataSignIn Specification", ^{
     
     __block AFOAuthCredential *credential;
     
@@ -45,35 +45,35 @@ context(@"PCFDataSignIn Specification", ^{
         credential = nil;
     });
     
-    describe(@"PCFDataSignIn shared instance initialization", ^{
+    describe(@"PMSSDataSignIn shared instance initialization", ^{
         
         it(@"should initialize with the |openid| value in the scope property.", ^{
-            NSArray *scopes = [[PCFDataSignIn sharedInstance] scopes];
+            NSArray *scopes = [[PMSSDataSignIn sharedInstance] scopes];
             [[theValue([scopes containsObject:@"openid"]) should] beTrue];
         });
         
         it(@"should initialize with nil clientID", ^{
-            [[[[PCFDataSignIn sharedInstance] clientID] should] beNil];
+            [[[[PMSSDataSignIn sharedInstance] clientID] should] beNil];
         });
     });
     
     describe(@"call delegate with error during authentication", ^{
         
-        __block PCFDataSignIn *sharedInstance;
+        __block PMSSDataSignIn *sharedInstance;
         
         beforeEach(^{
-            sharedInstance = [PCFDataSignIn sharedInstance];
-            NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
+            sharedInstance = [PMSSDataSignIn sharedInstance];
+            NSObject<PMSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, any()];
             sharedInstance.delegate = instanceDelegate;
         });
         
-        it(@"should call delegate with error if authenticate is called while 'clientID' is not set on PCFDataSignIn shared instance", ^{
+        it(@"should call delegate with error if authenticate is called while 'clientID' is not set on PMSSDataSignIn shared instance", ^{
             [[sharedInstance.clientID should] beNil];
             [sharedInstance authenticate];
         });
         
-        it(@"should call delegate with error if authenticate is called while 'openIDConnectURL' is not set on PCFDataSignIn shared instance", ^{
+        it(@"should call delegate with error if authenticate is called while 'openIDConnectURL' is not set on PMSSDataSignIn shared instance", ^{
             [[sharedInstance.openIDConnectURL should] beNil];
             [sharedInstance authenticate];
         });
@@ -81,13 +81,13 @@ context(@"PCFDataSignIn Specification", ^{
         
     describe(@"trySilentAuthentication ", ^{
         
-        __block NSObject<PCFSignInDelegate> *instanceDelegate;
-        __block PCFDataSignIn *sharedInstance;
+        __block NSObject<PMSSSignInDelegate> *instanceDelegate;
+        __block PMSSDataSignIn *sharedInstance;
         
         beforeEach(^{
-            instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
-            setupPCFDataSignInInstance(instanceDelegate);
-            sharedInstance = [PCFDataSignIn sharedInstance];
+            instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
+            setupPMSSDataSignInInstance(instanceDelegate);
+            sharedInstance = [PMSSDataSignIn sharedInstance];
         });
         
         afterEach(^{
@@ -163,7 +163,7 @@ context(@"PCFDataSignIn Specification", ^{
         });
     });
     
-    describe(@"PCFDataSignIn Authentication callback", ^{
+    describe(@"PMSSDataSignIn Authentication callback", ^{
         
         __block NSURL *url;
         
@@ -179,22 +179,22 @@ context(@"PCFDataSignIn Specification", ^{
         });
         
         it(@"should parse out the OAuth code from the 'application:openURL:sourceApplication:annotation:' callback", ^{
-            setupPCFDataSignInInstance(nil);
+            setupPMSSDataSignInInstance(nil);
             
-            [[[[PCFDataSignIn sharedInstance] authClient] should] receive:authSelector
+            [[[[PMSSDataSignIn sharedInstance] authClient] should] receive:authSelector
                                                             withArguments:any(), authCode, any(), any(), any()];
             
-            [[PCFDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[PMSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
         
         it(@"should call delegate 'finishedWithAuth:error:' with a credential object if authentication is successful", ^{
-            NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
+            NSObject<PMSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
             AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken1 tokenType:kTestTokenType];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
-            setupPCFDataSignInInstance(instanceDelegate);
+            setupPMSSDataSignInInstance(instanceDelegate);
             
-            PCFDataSignIn *sharedInstance = [PCFDataSignIn sharedInstance];
+            PMSSDataSignIn *sharedInstance = [PMSSDataSignIn sharedInstance];
             sharedInstance.dataServiceURL = kTestDataServiceURL;
             [[sharedInstance authClient] stub:authSelector
                                     withBlock:^id(NSArray *params) {
@@ -203,26 +203,26 @@ context(@"PCFDataSignIn Specification", ^{
                                         return nil;
                                     }];
             
-            [[PCFDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[PMSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
         
         it(@"should call delegate 'finishedWithAuth:error:' method with an error object if authentication fails", ^{
-            NSObject<PCFSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PCFSignInDelegate)];
-            NSError *error = [NSError errorWithDomain:kPCFDataServicesErrorDomain
-                                                 code:PCFDataServicesFailedAuthenticationError
+            NSObject<PMSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
+            NSError *error = [NSError errorWithDomain:kPMSSDataServicesErrorDomain
+                                                 code:PMSSDataServicesFailedAuthenticationError
                                              userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, error];
-            setupPCFDataSignInInstance(instanceDelegate);
+            setupPMSSDataSignInInstance(instanceDelegate);
             
-            [[[PCFDataSignIn sharedInstance] authClient] stub:authSelector
+            [[[PMSSDataSignIn sharedInstance] authClient] stub:authSelector
                                                     withBlock:^id(NSArray *params) {
                                                         void (^failure)(NSError *) = params[4];
                                                         failure(error);
                                                         return nil;
                                                     }];
             
-            [[PCFDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[PMSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
     });
     
@@ -231,7 +231,7 @@ context(@"PCFDataSignIn Specification", ^{
         typedef void(^EnqueueBlock)(AFHTTPRequestOperation *operation);
         
         void (^stubEnqueueOperation)(EnqueueBlock) = ^(EnqueueBlock block) {
-            [[PCFDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
+            [[PMSSDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
                                                   withBlock:^id(NSArray *params) {
                                                       AFHTTPRequestOperation *operation = params[0];
                                                       
@@ -246,10 +246,10 @@ context(@"PCFDataSignIn Specification", ^{
         };
         
         beforeEach(^{
-            setupPCFDataSignInInstance(nil);
+            setupPMSSDataSignInInstance(nil);
             setupForSuccessfulSilentAuth();
             
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] should] beNonNil];
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPMSSOAuthCredentialID] should] beNonNil];
         });
         
         afterEach(^{
@@ -257,7 +257,7 @@ context(@"PCFDataSignIn Specification", ^{
         });
         
         it(@"should remove the OAuth token from the keychain when signing out", ^{
-            [[PCFDataSignIn sharedInstance] signOut];
+            [[PMSSDataSignIn sharedInstance] signOut];
         });
         
         it(@"'disconnect' should try to revoke OAuth token from the OpenID Connect server", ^{
@@ -266,14 +266,14 @@ context(@"PCFDataSignIn Specification", ^{
             });
             
             [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
-            [[PCFDataSignIn sharedInstance] disconnect];
+            [[PMSSDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should remove the OAuth token from the keychain if disconnect is successful", ^{
             stubEnqueueOperation(nil);
             
             [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
-            [[PCFDataSignIn sharedInstance] disconnect];
+            [[PMSSDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should not remove the OAuth token from the keychain if disconnect fails", ^{
@@ -282,8 +282,8 @@ context(@"PCFDataSignIn Specification", ^{
                              forKey:@"HTTPError"];
             });
             
-            [[PCFDataSignIn sharedInstance] disconnect];
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPCFOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
+            [[PMSSDataSignIn sharedInstance] disconnect];
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPMSSOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
         });
     });
 });

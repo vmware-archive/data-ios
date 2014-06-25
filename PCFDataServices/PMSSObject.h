@@ -1,5 +1,5 @@
 //
-//  PCFObject.h
+//  PMSSObject.h
 //  
 //
 //  Created by DX123-XL on 2014-05-30.
@@ -8,32 +8,32 @@
 
 #import <Foundation/Foundation.h>
 
-@class PCFObject;
+@class PMSSObject;
 
-@interface PCFObject : NSObject
+@interface PMSSObject : NSObject
 
 #pragma mark Constructors
 ///---------------------------
-/// @name Creating a PCFObject
+/// @name Creating a PMSSObject
 ///---------------------------
 
 /**
- Creates a new PCFObject with a class name.
+ Creates a new PMSSObject with a class name.
  @param className A class name can be any alphanumeric string that begins with a letter. It represents an object in your app, like a User of a Document.
  @result Returns the object that is instantiated with the given class name.
  */
 + (instancetype)objectWithClassName:(NSString *)className;
 
 /**
- Creates a new PCFObject with a class name, initialized with data constructed from the specified set of objects and keys.
+ Creates a new PMSSObject with a class name, initialized with data constructed from the specified set of objects and keys.
  @param className The object's class.
- @param dictionary An NSDictionary of keys and objects to set on the new PCFObject.
- @result A PCFObject with the given class name and set with the given data.
+ @param dictionary An NSDictionary of keys and objects to set on the new PMSSObject.
+ @result A PMSSObject with the given class name and set with the given data.
  */
 + (instancetype)objectWithClassName:(NSString *)className dictionary:(NSDictionary *)dictionary;
 
 /**
- Initializes a new PCFObject with a class name.
+ Initializes a new PMSSObject with a class name.
  @param className A class name can be any alphanumeric string that begins with a letter. It represents an object in your app, like a User or a Document.
  @result Returns the object that is instantiated with the given class name.
  */
@@ -80,7 +80,7 @@
 - (void)setObject:(id)object forKey:(NSString *)key;
 
 /**
- Sets the objects and keys from the dictionary on the PCFObject at once
+ Sets the objects and keys from the dictionary on the PMSSObject at once
  @param dictionary The dictionary with keys and values
  */
 
@@ -93,13 +93,13 @@
 - (void)removeObjectForKey:(NSString *)key;
 
 /**
- * For myObject[key] = value type syntx myPCFObject[key].
+ * For myObject[key] = value type syntx myPMSSObject[key].
  @param key The key.
  */
 - (id)objectForKeyedSubscript:(NSString *)key;
 
 /**
- * For myPCFObject[key] = value type syntx
+ * For myPMSSObject[key] = value type syntx
  @param object The object.
  @param key The key.
  */
@@ -113,11 +113,11 @@
 ///--------------------------------------
 
 /**
- Saves the PCFObject asynchronously and executes the given callback block.
+ Saves the PMSSObject asynchronously and executes the given callback block.
  @param success The block to execute when the save operation is successful.
  @param failure The block to execute when the save operation fails.
  */
-- (void)saveOnSuccess:(void (^)(PCFObject *object))success
+- (void)saveOnSuccess:(void (^)(PMSSObject *object))success
               failure:(void (^)(NSError *error))failure;
 
 #pragma mark -
@@ -126,11 +126,11 @@
 /** @name Getting an Object from Parse */
 
 /**
- Fetches the PCFObject asynchronously and executes the given callback block.
+ Fetches the PMSSObject asynchronously and executes the given callback block.
  @param success The block to execute when the fetch operation is successful.
  @param failure The block to execute when the fetch operation fails.
  */
-- (void)fetchOnSuccess:(void (^)(PCFObject *object))success
+- (void)fetchOnSuccess:(void (^)(PMSSObject *object))success
                failure:(void (^)(NSError *error))failure;
 
 #pragma mark -
@@ -141,11 +141,11 @@
 ///------------------------------------------
 
 /**
- Deletes the PCFObject asynchronously and executes the given callback block.
+ Deletes the PMSSObject asynchronously and executes the given callback block.
  @param success The block to execute if the delete operation is successful.
  @param failure The block to execute if the delete operation fails.
  */
-- (void)deleteOnSuccess:(void (^)(PCFObject *object))success
+- (void)deleteOnSuccess:(void (^)(PMSSObject *object))success
                 failure:(void (^)(NSError *error))failure;
 
 @end
