@@ -175,6 +175,22 @@ static
     if (savedCredential) {
         
         void (^failureBlock)(NSError *) = ^(NSError *error) {
+            
+            if (error) {
+                NSRange range = [error.localizedDescription rangeOfString:@"401"]; // unauthorized error
+                if (range.location != NSNotFound) {
+                   
+                    // The saved credential has probably expired.  We need to clear it.
+                    [self setCredential:nil];
+                    
+                    // If interactive login mode is requested, then go for it now.
+                    if (interactive) {
+                        [self performOAuthLogin];
+                        return;
+                    }
+                }
+            }
+            
             if (failure) {
                 failure(error);
             }
