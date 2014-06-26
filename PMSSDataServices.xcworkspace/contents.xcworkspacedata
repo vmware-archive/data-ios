@@ -2,8 +2,8 @@
 <Workspace
    version = "1.0">
    <Group
-      location = "group:PCFDataServices"
-      name = "PCFDataServices">
+      location = "group:PMSSDataServices"
+      name = "PMSSDataServices">
       <FileRef
          location = "group:PMSSDataSignIn+Internal.h">
       </FileRef>
@@ -36,10 +36,10 @@
       </FileRef>
    </Group>
    <FileRef
-      location = "group:Specs/PCFDataServices Spec.xcodeproj">
+      location = "group:Specs/PMSSDataServices Spec.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/PCFDataServices Example.xcodeproj">
+      location = "group:Example/PMSSDataServices Example.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

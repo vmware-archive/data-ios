@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "0510"
-   version = "1.3">
+   version = "2.0">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -9,15 +9,15 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F1B601B61925257200B65371"
-               BuildableName = "PCFDataServices Example.app"
-               BlueprintName = "PCFDataServices Example"
-               ReferencedContainer = "container:PCFDataServices Example.xcodeproj">
+               BlueprintIdentifier = "F1F9F935192BF956002848C7"
+               BuildableName = "PMSSDataServicesSpecs.xctest"
+               BlueprintName = "PMSSDataServicesSpecs"
+               ReferencedContainer = "container:PMSSDataServices Spec.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,16 +28,22 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F1F9F935192BF956002848C7"
+               BuildableName = "PMSSDataServicesSpecs.xctest"
+               BlueprintName = "PMSSDataServicesSpecs"
+               ReferencedContainer = "container:PMSSDataServices Spec.xcodeproj">
+            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "PMSSIntegrationSpec">
+               </Test>
+            </SkippedTests>
+         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1B601B61925257200B65371"
-            BuildableName = "PCFDataServices Example.app"
-            BlueprintName = "PCFDataServices Example"
-            ReferencedContainer = "container:PCFDataServices Example.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -47,16 +53,8 @@
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
+      debugXPCServices = "NO"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1B601B61925257200B65371"
-            BuildableName = "PCFDataServices Example.app"
-            BlueprintName = "PCFDataServices Example"
-            ReferencedContainer = "container:PCFDataServices Example.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -66,15 +64,6 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1B601B61925257200B65371"
-            BuildableName = "PCFDataServices Example.app"
-            BlueprintName = "PCFDataServices Example"
-            ReferencedContainer = "container:PCFDataServices Example.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -1,6 +1,6 @@
 language: objective-c
-xcode_workspace: PCFDataServices.xcworkspace
-xcode_scheme: PCFDataServicesSpecs
+xcode_workspace: PMSSDataServices.xcworkspace
+xcode_scheme: PMSSDataServicesSpecs
 xcode_sdk: iphonesimulator7.0
 
 notifications:

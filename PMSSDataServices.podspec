@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name     = 'PCFDataServices'
+  s.name     = 'PMSSDataServices'
   s.version  = '0.1.0'
   s.license  = 'MIT'
   s.summary  = 'A OpenID Connect client framework for iOS.'
@@ -12,6 +12,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '6.0'
   s.dependency 'AFOAuth2Client'
 
-  s.public_header_files = 'PCFDataServices/*.h'
-  s.source_files = 'PCFDataServices/*.{h,m}'
+  s.public_header_files = 'PMSSDataServices/*.h'
+  s.source_files = 'PMSSDataServices/*.{h,m}'
 end

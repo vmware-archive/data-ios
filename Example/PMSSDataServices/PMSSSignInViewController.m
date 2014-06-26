@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PCFDataServices/PMSSDataSignIn.h>
+#import <PMSSDataServices/PMSSDataSignIn.h>
 
 #import "PMSSSignInViewController.h"
 

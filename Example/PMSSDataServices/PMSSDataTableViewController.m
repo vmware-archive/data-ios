@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PCFDataServices/PMSSDataServices.h>
+#import <PMSSDataServices/PMSSDataServices.h>
 
 #import "PMSSDataTableViewController.h"
 #import "PMSSShowJSONViewController.h"

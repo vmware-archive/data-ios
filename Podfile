@@ -1,20 +1,20 @@
-workspace './PCFDataServices'
-xcodeproj 'Example/PCFDataServices Example'
-xcodeproj 'Specs/PCFDataServices Spec'
+workspace './PMSSDataServices'
+xcodeproj 'Example/PMSSDataServices Example'
+xcodeproj 'Specs/PMSSDataServices Spec'
 
-target 'PCFDataServices Example' do
-  xcodeproj 'Example/PCFDataServices Example'
+target 'PMSSDataServices Example' do
+  xcodeproj 'Example/PMSSDataServices Example'
 
   platform :ios, '6.0'
-  link_with 'PCFDataServices Example'
-  pod 'PCFDataServices', :path => './'
+  link_with 'PMSSDataServices Example'
+  pod 'PMSSDataServices', :path => './'
 end
 
-target 'PCFDataServicesSpecs' do
-    xcodeproj 'Specs/PCFDataServices Spec'
+target 'PMSSDataServicesSpecs' do
+    xcodeproj 'Specs/PMSSDataServices Spec'
     
     platform :ios, '7.0'
-    link_with 'PCFDataServicesSpecs'
+    link_with 'PMSSDataServicesSpecs'
     pod 'Kiwi/XCTest'
-    pod 'PCFDataServices', :path => './'
+    pod 'PMSSDataServices', :path => './'
 end
