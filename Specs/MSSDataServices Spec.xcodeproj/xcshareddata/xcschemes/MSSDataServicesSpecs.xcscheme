@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F1F9F935192BF956002848C7"
-               BuildableName = "PMSSDataServicesSpecs.xctest"
-               BlueprintName = "PMSSDataServicesSpecs"
-               ReferencedContainer = "container:PMSSDataServices Spec.xcodeproj">
+               BuildableName = "MSSDataServicesSpecs.xctest"
+               BlueprintName = "MSSDataServicesSpecs"
+               ReferencedContainer = "container:MSSDataServices Spec.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,13 +33,13 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F1F9F935192BF956002848C7"
-               BuildableName = "PMSSDataServicesSpecs.xctest"
-               BlueprintName = "PMSSDataServicesSpecs"
-               ReferencedContainer = "container:PMSSDataServices Spec.xcodeproj">
+               BuildableName = "MSSDataServicesSpecs.xctest"
+               BlueprintName = "MSSDataServicesSpecs"
+               ReferencedContainer = "container:MSSDataServices Spec.xcodeproj">
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "PMSSIntegrationSpec">
+                  Identifier = "MSSIntegrationSpec">
                </Test>
             </SkippedTests>
          </TestableReference>

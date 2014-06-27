@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F1B601B61925257200B65371"
-               BuildableName = "PMSSDataServices Example.app"
-               BlueprintName = "PMSSDataServices Example"
-               ReferencedContainer = "container:PMSSDataServices Example.xcodeproj">
+               BuildableName = "MSSDataServices Example.app"
+               BlueprintName = "MSSDataServices Example"
+               ReferencedContainer = "container:MSSDataServices Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F1B601B61925257200B65371"
-            BuildableName = "PMSSDataServices Example.app"
-            BlueprintName = "PMSSDataServices Example"
-            ReferencedContainer = "container:PMSSDataServices Example.xcodeproj">
+            BuildableName = "MSSDataServices Example.app"
+            BlueprintName = "MSSDataServices Example"
+            ReferencedContainer = "container:MSSDataServices Example.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -52,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F1B601B61925257200B65371"
-            BuildableName = "PMSSDataServices Example.app"
-            BlueprintName = "PMSSDataServices Example"
-            ReferencedContainer = "container:PMSSDataServices Example.xcodeproj">
+            BuildableName = "MSSDataServices Example.app"
+            BlueprintName = "MSSDataServices Example"
+            ReferencedContainer = "container:MSSDataServices Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -70,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F1B601B61925257200B65371"
-            BuildableName = "PMSSDataServices Example.app"
-            BlueprintName = "PMSSDataServices Example"
-            ReferencedContainer = "container:PMSSDataServices Example.xcodeproj">
+            BuildableName = "MSSDataServices Example.app"
+            BlueprintName = "MSSDataServices Example"
+            ReferencedContainer = "container:MSSDataServices Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1AFA377B07AC42BAA0E2B2A4 /* libPods-PMSSDataServices Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE95FB68F0640759F313BE6 /* libPods-PMSSDataServices Example.a */; };
+		1AFA377B07AC42BAA0E2B2A4 /* libPods-MSSDataServices Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE95FB68F0640759F313BE6 /* libPods-MSSDataServices Example.a */; };
 		5718CABC19423DBB00761429 /* MSSSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CABB19423DBB00761429 /* MSSSignInViewController.m */; };
 		5718CAC219425D9800761429 /* MSSDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAC119425D9800761429 /* MSSDataTableViewController.m */; };
 		57982FA11948FA8F006B71A7 /* MSSShowJSONViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57982FA01948FA8F006B71A7 /* MSSShowJSONViewController.m */; };
@@ -25,9 +25,9 @@
 		5718CAC119425D9800761429 /* MSSDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataTableViewController.m; sourceTree = "<group>"; };
 		57982F9F1948FA8F006B71A7 /* MSSShowJSONViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSShowJSONViewController.h; sourceTree = "<group>"; };
 		57982FA01948FA8F006B71A7 /* MSSShowJSONViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSShowJSONViewController.m; sourceTree = "<group>"; };
-		66997FFC642446149BED3F9A /* Pods-PMSSDataServices Example.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PMSSDataServices Example.xcconfig"; path = "../Pods/Pods-PMSSDataServices Example.xcconfig"; sourceTree = "<group>"; };
-		DAE95FB68F0640759F313BE6 /* libPods-PMSSDataServices Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PMSSDataServices Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1B601B71925257200B65371 /* PMSSDataServices Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PMSSDataServices Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66997FFC642446149BED3F9A /* Pods-MSSDataServices Example.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSSDataServices Example.xcconfig"; path = "../Pods/Pods-MSSDataServices Example.xcconfig"; sourceTree = "<group>"; };
+		DAE95FB68F0640759F313BE6 /* libPods-MSSDataServices Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSSDataServices Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1B601B71925257200B65371 /* MSSDataServices Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MSSDataServices Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1B601C21925257200B65371 /* MSSDataServices Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MSSDataServices Example-Info.plist"; sourceTree = "<group>"; };
 		F1B601C41925257200B65371 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F1B601C61925257200B65371 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -43,7 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AFA377B07AC42BAA0E2B2A4 /* libPods-PMSSDataServices Example.a in Frameworks */,
+				1AFA377B07AC42BAA0E2B2A4 /* libPods-MSSDataServices Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 		3DFBFBA335484D039ADA1160 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DAE95FB68F0640759F313BE6 /* libPods-PMSSDataServices Example.a */,
+				DAE95FB68F0640759F313BE6 /* libPods-MSSDataServices Example.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -74,22 +74,22 @@
 		F1B601AE1925257200B65371 = {
 			isa = PBXGroup;
 			children = (
-				F1B601C01925257200B65371 /* PMSSDataServices */,
+				F1B601C01925257200B65371 /* MSSDataServices */,
 				F1B601B81925257200B65371 /* Products */,
 				3DFBFBA335484D039ADA1160 /* Frameworks */,
-				66997FFC642446149BED3F9A /* Pods-PMSSDataServices Example.xcconfig */,
+				66997FFC642446149BED3F9A /* Pods-MSSDataServices Example.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
 		F1B601B81925257200B65371 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F1B601B71925257200B65371 /* PMSSDataServices Example.app */,
+				F1B601B71925257200B65371 /* MSSDataServices Example.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F1B601C01925257200B65371 /* PMSSDataServices */ = {
+		F1B601C01925257200B65371 /* MSSDataServices */ = {
 			isa = PBXGroup;
 			children = (
 				5718CAB919423D9900761429 /* View Controllers */,
@@ -99,7 +99,7 @@
 				F1B601D21925257200B65371 /* Images.xcassets */,
 				F1B601C11925257200B65371 /* Supporting Files */,
 			);
-			path = PMSSDataServices;
+			path = MSSDataServices;
 			sourceTree = "<group>";
 		};
 		F1B601C11925257200B65371 /* Supporting Files */ = {
@@ -116,9 +116,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F1B601B61925257200B65371 /* PMSSDataServices Example */ = {
+		F1B601B61925257200B65371 /* MSSDataServices Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F1B601E91925257200B65371 /* Build configuration list for PBXNativeTarget "PMSSDataServices Example" */;
+			buildConfigurationList = F1B601E91925257200B65371 /* Build configuration list for PBXNativeTarget "MSSDataServices Example" */;
 			buildPhases = (
 				B2FF65AE40C243359C59B010 /* Check Pods Manifest.lock */,
 				F1B601B31925257200B65371 /* Sources */,
@@ -130,9 +130,9 @@
 			);
 			dependencies = (
 			);
-			name = "PMSSDataServices Example";
-			productName = PMSSDataServices;
-			productReference = F1B601B71925257200B65371 /* PMSSDataServices Example.app */;
+			name = "MSSDataServices Example";
+			productName = MSSDataServices;
+			productReference = F1B601B71925257200B65371 /* MSSDataServices Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -141,11 +141,11 @@
 		F1B601AF1925257200B65371 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = PMSS;
+				CLASSPREFIX = MSS;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Pivotal;
 			};
-			buildConfigurationList = F1B601B21925257200B65371 /* Build configuration list for PBXProject "PMSSDataServices Example" */;
+			buildConfigurationList = F1B601B21925257200B65371 /* Build configuration list for PBXProject "MSSDataServices Example" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -158,7 +158,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F1B601B61925257200B65371 /* PMSSDataServices Example */,
+				F1B601B61925257200B65371 /* MSSDataServices Example */,
 			);
 		};
 /* End PBXProject section */
@@ -189,7 +189,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Pods-PMSSDataServices Example-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/../Pods/Pods-MSSDataServices Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B2FF65AE40C243359C59B010 /* Check Pods Manifest.lock */ = {
@@ -316,32 +316,32 @@
 		};
 		F1B601EA1925257200B65371 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66997FFC642446149BED3F9A /* Pods-PMSSDataServices Example.xcconfig */;
+			baseConfigurationReference = 66997FFC642446149BED3F9A /* Pods-MSSDataServices Example.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Robert Szumlakowski (TAAP59C578)";
 				FRAMEWORK_SEARCH_PATHS = "\"$(PODS_ROOT)/google-plus-ios-sdk/google-plus-ios-sdk-1.5.1\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PMSSDataServices/MSSDataServices Example-Prefix.pch";
-				INFOPLIST_FILE = "PMSSDataServices/MSSDataServices Example-Info.plist";
-				PRODUCT_NAME = "PMSSDataServices Example";
+				GCC_PREFIX_HEADER = "MSSDataServices/MSSDataServices Example-Prefix.pch";
+				INFOPLIST_FILE = "MSSDataServices/MSSDataServices Example-Info.plist";
+				PRODUCT_NAME = "MSSDataServices Example";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		F1B601EB1925257200B65371 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66997FFC642446149BED3F9A /* Pods-PMSSDataServices Example.xcconfig */;
+			baseConfigurationReference = 66997FFC642446149BED3F9A /* Pods-MSSDataServices Example.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Robert Szumlakowski (TAAP59C578)";
 				FRAMEWORK_SEARCH_PATHS = "\"$(PODS_ROOT)/google-plus-ios-sdk/google-plus-ios-sdk-1.5.1\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PMSSDataServices/MSSDataServices Example-Prefix.pch";
-				INFOPLIST_FILE = "PMSSDataServices/MSSDataServices Example-Info.plist";
-				PRODUCT_NAME = "PMSSDataServices Example";
+				GCC_PREFIX_HEADER = "MSSDataServices/MSSDataServices Example-Prefix.pch";
+				INFOPLIST_FILE = "MSSDataServices/MSSDataServices Example-Info.plist";
+				PRODUCT_NAME = "MSSDataServices Example";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -349,7 +349,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F1B601B21925257200B65371 /* Build configuration list for PBXProject "PMSSDataServices Example" */ = {
+		F1B601B21925257200B65371 /* Build configuration list for PBXProject "MSSDataServices Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1B601E71925257200B65371 /* Debug */,
@@ -358,7 +358,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F1B601E91925257200B65371 /* Build configuration list for PBXNativeTarget "PMSSDataServices Example" */ = {
+		F1B601E91925257200B65371 /* Build configuration list for PBXNativeTarget "MSSDataServices Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1B601EA1925257200B65371 /* Debug */,

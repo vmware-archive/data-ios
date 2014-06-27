@@ -1,20 +1,20 @@
 workspace './MSSDataServices'
-xcodeproj 'Example/PMSSDataServices Example'
-xcodeproj 'Specs/PMSSDataServices Spec'
+xcodeproj 'Example/MSSDataServices Example'
+xcodeproj 'Specs/MSSDataServices Spec'
 
-target 'PMSSDataServices Example' do
-  xcodeproj 'Example/PMSSDataServices Example'
+target 'MSSDataServices Example' do
+  xcodeproj 'Example/MSSDataServices Example'
 
   platform :ios, '6.0'
-  link_with 'PMSSDataServices Example'
+  link_with 'MSSDataServices Example'
   pod 'MSSDataServices', :path => './'
 end
 
-target 'PMSSDataServicesSpecs' do
-    xcodeproj 'Specs/PMSSDataServices Spec'
+target 'MSSDataServicesSpecs' do
+    xcodeproj 'Specs/MSSDataServices Spec'
     
     platform :ios, '7.0'
-    link_with 'PMSSDataServicesSpecs'
+    link_with 'MSSDataServicesSpecs'
     pod 'Kiwi/XCTest'
     pod 'MSSDataServices', :path => './'
 end
