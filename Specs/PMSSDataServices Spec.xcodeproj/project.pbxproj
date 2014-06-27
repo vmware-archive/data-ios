@@ -8,37 +8,37 @@
 
 /* Begin PBXBuildFile section */
 		2CAC853B59E343E78192C50A /* libPods-PMSSDataServicesSpecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D99E6EB469C04CF993C9CE49 /* libPods-PMSSDataServicesSpecs.a */; };
-		5718CAB519410E3900761429 /* PMSSDataIntegrationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAB419410E3900761429 /* PMSSDataIntegrationSpec.m */; };
-		579B48B61940BA9E002F2F26 /* PMSSDataTestHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 579B48B51940BA9E002F2F26 /* PMSSDataTestHelpers.m */; };
-		F15DD975193CBFFC00CFAC93 /* PMSSObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD974193CBFFC00CFAC93 /* PMSSObjectSpec.m */; };
+		5718CAB519410E3900761429 /* MSSDataIntegrationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAB419410E3900761429 /* MSSDataIntegrationSpec.m */; };
+		579B48B61940BA9E002F2F26 /* MSSDataTestHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 579B48B51940BA9E002F2F26 /* MSSDataTestHelpers.m */; };
+		F15DD975193CBFFC00CFAC93 /* MSSObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DD974193CBFFC00CFAC93 /* MSSObjectSpec.m */; };
 		F1EF46211934E77500CB8930 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46201934E77500CB8930 /* SystemConfiguration.framework */; };
 		F1EF46231934E78200CB8930 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46221934E78200CB8930 /* MobileCoreServices.framework */; };
 		F1F9F937192BF956002848C7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EA192BF81700CF830B /* XCTest.framework */; };
 		F1F9F938192BF956002848C7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EC192BF81700CF830B /* Foundation.framework */; };
 		F1F9F939192BF956002848C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F145A5EE192BF81700CF830B /* UIKit.framework */; };
 		F1F9F93F192BF956002848C7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1F9F93D192BF956002848C7 /* InfoPlist.strings */; };
-		F1F9F949192BFA26002848C7 /* PMSSDataSignInSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F9F948192BFA26002848C7 /* PMSSDataSignInSpec.m */; };
+		F1F9F949192BFA26002848C7 /* MSSDataSignInSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F9F948192BFA26002848C7 /* MSSDataSignInSpec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		10F021DF31854ADA85B91F84 /* Pods-PMSSDataServicesSpecs.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PMSSDataServicesSpecs.xcconfig"; path = "../Pods/Pods-PMSSDataServicesSpecs.xcconfig"; sourceTree = "<group>"; };
-		5718CAB419410E3900761429 /* PMSSDataIntegrationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSDataIntegrationSpec.m; sourceTree = "<group>"; };
-		579B48B21940B6E6002F2F26 /* PMSSDataTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSSDataTestConstants.h; sourceTree = "<group>"; };
-		579B48B41940BA9E002F2F26 /* PMSSDataTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSSDataTestHelpers.h; sourceTree = "<group>"; };
-		579B48B51940BA9E002F2F26 /* PMSSDataTestHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSDataTestHelpers.m; sourceTree = "<group>"; };
+		5718CAB419410E3900761429 /* MSSDataIntegrationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataIntegrationSpec.m; sourceTree = "<group>"; };
+		579B48B21940B6E6002F2F26 /* MSSDataTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataTestConstants.h; sourceTree = "<group>"; };
+		579B48B41940BA9E002F2F26 /* MSSDataTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataTestHelpers.h; sourceTree = "<group>"; };
+		579B48B51940BA9E002F2F26 /* MSSDataTestHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataTestHelpers.m; sourceTree = "<group>"; };
 		AA27B082064A4641BC857737 /* libPods-PMSSDataServicesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PMSSDataServicesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D99E6EB469C04CF993C9CE49 /* libPods-PMSSDataServicesSpecs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PMSSDataServicesSpecs.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F145A5EA192BF81700CF830B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EC192BF81700CF830B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EE192BF81700CF830B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		F15DD974193CBFFC00CFAC93 /* PMSSObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSObjectSpec.m; sourceTree = "<group>"; };
+		F15DD974193CBFFC00CFAC93 /* MSSObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSObjectSpec.m; sourceTree = "<group>"; };
 		F1EF46201934E77500CB8930 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F1EF46221934E78200CB8930 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		F1F9F936192BF956002848C7 /* PMSSDataServicesSpecs.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PMSSDataServicesSpecs.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1F9F93C192BF956002848C7 /* PMSSDataServicesSpecs-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PMSSDataServicesSpecs-Info.plist"; sourceTree = "<group>"; };
+		F1F9F93C192BF956002848C7 /* MSSDataServicesSpecs-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MSSDataServicesSpecs-Info.plist"; sourceTree = "<group>"; };
 		F1F9F93E192BF956002848C7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F1F9F942192BF956002848C7 /* PMSSDataServicesSpecs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PMSSDataServicesSpecs-Prefix.pch"; sourceTree = "<group>"; };
-		F1F9F948192BFA26002848C7 /* PMSSDataSignInSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSDataSignInSpec.m; sourceTree = "<group>"; };
+		F1F9F942192BF956002848C7 /* MSSDataServicesSpecs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MSSDataServicesSpecs-Prefix.pch"; sourceTree = "<group>"; };
+		F1F9F948192BFA26002848C7 /* MSSDataSignInSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataSignInSpec.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,9 +61,9 @@
 		579B48B31940BA85002F2F26 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				579B48B21940B6E6002F2F26 /* PMSSDataTestConstants.h */,
-				579B48B41940BA9E002F2F26 /* PMSSDataTestHelpers.h */,
-				579B48B51940BA9E002F2F26 /* PMSSDataTestHelpers.m */,
+				579B48B21940B6E6002F2F26 /* MSSDataTestConstants.h */,
+				579B48B41940BA9E002F2F26 /* MSSDataTestHelpers.h */,
+				579B48B51940BA9E002F2F26 /* MSSDataTestHelpers.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -105,9 +105,9 @@
 			children = (
 				579B48B31940BA85002F2F26 /* Helpers */,
 				F1F9F93B192BF956002848C7 /* Supporting Files */,
-				F1F9F948192BFA26002848C7 /* PMSSDataSignInSpec.m */,
-				F15DD974193CBFFC00CFAC93 /* PMSSObjectSpec.m */,
-				5718CAB419410E3900761429 /* PMSSDataIntegrationSpec.m */,
+				F1F9F948192BFA26002848C7 /* MSSDataSignInSpec.m */,
+				F15DD974193CBFFC00CFAC93 /* MSSObjectSpec.m */,
+				5718CAB419410E3900761429 /* MSSDataIntegrationSpec.m */,
 			);
 			path = PMSSDataServicesSpecs;
 			sourceTree = "<group>";
@@ -115,9 +115,9 @@
 		F1F9F93B192BF956002848C7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F1F9F93C192BF956002848C7 /* PMSSDataServicesSpecs-Info.plist */,
+				F1F9F93C192BF956002848C7 /* MSSDataServicesSpecs-Info.plist */,
 				F1F9F93D192BF956002848C7 /* InfoPlist.strings */,
-				F1F9F942192BF956002848C7 /* PMSSDataServicesSpecs-Prefix.pch */,
+				F1F9F942192BF956002848C7 /* MSSDataServicesSpecs-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -219,10 +219,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F15DD975193CBFFC00CFAC93 /* PMSSObjectSpec.m in Sources */,
-				579B48B61940BA9E002F2F26 /* PMSSDataTestHelpers.m in Sources */,
-				5718CAB519410E3900761429 /* PMSSDataIntegrationSpec.m in Sources */,
-				F1F9F949192BFA26002848C7 /* PMSSDataSignInSpec.m in Sources */,
+				F15DD975193CBFFC00CFAC93 /* MSSObjectSpec.m in Sources */,
+				579B48B61940BA9E002F2F26 /* MSSDataTestHelpers.m in Sources */,
+				5718CAB519410E3900761429 /* MSSDataIntegrationSpec.m in Sources */,
+				F1F9F949192BFA26002848C7 /* MSSDataSignInSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

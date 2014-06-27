@@ -8,32 +8,32 @@
 
 /* Begin PBXBuildFile section */
 		1AFA377B07AC42BAA0E2B2A4 /* libPods-PMSSDataServices Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE95FB68F0640759F313BE6 /* libPods-PMSSDataServices Example.a */; };
-		5718CABC19423DBB00761429 /* PMSSSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CABB19423DBB00761429 /* PMSSSignInViewController.m */; };
-		5718CAC219425D9800761429 /* PMSSDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAC119425D9800761429 /* PMSSDataTableViewController.m */; };
-		57982FA11948FA8F006B71A7 /* PMSSShowJSONViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57982FA01948FA8F006B71A7 /* PMSSShowJSONViewController.m */; };
+		5718CABC19423DBB00761429 /* MSSSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CABB19423DBB00761429 /* MSSSignInViewController.m */; };
+		5718CAC219425D9800761429 /* MSSDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5718CAC119425D9800761429 /* MSSDataTableViewController.m */; };
+		57982FA11948FA8F006B71A7 /* MSSShowJSONViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57982FA01948FA8F006B71A7 /* MSSShowJSONViewController.m */; };
 		F1B601C51925257200B65371 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1B601C31925257200B65371 /* InfoPlist.strings */; };
 		F1B601C71925257200B65371 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B601C61925257200B65371 /* main.m */; };
-		F1B601CB1925257200B65371 /* PMSSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B601CA1925257200B65371 /* PMSSAppDelegate.m */; };
+		F1B601CB1925257200B65371 /* MSSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B601CA1925257200B65371 /* MSSAppDelegate.m */; };
 		F1B601CE1925257200B65371 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1B601CC1925257200B65371 /* Main.storyboard */; };
 		F1B601D31925257200B65371 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1B601D21925257200B65371 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5718CABA19423DBB00761429 /* PMSSSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSSSignInViewController.h; sourceTree = "<group>"; };
-		5718CABB19423DBB00761429 /* PMSSSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSSignInViewController.m; sourceTree = "<group>"; };
-		5718CAC019425D9800761429 /* PMSSDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSSDataTableViewController.h; sourceTree = "<group>"; };
-		5718CAC119425D9800761429 /* PMSSDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSDataTableViewController.m; sourceTree = "<group>"; };
-		57982F9F1948FA8F006B71A7 /* PMSSShowJSONViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSSShowJSONViewController.h; sourceTree = "<group>"; };
-		57982FA01948FA8F006B71A7 /* PMSSShowJSONViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSShowJSONViewController.m; sourceTree = "<group>"; };
+		5718CABA19423DBB00761429 /* MSSSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSSignInViewController.h; sourceTree = "<group>"; };
+		5718CABB19423DBB00761429 /* MSSSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSSignInViewController.m; sourceTree = "<group>"; };
+		5718CAC019425D9800761429 /* MSSDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataTableViewController.h; sourceTree = "<group>"; };
+		5718CAC119425D9800761429 /* MSSDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataTableViewController.m; sourceTree = "<group>"; };
+		57982F9F1948FA8F006B71A7 /* MSSShowJSONViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSShowJSONViewController.h; sourceTree = "<group>"; };
+		57982FA01948FA8F006B71A7 /* MSSShowJSONViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSShowJSONViewController.m; sourceTree = "<group>"; };
 		66997FFC642446149BED3F9A /* Pods-PMSSDataServices Example.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PMSSDataServices Example.xcconfig"; path = "../Pods/Pods-PMSSDataServices Example.xcconfig"; sourceTree = "<group>"; };
 		DAE95FB68F0640759F313BE6 /* libPods-PMSSDataServices Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PMSSDataServices Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1B601B71925257200B65371 /* PMSSDataServices Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PMSSDataServices Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1B601C21925257200B65371 /* PMSSDataServices Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PMSSDataServices Example-Info.plist"; sourceTree = "<group>"; };
+		F1B601C21925257200B65371 /* MSSDataServices Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MSSDataServices Example-Info.plist"; sourceTree = "<group>"; };
 		F1B601C41925257200B65371 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F1B601C61925257200B65371 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F1B601C81925257200B65371 /* PMSSDataServices Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PMSSDataServices Example-Prefix.pch"; sourceTree = "<group>"; };
-		F1B601C91925257200B65371 /* PMSSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PMSSAppDelegate.h; sourceTree = "<group>"; };
-		F1B601CA1925257200B65371 /* PMSSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PMSSAppDelegate.m; sourceTree = "<group>"; };
+		F1B601C81925257200B65371 /* MSSDataServices Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MSSDataServices Example-Prefix.pch"; sourceTree = "<group>"; };
+		F1B601C91925257200B65371 /* MSSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSSAppDelegate.h; sourceTree = "<group>"; };
+		F1B601CA1925257200B65371 /* MSSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSSAppDelegate.m; sourceTree = "<group>"; };
 		F1B601CD1925257200B65371 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1B601D21925257200B65371 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,12 +61,12 @@
 		5718CAB919423D9900761429 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				5718CABA19423DBB00761429 /* PMSSSignInViewController.h */,
-				5718CABB19423DBB00761429 /* PMSSSignInViewController.m */,
-				5718CAC019425D9800761429 /* PMSSDataTableViewController.h */,
-				5718CAC119425D9800761429 /* PMSSDataTableViewController.m */,
-				57982F9F1948FA8F006B71A7 /* PMSSShowJSONViewController.h */,
-				57982FA01948FA8F006B71A7 /* PMSSShowJSONViewController.m */,
+				5718CABA19423DBB00761429 /* MSSSignInViewController.h */,
+				5718CABB19423DBB00761429 /* MSSSignInViewController.m */,
+				5718CAC019425D9800761429 /* MSSDataTableViewController.h */,
+				5718CAC119425D9800761429 /* MSSDataTableViewController.m */,
+				57982F9F1948FA8F006B71A7 /* MSSShowJSONViewController.h */,
+				57982FA01948FA8F006B71A7 /* MSSShowJSONViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -93,8 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				5718CAB919423D9900761429 /* View Controllers */,
-				F1B601C91925257200B65371 /* PMSSAppDelegate.h */,
-				F1B601CA1925257200B65371 /* PMSSAppDelegate.m */,
+				F1B601C91925257200B65371 /* MSSAppDelegate.h */,
+				F1B601CA1925257200B65371 /* MSSAppDelegate.m */,
 				F1B601CC1925257200B65371 /* Main.storyboard */,
 				F1B601D21925257200B65371 /* Images.xcassets */,
 				F1B601C11925257200B65371 /* Supporting Files */,
@@ -105,10 +105,10 @@
 		F1B601C11925257200B65371 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F1B601C21925257200B65371 /* PMSSDataServices Example-Info.plist */,
+				F1B601C21925257200B65371 /* MSSDataServices Example-Info.plist */,
 				F1B601C31925257200B65371 /* InfoPlist.strings */,
 				F1B601C61925257200B65371 /* main.m */,
-				F1B601C81925257200B65371 /* PMSSDataServices Example-Prefix.pch */,
+				F1B601C81925257200B65371 /* MSSDataServices Example-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -214,10 +214,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5718CAC219425D9800761429 /* PMSSDataTableViewController.m in Sources */,
-				5718CABC19423DBB00761429 /* PMSSSignInViewController.m in Sources */,
-				57982FA11948FA8F006B71A7 /* PMSSShowJSONViewController.m in Sources */,
-				F1B601CB1925257200B65371 /* PMSSAppDelegate.m in Sources */,
+				5718CAC219425D9800761429 /* MSSDataTableViewController.m in Sources */,
+				5718CABC19423DBB00761429 /* MSSSignInViewController.m in Sources */,
+				57982FA11948FA8F006B71A7 /* MSSShowJSONViewController.m in Sources */,
+				F1B601CB1925257200B65371 /* MSSAppDelegate.m in Sources */,
 				F1B601C71925257200B65371 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,8 +323,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Robert Szumlakowski (TAAP59C578)";
 				FRAMEWORK_SEARCH_PATHS = "\"$(PODS_ROOT)/google-plus-ios-sdk/google-plus-ios-sdk-1.5.1\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PMSSDataServices/PMSSDataServices Example-Prefix.pch";
-				INFOPLIST_FILE = "PMSSDataServices/PMSSDataServices Example-Info.plist";
+				GCC_PREFIX_HEADER = "PMSSDataServices/MSSDataServices Example-Prefix.pch";
+				INFOPLIST_FILE = "PMSSDataServices/MSSDataServices Example-Info.plist";
 				PRODUCT_NAME = "PMSSDataServices Example";
 				WRAPPER_EXTENSION = app;
 			};
@@ -339,8 +339,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Robert Szumlakowski (TAAP59C578)";
 				FRAMEWORK_SEARCH_PATHS = "\"$(PODS_ROOT)/google-plus-ios-sdk/google-plus-ios-sdk-1.5.1\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PMSSDataServices/PMSSDataServices Example-Prefix.pch";
-				INFOPLIST_FILE = "PMSSDataServices/PMSSDataServices Example-Info.plist";
+				GCC_PREFIX_HEADER = "PMSSDataServices/MSSDataServices Example-Prefix.pch";
+				INFOPLIST_FILE = "PMSSDataServices/MSSDataServices Example-Info.plist";
 				PRODUCT_NAME = "PMSSDataServices Example";
 				WRAPPER_EXTENSION = app;
 			};

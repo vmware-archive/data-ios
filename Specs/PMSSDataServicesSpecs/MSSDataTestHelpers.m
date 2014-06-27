@@ -1,6 +1,6 @@
 //
-//  PMSSDataTestHelpers.m
-//  PMSSDataServices Spec
+//  MSSDataTestHelpers.m
+//  MSSDataServices Spec
 //
 //  Created by Elliott Garcea on 2014-06-05.
 //
@@ -10,16 +10,16 @@
 #import <Kiwi/Kiwi.h>
 #import <AFOAuth2Client/AFOAuth2Client.h>
 
-#import "PMSSDataSignIn+Internal.h"
-#import "PMSSDataTestHelpers.h"
-#import "PMSSDataTestConstants.h"
-#import "PMSSDataError.h"
-#import "PMSSObject+Internal.h"
+#import "MSSDataSignIn+Internal.h"
+#import "MSSDataTestHelpers.h"
+#import "MSSDataTestConstants.h"
+#import "MSSDataError.h"
+#import "MSSObject+Internal.h"
 
 void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger) = ^(NSString *accessToken, NSString *refreshToken, NSInteger expiresIn){
     AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:accessToken tokenType:@"Bearer"];
     [cred setRefreshToken:refreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:expiresIn]];
-    [AFOAuthCredential storeCredential:cred withIdentifier:kPMSSOAuthCredentialID];
+    [AFOAuthCredential storeCredential:cred withIdentifier:kMSSOAuthCredentialID];
 };
 
 void (^setupDefaultCredentialInKeychain)(void) = ^{
@@ -28,7 +28,7 @@ void (^setupDefaultCredentialInKeychain)(void) = ^{
 
 void (^setupForSuccessfulSilentAuth)(void) = ^{
     setupDefaultCredentialInKeychain();
-    AFOAuth2Client *authClient = [[PMSSDataSignIn sharedInstance] authClient];
+    AFOAuth2Client *authClient = [[MSSDataSignIn sharedInstance] authClient];
     [authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
            withBlock:^id(NSArray *params) {
                void (^success)(AFOAuthCredential *credential) = params[2];
@@ -39,8 +39,8 @@ void (^setupForSuccessfulSilentAuth)(void) = ^{
            }];
 };
 
-void (^setupPMSSDataSignInInstance)(id<PMSSSignInDelegate>) = ^(id<PMSSSignInDelegate> delegate){
-    PMSSDataSignIn *instance = [PMSSDataSignIn sharedInstance];
+void (^setupMSSDataSignInInstance)(id<MSSSignInDelegate>) = ^(id<MSSSignInDelegate> delegate){
+    MSSDataSignIn *instance = [MSSDataSignIn sharedInstance];
     [instance setOpenIDConnectURL:kTestOpenIDConnectURL];
     [instance setClientID:kTestClientID];
     [instance setClientSecret:kTestClientSecret];
@@ -72,7 +72,7 @@ NSError *(^unauthorizedError)(void) = ^NSError *{
     return [NSError errorWithDomain:NSURLErrorDomain code:401 userInfo:userInfo];
 };
 
-void (^assertObjectEqual)(id, NSDictionary *, PMSSObject *) = ^(id self, NSDictionary *expectedDictionary, PMSSObject *object) {
+void (^assertObjectEqual)(id, NSDictionary *, MSSObject *) = ^(id self, NSDictionary *expectedDictionary, MSSObject *object) {
     [[object.contentsDictionary should] equal:expectedDictionary];
 };
 
@@ -85,7 +85,7 @@ void (^verifyAuthorizationInRequest)(id, NSURLRequest *) = ^(id self, NSURLReque
 
 void (^stubAsyncCall)(NSString *, NSError **, EnqueueAsyncBlock) = ^(NSString *method, NSError **error, EnqueueAsyncBlock block){
     SEL stubSel = NSSelectorFromString([NSString stringWithFormat:@"%@Path:parameters:success:failure:", [method lowercaseString]]);
-    AFHTTPClient *client = [[PMSSDataSignIn sharedInstance] dataServiceClient:error];
+    AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:error];
     
     [client stub:stubSel
        withBlock:^id(NSArray *params) {

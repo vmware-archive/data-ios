@@ -1,14 +1,14 @@
 //
-//  PMSSObject+Internal.h
+//  MSSObject+Internal.h
 //  
 //
 //  Created by Elliott Garcea on 2014-06-12.
 //
 //
 
-#import "PMSSObject.h"
+#import "MSSObject.h"
 
-@interface PMSSObject (Internal)
+@interface MSSObject (Internal)
 
 @property (nonatomic, readonly) NSMutableDictionary *contentsDictionary;
 

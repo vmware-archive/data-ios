@@ -1,13 +1,13 @@
 //
-//  PMSSDataTestConstants.h
-//  PMSSDataServices Spec
+//  MSSDataTestConstants.h
+//  MSSDataServices Spec
 //
 //  Created by Elliott Garcea on 2014-06-05.
 //
 //
 
-#ifndef PMSSDataServices_Spec_PMSSDataTestConstants_h
-#define PMSSDataServices_Spec_PMSSDataTestConstants_h
+#ifndef MSSDataServices_Spec_MSSDataTestConstants_h
+#define MSSDataServices_Spec_MSSDataTestConstants_h
 
 static NSString *const kTestAccessToken1 = @"AccessToken1";
 static NSString *const kTestAccessToken2 = @"AccessToken2";

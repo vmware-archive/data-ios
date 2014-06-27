@@ -1,6 +1,6 @@
 //
-//  PMSSDataSignInSpec.m
-//  PMSSDataServices Spec
+//  MSSDataSignInSpec.m
+//  MSSDataServices Spec
 //
 //  Created by DX123-XL on 2014-05-20.
 //
@@ -11,23 +11,23 @@
 
 #import "Kiwi.h"
 
-#import "PMSSDataSignIn+Internal.h"
-#import "PMSSDataError.h"
-#import "PMSSDataTestConstants.h"
-#import "PMSSDataTestHelpers.h"
+#import "MSSDataSignIn+Internal.h"
+#import "MSSDataError.h"
+#import "MSSDataTestConstants.h"
+#import "MSSDataTestHelpers.h"
 
 
-SPEC_BEGIN(PMSSDataSignInSpec)
+SPEC_BEGIN(MSSDataSignInSpec)
 
 void (^resetSharedInstance)(void) = ^{
-    [PMSSDataSignIn setSharedInstance:nil];
+    [MSSDataSignIn setSharedInstance:nil];
 };
 
 void (^setupForFailedSilentAuth)(void) = ^{
-    [AFOAuthCredential deleteCredentialWithIdentifier:kPMSSOAuthCredentialID];
+    [AFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
 };
 
-context(@"PMSSDataSignIn Specification", ^{
+context(@"MSSDataSignIn Specification", ^{
     
     __block AFOAuthCredential *credential;
     
@@ -45,35 +45,35 @@ context(@"PMSSDataSignIn Specification", ^{
         credential = nil;
     });
     
-    describe(@"PMSSDataSignIn shared instance initialization", ^{
+    describe(@"MSSDataSignIn shared instance initialization", ^{
         
         it(@"should initialize with the |openid| value in the scope property.", ^{
-            NSArray *scopes = [[PMSSDataSignIn sharedInstance] scopes];
+            NSArray *scopes = [[MSSDataSignIn sharedInstance] scopes];
             [[theValue([scopes containsObject:@"openid"]) should] beTrue];
         });
         
         it(@"should initialize with nil clientID", ^{
-            [[[[PMSSDataSignIn sharedInstance] clientID] should] beNil];
+            [[[[MSSDataSignIn sharedInstance] clientID] should] beNil];
         });
     });
     
     describe(@"call delegate with error during authentication", ^{
         
-        __block PMSSDataSignIn *sharedInstance;
+        __block MSSDataSignIn *sharedInstance;
         
         beforeEach(^{
-            sharedInstance = [PMSSDataSignIn sharedInstance];
-            NSObject<PMSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
+            sharedInstance = [MSSDataSignIn sharedInstance];
+            NSObject<MSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, any()];
             sharedInstance.delegate = instanceDelegate;
         });
         
-        it(@"should call delegate with error if authenticate is called while 'clientID' is not set on PMSSDataSignIn shared instance", ^{
+        it(@"should call delegate with error if authenticate is called while 'clientID' is not set on MSSDataSignIn shared instance", ^{
             [[sharedInstance.clientID should] beNil];
             [sharedInstance authenticate];
         });
         
-        it(@"should call delegate with error if authenticate is called while 'openIDConnectURL' is not set on PMSSDataSignIn shared instance", ^{
+        it(@"should call delegate with error if authenticate is called while 'openIDConnectURL' is not set on MSSDataSignIn shared instance", ^{
             [[sharedInstance.openIDConnectURL should] beNil];
             [sharedInstance authenticate];
         });
@@ -81,13 +81,13 @@ context(@"PMSSDataSignIn Specification", ^{
         
     describe(@"trySilentAuthentication ", ^{
         
-        __block NSObject<PMSSSignInDelegate> *instanceDelegate;
-        __block PMSSDataSignIn *sharedInstance;
+        __block NSObject<MSSSignInDelegate> *instanceDelegate;
+        __block MSSDataSignIn *sharedInstance;
         
         beforeEach(^{
-            instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
-            setupPMSSDataSignInInstance(instanceDelegate);
-            sharedInstance = [PMSSDataSignIn sharedInstance];
+            instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
+            setupMSSDataSignInInstance(instanceDelegate);
+            sharedInstance = [MSSDataSignIn sharedInstance];
         });
         
         afterEach(^{
@@ -163,7 +163,7 @@ context(@"PMSSDataSignIn Specification", ^{
         });
     });
     
-    describe(@"PMSSDataSignIn Authentication callback", ^{
+    describe(@"MSSDataSignIn Authentication callback", ^{
         
         __block NSURL *url;
         
@@ -179,22 +179,22 @@ context(@"PMSSDataSignIn Specification", ^{
         });
         
         it(@"should parse out the OAuth code from the 'application:openURL:sourceApplication:annotation:' callback", ^{
-            setupPMSSDataSignInInstance(nil);
+            setupMSSDataSignInInstance(nil);
             
-            [[[[PMSSDataSignIn sharedInstance] authClient] should] receive:authSelector
+            [[[[MSSDataSignIn sharedInstance] authClient] should] receive:authSelector
                                                             withArguments:any(), authCode, any(), any(), any()];
             
-            [[PMSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
         
         it(@"should call delegate 'finishedWithAuth:error:' with a credential object if authentication is successful", ^{
-            NSObject<PMSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
+            NSObject<MSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
             AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken1 tokenType:kTestTokenType];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
-            setupPMSSDataSignInInstance(instanceDelegate);
+            setupMSSDataSignInInstance(instanceDelegate);
             
-            PMSSDataSignIn *sharedInstance = [PMSSDataSignIn sharedInstance];
+            MSSDataSignIn *sharedInstance = [MSSDataSignIn sharedInstance];
             sharedInstance.dataServiceURL = kTestDataServiceURL;
             [[sharedInstance authClient] stub:authSelector
                                     withBlock:^id(NSArray *params) {
@@ -203,26 +203,26 @@ context(@"PMSSDataSignIn Specification", ^{
                                         return nil;
                                     }];
             
-            [[PMSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
         
         it(@"should call delegate 'finishedWithAuth:error:' method with an error object if authentication fails", ^{
-            NSObject<PMSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(PMSSSignInDelegate)];
-            NSError *error = [NSError errorWithDomain:kPMSSDataServicesErrorDomain
-                                                 code:PMSSDataServicesFailedAuthenticationError
+            NSObject<MSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
+            NSError *error = [NSError errorWithDomain:kMSSDataServicesErrorDomain
+                                                 code:MSSDataServicesFailedAuthenticationError
                                              userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, error];
-            setupPMSSDataSignInInstance(instanceDelegate);
+            setupMSSDataSignInInstance(instanceDelegate);
             
-            [[[PMSSDataSignIn sharedInstance] authClient] stub:authSelector
+            [[[MSSDataSignIn sharedInstance] authClient] stub:authSelector
                                                     withBlock:^id(NSArray *params) {
                                                         void (^failure)(NSError *) = params[4];
                                                         failure(error);
                                                         return nil;
                                                     }];
             
-            [[PMSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
         });
     });
     
@@ -231,7 +231,7 @@ context(@"PMSSDataSignIn Specification", ^{
         typedef void(^EnqueueBlock)(AFHTTPRequestOperation *operation);
         
         void (^stubEnqueueOperation)(EnqueueBlock) = ^(EnqueueBlock block) {
-            [[PMSSDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
+            [[MSSDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
                                                   withBlock:^id(NSArray *params) {
                                                       AFHTTPRequestOperation *operation = params[0];
                                                       
@@ -246,10 +246,10 @@ context(@"PMSSDataSignIn Specification", ^{
         };
         
         beforeEach(^{
-            setupPMSSDataSignInInstance(nil);
+            setupMSSDataSignInInstance(nil);
             setupForSuccessfulSilentAuth();
             
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPMSSOAuthCredentialID] should] beNonNil];
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID] should] beNonNil];
         });
         
         afterEach(^{
@@ -257,7 +257,7 @@ context(@"PMSSDataSignIn Specification", ^{
         });
         
         it(@"should remove the OAuth token from the keychain when signing out", ^{
-            [[PMSSDataSignIn sharedInstance] signOut];
+            [[MSSDataSignIn sharedInstance] signOut];
         });
         
         it(@"'disconnect' should try to revoke OAuth token from the OpenID Connect server", ^{
@@ -266,14 +266,14 @@ context(@"PMSSDataSignIn Specification", ^{
             });
             
             [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
-            [[PMSSDataSignIn sharedInstance] disconnect];
+            [[MSSDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should remove the OAuth token from the keychain if disconnect is successful", ^{
             stubEnqueueOperation(nil);
             
             [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
-            [[PMSSDataSignIn sharedInstance] disconnect];
+            [[MSSDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should not remove the OAuth token from the keychain if disconnect fails", ^{
@@ -282,8 +282,8 @@ context(@"PMSSDataSignIn Specification", ^{
                              forKey:@"HTTPError"];
             });
             
-            [[PMSSDataSignIn sharedInstance] disconnect];
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kPMSSOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
+            [[MSSDataSignIn sharedInstance] disconnect];
+            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
         });
     });
 });

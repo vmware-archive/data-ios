@@ -1,6 +1,6 @@
 //
-//  PMSSDataTestHelpers.h
-//  PMSSDataServices Spec
+//  MSSDataTestHelpers.h
+//  MSSDataServices Spec
 //
 //  Created by Elliott Garcea on 2014-06-05.
 //
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class PMSSObject;
+@class MSSObject;
 
 typedef void (^EnqueueAsyncBlock)(NSArray *);
 
@@ -18,13 +18,13 @@ void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger expiresIn);
 
 void (^setupForSuccessfulSilentAuth)(void);
 
-void (^setupPMSSDataSignInInstance)(id<PMSSSignInDelegate>);
+void (^setupMSSDataSignInInstance)(id<MSSSignInDelegate>);
 
 void (^stubKeychain)(AFOAuthCredential *);
 
 NSError *(^unauthorizedError)(void);
 
-void (^assertObjectEqual)(id, NSDictionary *, PMSSObject *);
+void (^assertObjectEqual)(id, NSDictionary *, MSSObject *);
 
 void (^verifyAuthorizationInRequest)(id, NSURLRequest *);
 

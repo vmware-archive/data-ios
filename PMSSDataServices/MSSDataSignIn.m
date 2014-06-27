@@ -1,5 +1,5 @@
 //
-//  PMSSDataSignIn.m
+//  MSSDataSignIn.m
 //  
 //
 //  Created by DX123-XL on 2014-05-20.
@@ -9,45 +9,45 @@
 #import <AFNetworking/AFNetworking.h>
 
 #import "AFOAuth2Client.h"
-#import "PMSSDataSignIn+Internal.h"
-#import "PMSSDataError.h"
+#import "MSSDataSignIn+Internal.h"
+#import "MSSDataError.h"
 
 
-NSString *const kPMSSOAuthCredentialID = @"PMSSDataServicesOAuthCredential";
-NSString *const kPMSSDataServicesErrorDomain = @"PMSSDataServicesError";
+NSString *const kMSSOAuthCredentialID = @"MSSDataServicesOAuthCredential";
+NSString *const kMSSDataServicesErrorDomain = @"MSSDataServicesError";
 
-NSString *const kPMSSOAuthPath = @"/oauth/authorize";
-NSString *const kPMSSOAuthTokenPath = @"/token";
-NSString *const kPMSSOAuthRevokePath = @"/revoke";
+NSString *const kMSSOAuthPath = @"/oauth/authorize";
+NSString *const kMSSOAuthTokenPath = @"/token";
+NSString *const kMSSOAuthRevokePath = @"/revoke";
 
-static PMSSDataSignIn *_sharedPMSSDataSignIn;
+static MSSDataSignIn *_sharedMSSDataSignIn;
 static dispatch_once_t _sharedOnceToken;
 
 static
 
-@interface PMSSDataSignIn ()
+@interface MSSDataSignIn ()
 
 @property (nonatomic) AFOAuth2Client *authClient;
 @property (nonatomic) AFHTTPClient *dataServiceClient;
 
 @end
 
-@implementation PMSSDataSignIn
+@implementation MSSDataSignIn
 
-+ (PMSSDataSignIn *)sharedInstance
++ (MSSDataSignIn *)sharedInstance
 {
     dispatch_once(&_sharedOnceToken, ^{
-        if (!_sharedPMSSDataSignIn) {
-            _sharedPMSSDataSignIn = [[self alloc] init];
+        if (!_sharedMSSDataSignIn) {
+            _sharedMSSDataSignIn = [[self alloc] init];
         }
     });
-    return _sharedPMSSDataSignIn;
+    return _sharedMSSDataSignIn;
 }
 
-+ (void)setSharedInstance:(PMSSDataSignIn *)sharedInstance
++ (void)setSharedInstance:(MSSDataSignIn *)sharedInstance
 {
     _sharedOnceToken = 0;
-    _sharedPMSSDataSignIn = sharedInstance;
+    _sharedMSSDataSignIn = sharedInstance;
 }
 
 - (id)init
@@ -62,11 +62,11 @@ static
     return self;
 }
 
-- (void)callDelegateWithErrorCode:(PMSSDataServicesErrorCode)code
+- (void)callDelegateWithErrorCode:(MSSDataServicesErrorCode)code
                          userInfo:(NSDictionary *)userInfo
 {
     if ([self delegate]) {
-        NSError *error = [NSError errorWithDomain:kPMSSDataServicesErrorDomain code:(NSInteger)code userInfo:userInfo];
+        NSError *error = [NSError errorWithDomain:kMSSDataServicesErrorDomain code:(NSInteger)code userInfo:userInfo];
         [self.delegate finishedWithAuth:nil error:error];
     }
 }
@@ -92,7 +92,7 @@ static
     
     if (![self hasAuthInKeychain]) {
         if (error) {
-            *error = [NSError errorWithDomain:kPMSSDataServicesErrorDomain code:PMSSDataServicesAuthorizationRequired userInfo:@{ NSLocalizedDescriptionKey : @"No credentials found. Authentication required." }];
+            *error = [NSError errorWithDomain:kMSSDataServicesErrorDomain code:MSSDataServicesAuthorizationRequired userInfo:@{ NSLocalizedDescriptionKey : @"No credentials found. Authentication required." }];
         }
         return nil;
     }
@@ -129,12 +129,12 @@ static
 
 - (AFOAuthCredential *)credential
 {
-    return [AFOAuthCredential retrieveCredentialWithIdentifier:kPMSSOAuthCredentialID];
+    return [AFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID];
 }
 
 - (BOOL)storeCredentialInKeychain:(AFOAuthCredential *)credential
 {
-    return [AFOAuthCredential storeCredential:credential withIdentifier:kPMSSOAuthCredentialID];
+    return [AFOAuthCredential storeCredential:credential withIdentifier:kMSSOAuthCredentialID];
 }
 
 - (BOOL)trySilentAuthentication
@@ -157,17 +157,17 @@ static
                                   failure:(void (^)(NSError *error))failure
 {
     if (!self.clientID) {
-        [self callDelegateWithErrorCode:PMSSDataServicesNoClientIDError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client ID" }];
+        [self callDelegateWithErrorCode:MSSDataServicesNoClientIDError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client ID" }];
         return NO;
     }
     
     if (!self.clientSecret) {
-        [self callDelegateWithErrorCode:PMSSDataServicesNoClientSecretError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client Secret" }];
+        [self callDelegateWithErrorCode:MSSDataServicesNoClientSecretError userInfo:@{ NSLocalizedDescriptionKey : @"Missing client Secret" }];
         return NO;
     }
     
     if (!self.openIDConnectURL) {
-        [self callDelegateWithErrorCode:PMSSDataServicesNoOpenIDConnectURLError userInfo:@{ NSLocalizedDescriptionKey : @"Missing Open ID Connect URL" }];
+        [self callDelegateWithErrorCode:MSSDataServicesNoOpenIDConnectURLError userInfo:@{ NSLocalizedDescriptionKey : @"Missing Open ID Connect URL" }];
         return NO;
     }
     
@@ -207,7 +207,7 @@ static
             [self.delegate finishedWithAuth:credential error:nil];
         };
         
-        [self.authClient authenticateUsingOAuthWithPath:kPMSSOAuthTokenPath refreshToken:savedCredential.refreshToken success:successBlock failure:failureBlock];
+        [self.authClient authenticateUsingOAuthWithPath:kMSSOAuthTokenPath refreshToken:savedCredential.refreshToken success:successBlock failure:failureBlock];
         return YES;
     }
     
@@ -236,12 +236,12 @@ static
                                  @"scope" : [self.scopes componentsJoinedByString:@" "],
                                  };
     
-    NSURL *url = [NSURL URLWithString:kPMSSOAuthPath relativeToURL:[NSURL URLWithString:self.openIDConnectURL]];
-    NSURL *urlWithParams = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[kPMSSOAuthPath rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(parameters, NSUTF8StringEncoding)]];
+    NSURL *url = [NSURL URLWithString:kMSSOAuthPath relativeToURL:[NSURL URLWithString:self.openIDConnectURL]];
+    NSURL *urlWithParams = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[kMSSOAuthPath rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(parameters, NSUTF8StringEncoding)]];
     
     if (!urlWithParams || !urlWithParams.scheme || !urlWithParams.host) {
         NSDictionary *userInfo =  @{ NSLocalizedDescriptionKey : @"The authorization URL was malformed. Please check the openIDConnectURL value." };
-        [self callDelegateWithErrorCode:PMSSDataServicesMalformedURLError userInfo:userInfo];
+        [self callDelegateWithErrorCode:MSSDataServicesMalformedURLError userInfo:userInfo];
     }
     
     [[UIApplication sharedApplication] openURL:urlWithParams];
@@ -266,7 +266,7 @@ sourceApplication:(NSString *)sourceApplication
 {
     if ([url.absoluteString.lowercaseString hasPrefix:self.redirectURI.lowercaseString]) {
         NSString *code = [self OAuthCodeFromRedirectURI:url];
-        [self.authClient authenticateUsingOAuthWithPath:kPMSSOAuthTokenPath
+        [self.authClient authenticateUsingOAuthWithPath:kMSSOAuthTokenPath
                                                    code:code
                                             redirectURI:[self redirectURI]
                                                 success:^(AFOAuthCredential *credential) {
@@ -283,14 +283,14 @@ sourceApplication:(NSString *)sourceApplication
 
 - (void)signOut
 {
-    [AFOAuthCredential deleteCredentialWithIdentifier:kPMSSOAuthCredentialID];
+    [AFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
 }
 
 - (void)disconnect
 {
     NSString *accessToken = [[self credential] accessToken];
     if (accessToken) {
-        [self.authClient deletePath:kPMSSOAuthRevokePath
+        [self.authClient deletePath:kMSSOAuthRevokePath
                          parameters:@{ @"token" : accessToken }
                             success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                 [self signOut];
@@ -299,8 +299,8 @@ sourceApplication:(NSString *)sourceApplication
                                 [self callDelegateWithError:error];
                             }];
     } else {
-        NSError *error = [NSError errorWithDomain:kPMSSDataServicesErrorDomain
-                                             code:PMSSDataServicesMissingAccessToken
+        NSError *error = [NSError errorWithDomain:kMSSDataServicesErrorDomain
+                                             code:MSSDataServicesMissingAccessToken
                                          userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Disconnect method called with no credential stored in keychain." }];
         [self callDelegateWithError:error];
     }

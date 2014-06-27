@@ -1,5 +1,5 @@
 //
-//  PMSSObject.m
+//  MSSObject.m
 //  
 //
 //  Created by DX123-XL on 2014-05-30.
@@ -7,15 +7,15 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
-#import "AFHTTPClient+PMSSMethods.h"
+#import "AFHTTPClient+MSSMethods.h"
 
-#import "PMSSObject+Internal.h"
-#import "PMSSDataSignIn+Internal.h"
-#import "PMSSDataError.h"
+#import "MSSObject+Internal.h"
+#import "MSSDataSignIn+Internal.h"
+#import "MSSDataError.h"
 
 
 #define FAIL_AND_RETURN_WITH_CODE(errorcode) \
-    FAIL_AND_RETURN([NSError errorWithDomain:kPMSSDataServicesErrorDomain code:(errorcode) userInfo:nil])
+    FAIL_AND_RETURN([NSError errorWithDomain:kMSSDataServicesErrorDomain code:(errorcode) userInfo:nil])
 
 #define FAIL_AND_RETURN(error) \
     if (failure) { \
@@ -29,14 +29,14 @@
     } \
     return;
 
-@interface PMSSObject ()
+@interface MSSObject ()
 
 @property (readwrite) NSString *className;
 @property (nonatomic, readwrite) NSMutableDictionary *contentsDictionary;
 
 @end
 
-@implementation PMSSObject
+@implementation MSSObject
 
 + (instancetype)objectWithClassName:(NSString *)className
 {
@@ -45,7 +45,7 @@
 
 + (instancetype)objectWithClassName:(NSString *)className dictionary:(NSDictionary *)dictionary
 {
-    PMSSObject *instance = [[self alloc] initWithClassName:className];
+    MSSObject *instance = [[self alloc] initWithClassName:className];
     [instance setObjectsForKeysWithDictionary:dictionary];
     return instance;
 }
@@ -110,7 +110,7 @@
     return [NSString stringWithFormat:@"%@/%@", self.className, self.objectID];
 }
 
-- (void)saveOnSuccess:(void (^)(PMSSObject *object))success
+- (void)saveOnSuccess:(void (^)(MSSObject *object))success
               failure:(void (^)(NSError *error))failure
 {
     [self performMethod:@"PUT" parameters:self.contentsDictionary onSuccess:success failure:failure];
@@ -126,7 +126,7 @@
 
 - (NSError *)authorizationRequiredError
 {
-    return [NSError errorWithDomain:kPMSSDataServicesErrorDomain code:PMSSDataServicesAuthorizationRequired userInfo:nil];
+    return [NSError errorWithDomain:kMSSDataServicesErrorDomain code:MSSDataServicesAuthorizationRequired userInfo:nil];
 }
 
 - (NSError *)failureError:(NSError *)error
@@ -147,11 +147,11 @@
 - (void)signOutIfRequired:(NSError *)error
 {
     if ([self isUnauthorizedAccessError:error]) {
-        [[PMSSDataSignIn sharedInstance] signOut];
+        [[MSSDataSignIn sharedInstance] signOut];
     }
 }
 
-- (void)fetchOnSuccess:(void (^)(PMSSObject *object))success
+- (void)fetchOnSuccess:(void (^)(MSSObject *object))success
                failure:(void (^)(NSError *error))failure
 {
     [self performMethod:@"GET" parameters:nil onSuccess:success failure:failure];
@@ -160,7 +160,7 @@
 #pragma mark -
 #pragma mark Delete
 
-- (void)deleteOnSuccess:(void (^)(PMSSObject *object))success
+- (void)deleteOnSuccess:(void (^)(MSSObject *object))success
                 failure:(void (^)(NSError *error))failure
 {
     [self performMethod:@"DELETE" parameters:nil onSuccess:success failure:failure];
@@ -171,7 +171,7 @@
 
 - (void)performMethod:(NSString *)method
            parameters:(NSDictionary *)parameters
-            onSuccess:(void (^)(PMSSObject *object))success
+            onSuccess:(void (^)(MSSObject *object))success
               failure:(void (^)(NSError *error))failure
 {
     [self performMethod:method withNumberOfAttempts:2 parameters:parameters onSuccess:success failure:failure];
@@ -180,19 +180,19 @@
 - (void)performMethod:(NSString *)method
  withNumberOfAttempts:(NSInteger)attempts
            parameters:(NSDictionary *)parameters
-            onSuccess:(void (^)(PMSSObject *object))success
+            onSuccess:(void (^)(MSSObject *object))success
               failure:(void (^)(NSError *error))failure
 {
     if (!self.objectID || self.objectID.length <= 0) {
-        FAIL_AND_RETURN_WITH_CODE(PMSSDataServicesObjectIDRequired);
+        FAIL_AND_RETURN_WITH_CODE(MSSDataServicesObjectIDRequired);
     }
     
     if (attempts <= 0) {
-        FAIL_AND_RETURN_WITH_CODE(PMSSDataServicesAuthorizationRequired);
+        FAIL_AND_RETURN_WITH_CODE(MSSDataServicesAuthorizationRequired);
     }
     
     NSError *error;
-    AFHTTPClient *client = [[PMSSDataSignIn sharedInstance] dataServiceClient:&error];
+    AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:&error];
     
     if (!client) {
         FAIL_AND_RETURN(error);
@@ -205,7 +205,7 @@
 }
 
 - (HTTPSuccessBlock)successBlockForMethod:(NSString *)method
-                                  success:(void (^)(PMSSObject *object))success
+                                  success:(void (^)(MSSObject *object))success
                                   failure:(void (^)(NSError *error))failure
 {
     if ([method isEqualToString:@"DELETE"] || [method isEqualToString:@"PUT"]) {
@@ -228,7 +228,7 @@
                 }
             } else {
                 NSDictionary *userInfo = operation ? @{ @"HTTPRequestOperation" : operation } : nil;
-                NSError *error = [NSError errorWithDomain:kPMSSDataServicesErrorDomain code:PMSSDataServicesEmptyResponseData userInfo:userInfo];
+                NSError *error = [NSError errorWithDomain:kMSSDataServicesErrorDomain code:MSSDataServicesEmptyResponseData userInfo:userInfo];
                 FAIL_AND_RETURN(error);
             }
         };
@@ -241,12 +241,12 @@
 - (HTTPFailureBlock)failureBlockForMethod:(NSString *)method
                      withNumberOfAttempts:(NSInteger)attempts
                                parameters:(NSDictionary *)parameters
-                                  success:(void (^)(PMSSObject *object))success
+                                  success:(void (^)(MSSObject *object))success
                                   failure:(void (^)(NSError *error))failure
 {
     return ^(AFHTTPRequestOperation *operation, NSError *error){
         if ([self isUnauthorizedAccessError:error]) {
-            [[PMSSDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(AFOAuthCredential *credential) {
+            [[MSSDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(AFOAuthCredential *credential) {
                 [self performMethod:method withNumberOfAttempts:attempts-1 parameters:parameters onSuccess:success failure:failure];
                 
             } failure:^(NSError *error) {

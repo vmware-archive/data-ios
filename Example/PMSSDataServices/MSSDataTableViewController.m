@@ -1,30 +1,30 @@
 //
-//  PMSSDataTableViewController.m
-//  PMSSDataServices Example
+//  MSSDataTableViewController.m
+//  MSSDataServices Example
 //
 //  Created by Elliott Garcea on 2014-06-06.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PMSSDataServices/PMSSDataServices.h>
+#import <PMSSDataServices/MSSDataServices.h>
 
-#import "PMSSDataTableViewController.h"
-#import "PMSSShowJSONViewController.h"
+#import "MSSDataTableViewController.h"
+#import "MSSShowJSONViewController.h"
 
-#pragma mark - PMSSArrayObject
+#pragma mark - MSSArrayObject
 
-@interface PMSSArrayObject : NSObject
+@interface MSSArrayObject : NSObject
 
 @property NSString *keyString;
 @property NSString *valueString;
 
 @end
 
-@implementation PMSSArrayObject
+@implementation MSSArrayObject
 
 + (instancetype)objectWithKey:(NSString *)key value:(NSString *)value
 {
-    PMSSArrayObject *newObj = [[self alloc] init];
+    MSSArrayObject *newObj = [[self alloc] init];
     if (newObj) {
         newObj.keyString = key;
         newObj.valueString = value;
@@ -35,7 +35,7 @@
 
 + (instancetype)objectWithCollectionName:(NSString *)name objectID:(NSString *)objectID
 {
-    PMSSArrayObject *newObj = [[self alloc] init];
+    MSSArrayObject *newObj = [[self alloc] init];
     if (newObj) {
         newObj.keyString = name;
         newObj.valueString = objectID;
@@ -56,17 +56,17 @@
 
 @end
 
-#pragma mark - PMSSTableViewCell
+#pragma mark - MSSTableViewCell
 
-@interface PMSSTableViewCell : UITableViewCell <UITextFieldDelegate>
+@interface MSSTableViewCell : UITableViewCell <UITextFieldDelegate>
 
-@property PMSSArrayObject *arrayObject;
+@property MSSArrayObject *arrayObject;
 @property (weak, nonatomic) IBOutlet UITextField *keyTextField;
 @property (weak, nonatomic) IBOutlet UITextField *valueTextField;
 
 @end
 
-@implementation PMSSTableViewCell
+@implementation MSSTableViewCell
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
@@ -80,11 +80,11 @@
 
 @end
 
-#pragma mark - PMSSDataTableViewController
+#pragma mark - MSSDataTableViewController
 
-@interface PMSSDataTableViewController ()
+@interface MSSDataTableViewController ()
 
-@property (nonatomic)  PMSSObject *syncObject;
+@property (nonatomic)  MSSObject *syncObject;
 @property NSMutableArray *keyValuePairsArray;
 
 
@@ -92,21 +92,21 @@
 
 @end
 
-@implementation PMSSDataTableViewController
+@implementation MSSDataTableViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.navigationController.toolbarHidden = NO;
-    self.keyValuePairsArray = [NSMutableArray arrayWithObject:[PMSSArrayObject objectWithCollectionName:@"objects" objectID:@"1234"]];
+    self.keyValuePairsArray = [NSMutableArray arrayWithObject:[MSSArrayObject objectWithCollectionName:@"objects" objectID:@"1234"]];
 }
 
-- (PMSSObject *)syncObject
+- (MSSObject *)syncObject
 {
     if (self.keyValuePairsArray[0] && [self.keyValuePairsArray[0] collectionName] && [self.keyValuePairsArray[0] collectionName].length > 0) {
         if (!_syncObject || ![_syncObject.className isEqualToString:[self.keyValuePairsArray[0] collectionName]]) {
-            _syncObject = [PMSSObject objectWithClassName:[self.keyValuePairsArray[0] collectionName]];
+            _syncObject = [MSSObject objectWithClassName:[self.keyValuePairsArray[0] collectionName]];
         }
         return _syncObject;
     }
@@ -138,9 +138,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        PMSSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
+        MSSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"objectIDCell" forIndexPath:indexPath];
         
-        PMSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        MSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         cell.arrayObject = arrayObject;
         
         [cell.keyTextField setText:arrayObject.collectionName];
@@ -152,10 +152,10 @@
         return cell;
     }
 
-    PMSSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"keyValueCell" forIndexPath:indexPath];
+    MSSTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"keyValueCell" forIndexPath:indexPath];
 
     if (indexPath.row < self.keyValuePairsArray.count) {
-        PMSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        MSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         cell.arrayObject = arrayObject;
 
         [cell.keyTextField setText:arrayObject.keyString];
@@ -174,7 +174,7 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        PMSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
+        MSSArrayObject *arrayObject = self.keyValuePairsArray[indexPath.row];
         [self.syncObject removeObjectForKey:arrayObject.keyString];
         
         [self.keyValuePairsArray removeObjectAtIndex:indexPath.row];
@@ -195,11 +195,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     if (self.syncObject && [self.keyValuePairsArray[0] objectID]) {
         self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
         
-        [self.syncObject fetchOnSuccess:^(PMSSObject *object) {
+        [self.syncObject fetchOnSuccess:^(MSSObject *object) {
             [self resetKeyValuePairsArray];
             
             [object.allKeys enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
-                [self.keyValuePairsArray addObject:[PMSSArrayObject objectWithKey:key value:object[key]]];
+                [self.keyValuePairsArray addObject:[MSSArrayObject objectWithKey:key value:object[key]]];
             }];
 
             [self.tableView reloadData];
@@ -216,7 +216,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)saveButtonClicked:(id)sender
 {
     [self populateSyncObject];
-    [self.syncObject saveOnSuccess:^(PMSSObject *object){
+    [self.syncObject saveOnSuccess:^(MSSObject *object){
         UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Save Success" message:@"Save was successful." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [view show];
         
@@ -228,7 +228,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)addButtonClicked:(id)sender
 {
-    [self.keyValuePairsArray addObject:[PMSSArrayObject objectWithKey:@"" value:@""]];
+    [self.keyValuePairsArray addObject:[MSSArrayObject objectWithKey:@"" value:@""]];
     [self.tableView reloadData];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.keyValuePairsArray.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
@@ -260,7 +260,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
     
     if ([self.keyValuePairsArray[0] objectID]) {
-        [self.syncObject deleteOnSuccess:^(PMSSObject *object){
+        [self.syncObject deleteOnSuccess:^(MSSObject *object){
             [self resetKeyValuePairsArray];
             [self.tableView reloadData];
             
@@ -285,7 +285,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)populateSyncObject
 {
     self.syncObject.objectID = [self.keyValuePairsArray[0] objectID];
-    [self.keyValuePairsArray enumerateObjectsUsingBlock:^(PMSSArrayObject *obj, NSUInteger idx, BOOL *stop) {
+    [self.keyValuePairsArray enumerateObjectsUsingBlock:^(MSSArrayObject *obj, NSUInteger idx, BOOL *stop) {
         if (idx > 0 && obj.keyString.length > 0) {
             self.syncObject[obj.keyString] = obj.valueString;
         }
@@ -299,7 +299,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [self populateSyncObject];
     NSDictionary *dict = [self.syncObject performSelector:@selector(contentsDictionary)];
     NSString *formattedString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
-    [(PMSSShowJSONViewController *)[segue destinationViewController] setFormattedJSON:formattedString];
+    [(MSSShowJSONViewController *)[segue destinationViewController] setFormattedJSON:formattedString];
 }
 
 @end

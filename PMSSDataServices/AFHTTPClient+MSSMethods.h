@@ -1,5 +1,5 @@
 //
-//  AFHTTPClient+PMSSMethods.h
+//  AFHTTPClient+MSSMethods.h
 //  
 //
 //  Created by Elliott Garcea on 2014-06-12.
@@ -11,7 +11,7 @@
 typedef void (^HTTPSuccessBlock)(AFHTTPRequestOperation *, id);
 typedef void (^HTTPFailureBlock)(AFHTTPRequestOperation *, NSError *);
 
-@interface AFHTTPClient (PMSSMethods)
+@interface AFHTTPClient (MSSMethods)
 
 - (void)method:(NSString *)method
           path:(NSString *)path

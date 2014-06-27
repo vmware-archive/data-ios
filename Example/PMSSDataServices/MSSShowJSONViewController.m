@@ -1,20 +1,20 @@
 //
-//  PMSSShowJSONViewController.m
-//  PMSSDataServices Example
+//  MSSShowJSONViewController.m
+//  MSSDataServices Example
 //
 //  Created by Elliott Garcea on 2014-06-11.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PMSSShowJSONViewController.h"
+#import "MSSShowJSONViewController.h"
 
-@interface PMSSShowJSONViewController ()
+@interface MSSShowJSONViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextView *showJSONTextView;
 
 @end
 
-@implementation PMSSShowJSONViewController
+@implementation MSSShowJSONViewController
 
 - (void)viewDidLoad
 {

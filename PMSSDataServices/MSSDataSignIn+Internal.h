@@ -1,16 +1,16 @@
 //
-//  PMSSDataSignIn+Internal.h
-//  PMSSDataServices Spec
+//  MSSDataSignIn+Internal.h
+//  MSSDataServices Spec
 //
 //  Created by DX123-XL on 2014-05-21.
 //
 //
 
-#import "PMSSDataSignIn.h"
+#import "MSSDataSignIn.h"
 
-@class AFOAuthCredential, PMSSDataServiceClient;
+@class AFOAuthCredential, MSSDataServiceClient;
 
-@interface PMSSDataSignIn ()
+@interface MSSDataSignIn ()
 
 // The client used to make the OAuth requests to the OpenID connect server.
 - (AFOAuth2Client *)authClient;
@@ -25,6 +25,6 @@
                                   success:(void (^)(AFOAuthCredential *credential))success
                                   failure:(void (^)(NSError *error))failure;
 
-+ (void)setSharedInstance:(PMSSDataSignIn *)sharedInstance;
++ (void)setSharedInstance:(MSSDataSignIn *)sharedInstance;
 
 @end

@@ -1,14 +1,14 @@
 //
-//  PMSSSignInViewController.m
-//  PMSSDataServices Example
+//  MSSSignInViewController.m
+//  MSSDataServices Example
 //
 //  Created by Elliott Garcea on 2014-06-06.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PMSSDataServices/PMSSDataSignIn.h>
+#import <PMSSDataServices/MSSDataSignIn.h>
 
-#import "PMSSSignInViewController.h"
+#import "MSSSignInViewController.h"
 
 static NSString *const kOAuthServerURL = @"http://ident.one.pepsi.cf-app.com";
 static NSString *const kDataServiceURL = @"http://data-service.one.pepsi.cf-app.com";
@@ -16,19 +16,19 @@ static NSString *const kDataServiceURL = @"http://data-service.one.pepsi.cf-app.
 static NSString *const kClientID = @"739e8ae7-e518-4eac-b100-ceec2dd65459";
 static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUATAYEjO92LGaq4ZG60-TCAxM6hAStfdrj9rY29_t6dJ_yO2Vno";
 
-@interface PMSSSignInViewController () <PMSSSignInDelegate>
+@interface MSSSignInViewController () <MSSSignInDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *signInButton;
 
 @end
 
-@implementation PMSSSignInViewController
+@implementation MSSSignInViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    PMSSDataSignIn *instance = [PMSSDataSignIn sharedInstance];
+    MSSDataSignIn *instance = [MSSDataSignIn sharedInstance];
     instance.clientID = kClientID;
     instance.clientSecret = kClientSecret;
     instance.openIDConnectURL = kOAuthServerURL;
@@ -43,11 +43,11 @@ static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUAT
 }
 
 - (IBAction)signInClick:(id)sender {
-    [[PMSSDataSignIn sharedInstance] authenticate];
+    [[MSSDataSignIn sharedInstance] authenticate];
 }
 
 - (IBAction)signOutClicked:(id)sender {
-    [[PMSSDataSignIn sharedInstance] signOut];
+    [[MSSDataSignIn sharedInstance] signOut];
 }
 
 - (void)finishedWithAuth:(AFOAuthCredential *)auth
@@ -59,7 +59,7 @@ static NSString *const kClientSecret = @"AON8owWAztcnrnWDyOb1j_WOIS0LrnFbVoAzUAT
         
     } else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"PMSSDataTableViewController"];
+        UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"MSSDataTableViewController"];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }

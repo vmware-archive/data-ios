@@ -1,16 +1,16 @@
 //
-//  PMSSAppDelegate.m
-//  PMSSDataServices
+//  MSSAppDelegate.m
+//  MSSDataServices
 //
 //  Created by DX123-XL on 2014-05-15.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PMSSDataSignIn.h"
+#import "MSSDataSignIn.h"
 
-#import "PMSSAppDelegate.h"
+#import "MSSAppDelegate.h"
 
-@implementation PMSSAppDelegate
+@implementation MSSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -50,7 +50,7 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
-    return [[PMSSDataSignIn sharedInstance] handleURL:url
+    return [[MSSDataSignIn sharedInstance] handleURL:url
                                    sourceApplication:sourceApplication
                                           annotation:annotation];
 }
