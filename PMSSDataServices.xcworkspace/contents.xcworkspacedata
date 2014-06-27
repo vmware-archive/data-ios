@@ -2,8 +2,8 @@
 <Workspace
    version = "1.0">
    <Group
-      location = "group:PMSSDataServices"
-      name = "PMSSDataServices">
+      location = "group:MSSDataServices"
+      name = "MSSDataServices">
       <FileRef
          location = "group:MSSDataSignIn+Internal.h">
       </FileRef>

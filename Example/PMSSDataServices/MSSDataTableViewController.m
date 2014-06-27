@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PMSSDataServices/MSSDataServices.h>
+#import <MSSDataServices/MSSDataServices.h>
 
 #import "MSSDataTableViewController.h"
 #import "MSSShowJSONViewController.h"

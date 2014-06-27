@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import <PMSSDataServices/MSSDataSignIn.h>
+#import <MSSDataServices/MSSDataSignIn.h>
 
 #import "MSSSignInViewController.h"
 

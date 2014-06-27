@@ -7,21 +7,21 @@ PODS:
   - Kiwi/XCTest (2.2.4):
     - Kiwi/ARC
     - Kiwi/NonARC
-  - PMSSDataServices (0.1.0):
+  - MSSDataServices (0.1.0):
     - AFOAuth2Client
 
 DEPENDENCIES:
   - Kiwi/XCTest
-  - PMSSDataServices (from `./`)
+  - MSSDataServices (from `./`)
 
 EXTERNAL SOURCES:
-  PMSSDataServices:
+  MSSDataServices:
     :path: ./
 
 SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
   AFOAuth2Client: 4f05d29e0a26c7ddf529dd7c4480af6ee1e982c6
   Kiwi: c73667f2b84cbf36f1a3830267c5a4ae8dcbd8ba
-  PMSSDataServices: 3de65e70bd8e727e34e85d107b4292bf2ea57105
+  MSSDataServices: 7912771123eb14618fc7063b2f2ec43db0ebe9c9
 
 COCOAPODS: 0.33.1

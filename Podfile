@@ -1,4 +1,4 @@
-workspace './PMSSDataServices'
+workspace './MSSDataServices'
 xcodeproj 'Example/PMSSDataServices Example'
 xcodeproj 'Specs/PMSSDataServices Spec'
 
@@ -7,7 +7,7 @@ target 'PMSSDataServices Example' do
 
   platform :ios, '6.0'
   link_with 'PMSSDataServices Example'
-  pod 'PMSSDataServices', :path => './'
+  pod 'MSSDataServices', :path => './'
 end
 
 target 'PMSSDataServicesSpecs' do
@@ -16,5 +16,5 @@ target 'PMSSDataServicesSpecs' do
     platform :ios, '7.0'
     link_with 'PMSSDataServicesSpecs'
     pod 'Kiwi/XCTest'
-    pod 'PMSSDataServices', :path => './'
+    pod 'MSSDataServices', :path => './'
 end
