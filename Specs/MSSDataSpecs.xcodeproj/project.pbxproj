@@ -12,7 +12,7 @@
 		E76B93EB1976E179003F37FA /* MSSDataSignInSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = E76B93E21976E179003F37FA /* MSSDataSignInSpec.m */; };
 		E76B93EC1976E179003F37FA /* MSSDataSpecs-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E76B93E31976E179003F37FA /* MSSDataSpecs-Info.plist */; };
 		E76B93ED1976E179003F37FA /* MSSDataTestHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = E76B93E71976E179003F37FA /* MSSDataTestHelpers.m */; };
-		E76B93EE1976E179003F37FA /* MSSObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = E76B93E81976E179003F37FA /* MSSObjectSpec.m */; };
+		E76B93EE1976E179003F37FA /* MSSDataObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = E76B93E81976E179003F37FA /* MSSDataObjectSpec.m */; };
 		EAB2E51568864915A79A21F9 /* libPods-MSSDataSpecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4884DC704C4E413487A82002 /* libPods-MSSDataSpecs.a */; };
 		F1EF46211934E77500CB8930 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46201934E77500CB8930 /* SystemConfiguration.framework */; };
 		F1EF46231934E78200CB8930 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EF46221934E78200CB8930 /* MobileCoreServices.framework */; };
@@ -32,7 +32,7 @@
 		E76B93E51976E179003F37FA /* MSSDataTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataTestConstants.h; sourceTree = "<group>"; };
 		E76B93E61976E179003F37FA /* MSSDataTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataTestHelpers.h; sourceTree = "<group>"; };
 		E76B93E71976E179003F37FA /* MSSDataTestHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataTestHelpers.m; sourceTree = "<group>"; };
-		E76B93E81976E179003F37FA /* MSSObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSObjectSpec.m; sourceTree = "<group>"; };
+		E76B93E81976E179003F37FA /* MSSDataObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataObjectSpec.m; sourceTree = "<group>"; };
 		F145A5EA192BF81700CF830B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EC192BF81700CF830B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F145A5EE192BF81700CF830B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -69,7 +69,7 @@
 				E76B93E51976E179003F37FA /* MSSDataTestConstants.h */,
 				E76B93E61976E179003F37FA /* MSSDataTestHelpers.h */,
 				E76B93E71976E179003F37FA /* MSSDataTestHelpers.m */,
-				E76B93E81976E179003F37FA /* MSSObjectSpec.m */,
+				E76B93E81976E179003F37FA /* MSSDataObjectSpec.m */,
 			);
 			path = MSSDataSpecs;
 			sourceTree = "<group>";
@@ -206,7 +206,7 @@
 				E76B93ED1976E179003F37FA /* MSSDataTestHelpers.m in Sources */,
 				E76B93EB1976E179003F37FA /* MSSDataSignInSpec.m in Sources */,
 				E76B93EA1976E179003F37FA /* MSSDataIntegrationSpec.m in Sources */,
-				E76B93EE1976E179003F37FA /* MSSObjectSpec.m in Sources */,
+				E76B93EE1976E179003F37FA /* MSSDataObjectSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

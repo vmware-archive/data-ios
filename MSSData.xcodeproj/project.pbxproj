@@ -12,7 +12,7 @@
 		E76B94781976F257003F37FA /* MSSDataObject+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = E76B946E1976F257003F37FA /* MSSDataObject+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E76B94791976F257003F37FA /* MSSDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = E76B946F1976F257003F37FA /* MSSDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E76B947A1976F257003F37FA /* MSSDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E76B94701976F257003F37FA /* MSSDataObject.m */; };
-		E76B947B1976F257003F37FA /* MSSDataServices.h in Headers */ = {isa = PBXBuildFile; fileRef = E76B94711976F257003F37FA /* MSSDataServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E76B947B1976F257003F37FA /* MSSData.h in Headers */ = {isa = PBXBuildFile; fileRef = E76B94711976F257003F37FA /* MSSData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E76B947C1976F257003F37FA /* MSSDataSignIn+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = E76B94721976F257003F37FA /* MSSDataSignIn+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E76B947D1976F257003F37FA /* MSSDataSignIn.h in Headers */ = {isa = PBXBuildFile; fileRef = E76B94731976F257003F37FA /* MSSDataSignIn.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E76B947E1976F257003F37FA /* MSSDataSignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = E76B94741976F257003F37FA /* MSSDataSignIn.m */; };
@@ -48,7 +48,7 @@
 		E76B946E1976F257003F37FA /* MSSDataObject+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MSSDataObject+Internal.h"; sourceTree = "<group>"; };
 		E76B946F1976F257003F37FA /* MSSDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataObject.h; sourceTree = "<group>"; };
 		E76B94701976F257003F37FA /* MSSDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataObject.m; sourceTree = "<group>"; };
-		E76B94711976F257003F37FA /* MSSDataServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataServices.h; sourceTree = "<group>"; };
+		E76B94711976F257003F37FA /* MSSData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSData.h; sourceTree = "<group>"; };
 		E76B94721976F257003F37FA /* MSSDataSignIn+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MSSDataSignIn+Internal.h"; sourceTree = "<group>"; };
 		E76B94731976F257003F37FA /* MSSDataSignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSDataSignIn.h; sourceTree = "<group>"; };
 		E76B94741976F257003F37FA /* MSSDataSignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSDataSignIn.m; sourceTree = "<group>"; };
@@ -125,7 +125,7 @@
 				E76B946E1976F257003F37FA /* MSSDataObject+Internal.h */,
 				E76B946F1976F257003F37FA /* MSSDataObject.h */,
 				E76B94701976F257003F37FA /* MSSDataObject.m */,
-				E76B94711976F257003F37FA /* MSSDataServices.h */,
+				E76B94711976F257003F37FA /* MSSData.h */,
 				E76B94721976F257003F37FA /* MSSDataSignIn+Internal.h */,
 				E76B94731976F257003F37FA /* MSSDataSignIn.h */,
 				E76B94741976F257003F37FA /* MSSDataSignIn.m */,
@@ -188,7 +188,7 @@
 				E76B947D1976F257003F37FA /* MSSDataSignIn.h in Headers */,
 				E76B94791976F257003F37FA /* MSSDataObject.h in Headers */,
 				E76B94821976F32F003F37FA /* MSSData-Prefix.pch in Headers */,
-				E76B947B1976F257003F37FA /* MSSDataServices.h in Headers */,
+				E76B947B1976F257003F37FA /* MSSData.h in Headers */,
 				E76B94771976F257003F37FA /* MSSDataError.h in Headers */,
 				E76B94781976F257003F37FA /* MSSDataObject+Internal.h in Headers */,
 				E76B94AD1976F383003F37FA /* AFOAuth2Client.h in Headers */,
@@ -366,10 +366,7 @@
 		E76B94531976F1D6003F37FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
@@ -385,10 +382,7 @@
 		E76B94541976F1D6003F37FA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;

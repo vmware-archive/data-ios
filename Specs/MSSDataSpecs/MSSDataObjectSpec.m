@@ -9,7 +9,7 @@
 #import <Kiwi/Kiwi.h>
 #import <AFNetworking/AFNetworking.h>
 #import "AFOAuth2Client.h"
-#import "AFHTTPClient+MSSMethods.h"
+#import "AFHTTPClient.h"
 
 #import "MSSDataObject+Internal.h"
 #import "MSSDataSignIn+Internal.h"

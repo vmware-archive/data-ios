@@ -12,6 +12,6 @@
 #import "MSSDataError.h"
 #import "MSSDataSignIn.h"
 #import "MSSDataObject.h"
-#import "AFHTTPClient+MSSMethods.h"
+#import "AFHTTPClient.h"
 
 #endif
