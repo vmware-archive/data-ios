@@ -1,9 +1,5 @@
 //
-//  MSSDataError.h
-//  
-//
-//  Created by Elliott Garcea on 2014-06-04.
-//
+//  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
 #ifndef _MSSDataError_h

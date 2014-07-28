@@ -1,9 +1,5 @@
 //
-//  MSSDataObject+Internal.h
-//  
-//
-//  Created by Elliott Garcea on 2014-06-12.
-//
+//  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
 #import "MSSDataObject.h"

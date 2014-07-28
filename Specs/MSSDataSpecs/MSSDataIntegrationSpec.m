@@ -1,9 +1,5 @@
 //
-//  MSSDataIntegrationSpec.m
-//  MSSDataSpecs
-//
-//  Created by Elliott Garcea on 2014-06-05.
-//
+//  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
 #import <Kiwi/Kiwi.h>
