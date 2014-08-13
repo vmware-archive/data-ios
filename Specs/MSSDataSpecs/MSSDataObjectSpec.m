@@ -3,9 +3,9 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import "AFNetworking.h"
-#import "AFOAuth2Client.h"
-#import "AFHTTPClient.h"
+#import "MSSAFNetworking.h"
+#import "MSSAFOAuth2Client.h"
+#import "MSSAFHTTPClient.h"
 
 #import "MSSDataObject+Internal.h"
 #import "MSSDataSignIn+Internal.h"
@@ -31,7 +31,7 @@ describe(@"MSSDataObject no Auth in keychain", ^{
     beforeEach(^{
         stubKeychain(nil);
         
-        [AFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
+        [MSSAFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
         
         newObject = [MSSDataObject objectWithClassName:kTestClassName];
         newObject.objectID = kTestObjectID;
@@ -72,7 +72,7 @@ describe(@"MSSDataObject Auth in keychain", ^{
     beforeEach(^{
         stubKeychain(nil);
         
-        [AFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
+        [MSSAFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
         setupDefaultCredentialInKeychain();
     });
     
@@ -240,7 +240,7 @@ describe(@"MSSDataObject Auth in keychain", ^{
             });
             
             it(@"should perform PUT method call on data service client when 'saveOnSuccess:failure:' selector performed", ^{
-                AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
+                MSSAFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
                 [[client should] receive:@selector(putPath:parameters:success:failure:)];
                 [newObject saveOnSuccess:nil failure:nil];
             });
@@ -304,7 +304,7 @@ describe(@"MSSDataObject Auth in keychain", ^{
                     };
                     
                     stubPutAsyncCall(^(NSArray *params){
-                        void (^passedBlockSuccess)(AFHTTPRequestOperation *, NSError *) = params[2];
+                        void (^passedBlockSuccess)(MSSAFHTTPRequestOperation *, NSError *) = params[2];
                         passedBlockSuccess(nil, nil);
                     });
                     
@@ -321,7 +321,7 @@ describe(@"MSSDataObject Auth in keychain", ^{
                     };
                     
                     stubPutAsyncCall(^(NSArray *params){
-                        void (^passedBlockFail)(AFHTTPRequestOperation *operation, NSError *error) = params[3];
+                        void (^passedBlockFail)(MSSAFHTTPRequestOperation *operation, NSError *error) = params[3];
                         passedBlockFail(nil, nil);
                     });
                     
@@ -425,9 +425,9 @@ describe(@"MSSDataObject Auth in keychain", ^{
             };
             
             beforeEach(^{
-                AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
+                MSSAFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
                 [client stub:@selector(getPath:parameters:success:failure:) withBlock:^id(NSArray *params) {
-                    void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                    void (^successBlock)(MSSAFHTTPRequestOperation *operation, id responseObject) = params[2];
                     successBlock(nil, [NSJSONSerialization dataWithJSONObject:remoteData options:0 error:nil]);
                     return nil;
                 }];
@@ -613,7 +613,7 @@ describe(@"MSSDataObject Auth in keychain", ^{
     
     context(@"OpenID connect token validity on data service", ^{
         __block MSSDataObject *newObject;
-        __block AFHTTPClient *client;
+        __block MSSAFHTTPClient *client;
         __block BOOL wasBlockExecuted;
         __block BOOL wasAuthBlockExecuted;
         __block NSInteger failureCount;
@@ -623,11 +623,11 @@ describe(@"MSSDataObject Auth in keychain", ^{
             if (failureCount > 0) {
                 failureCount--;
                 
-                void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = params[3];
+                void (^failureBlock)(MSSAFHTTPRequestOperation *, NSError *) = params[3];
                 failureBlock(nil, unauthorizedError());
                 
             } else {
-                void (^successBlock)(AFHTTPRequestOperation *operation, id responseObject) = params[2];
+                void (^successBlock)(MSSAFHTTPRequestOperation *operation, id responseObject) = params[2];
                 successBlock(nil, [NSJSONSerialization dataWithJSONObject:@{} options:0 error:nil]);
             }
             return nil;
@@ -760,12 +760,12 @@ describe(@"MSSDataObject Auth in keychain", ^{
         __block BOOL wasBlockExecuted;
         
         beforeEach(^{
-            AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
+            MSSAFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
             [[MSSDataSignIn sharedInstance] setCredential:[MSSDataSignIn sharedInstance].credential];
             
             [client stub:@selector(enqueueHTTPRequestOperation:)
                withBlock:^id(NSArray *params) {
-                   AFHTTPRequestOperation *operation = params[0];
+                   MSSAFHTTPRequestOperation *operation = params[0];
                    verifyAuthorizationInRequest(self, operation.request);
                    wasBlockExecuted = YES;
                    return nil;
@@ -806,11 +806,11 @@ describe(@"MSSDataObject Auth in keychain", ^{
             [[MSSDataSignIn sharedInstance] setDataServiceURL:kTestDataServiceURL];
             [[MSSDataSignIn sharedInstance] setCredential:[MSSDataSignIn sharedInstance].credential];
 
-            AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
+            MSSAFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:nil];
             
             [client stub:@selector(enqueueHTTPRequestOperation:)
                withBlock:^id(NSArray *params) {
-                   AFHTTPRequestOperation *operation = params[0];
+                   MSSAFHTTPRequestOperation *operation = params[0];
                    NSError *error;
                    savedRequestData = operation.request.HTTPBody;
                    NSDictionary *requestDictionary = [NSJSONSerialization JSONObjectWithData:savedRequestData options:0 error:&error];
@@ -847,7 +847,7 @@ describe(@"MSSDataObject Auth in keychain", ^{
             [newObject setObject:@"CAT" forKey:@"TACO"];
             
             [newObject saveOnSuccess:^(MSSDataObject *object) {
-                // NOTE - this block run AFTER the fetch is completed since it is asynchronous
+                // NOTE - this block run after the fetch is completed since it is asynchronous
                 wasSaveOnSuccessBlockExecuted = YES;
             } failure:^(NSError *error) {
                 fail(@"Should not have failed");

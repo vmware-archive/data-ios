@@ -3,7 +3,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import "AFNetworking.h"
+#import "MSSAFNetworking.h"
 
 #import "MSSDataObject.h"
 #import "MSSDataSignIn+Internal.h"

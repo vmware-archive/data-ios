@@ -8,6 +8,6 @@
 #import "MSSDataError.h"
 #import "MSSDataSignIn.h"
 #import "MSSDataObject.h"
-#import "AFHTTPClient.h"
+#import "MSSAFHTTPClient.h"
 
 #endif

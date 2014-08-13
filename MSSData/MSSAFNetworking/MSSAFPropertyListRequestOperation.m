@@ -1,4 +1,4 @@
-// AFPropertyListRequestOperation.m
+// MSSAFPropertyListRequestOperation.m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -20,25 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "AFPropertyListRequestOperation.h"
+#import "MSSAFPropertyListRequestOperation.h"
 
 static dispatch_queue_t property_list_request_operation_processing_queue() {
-    static dispatch_queue_t af_property_list_request_operation_processing_queue;
+    static dispatch_queue_t MSSAF_property_list_request_operation_processing_queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        af_property_list_request_operation_processing_queue = dispatch_queue_create("com.alamofire.networking.property-list-request.processing", DISPATCH_QUEUE_CONCURRENT);
+        MSSAF_property_list_request_operation_processing_queue = dispatch_queue_create("com.alamofire.networking.property-list-request.processing", DISPATCH_QUEUE_CONCURRENT);
     });
 
-    return af_property_list_request_operation_processing_queue;
+    return MSSAF_property_list_request_operation_processing_queue;
 }
 
-@interface AFPropertyListRequestOperation ()
+@interface MSSAFPropertyListRequestOperation ()
 @property (readwrite, nonatomic) id responsePropertyList;
 @property (readwrite, nonatomic, assign) NSPropertyListFormat propertyListFormat;
 @property (readwrite, nonatomic) NSError *propertyListError;
 @end
 
-@implementation AFPropertyListRequestOperation
+@implementation MSSAFPropertyListRequestOperation
 @synthesize responsePropertyList = _responsePropertyList;
 @synthesize propertyListReadOptions = _propertyListReadOptions;
 @synthesize propertyListFormat = _propertyListFormat;
@@ -48,14 +48,14 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
 												success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, id propertyList))success
 												failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id propertyList))failure
 {
-    AFPropertyListRequestOperation *requestOperation = [(AFPropertyListRequestOperation *)[self alloc] initWithRequest:request];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    MSSAFPropertyListRequestOperation *requestOperation = [(MSSAFPropertyListRequestOperation *)[self alloc] initWithRequest:request];
+    [requestOperation setCompletionBlockWithSuccess:^(MSSAFHTTPRequestOperation *operation, id responseObject) {
         if (success) {
             success(operation.request, operation.response, responseObject);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MSSAFHTTPRequestOperation *operation, NSError *error) {
         if (failure) {
-            failure(operation.request, operation.response, error, [(AFPropertyListRequestOperation *)operation responsePropertyList]);
+            failure(operation.request, operation.response, error, [(MSSAFPropertyListRequestOperation *)operation responsePropertyList]);
         }
     }];
 
@@ -94,7 +94,7 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
     }
 }
 
-#pragma mark - AFHTTPRequestOperation
+#pragma mark - MSSAFHTTPRequestOperation
 
 + (NSSet *)acceptableContentTypes {
     return [NSSet setWithObjects:@"application/x-plist", nil];
@@ -104,8 +104,8 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
     return [[[request URL] pathExtension] isEqualToString:@"plist"] || [super canProcessRequest:request];
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+- (void)setCompletionBlockWithSuccess:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+                              failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"

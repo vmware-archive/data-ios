@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "AFHTTPClient.h"
+#import "MSSAFHTTPClient.h"
 
 #ifndef _SECURITY_SECITEM_H_
 #warning Security framework not found in project, or not included in precompiled header. Keychain persistence functionality will not be available.
 #endif
 
-@class AFOAuthCredential;
+@class MSSAFOAuthCredential;
 
 /**
  `AFOAuth2Client` encapsulates common patterns to authenticate against a resource server conforming to the behavior outlined in the OAuth 2.0 specification.
@@ -35,7 +35,7 @@
  
  @see RFC 6749 The OAuth 2.0 Authorization Framework: http://tools.ietf.org/html/rfc6749
  */
-@interface AFOAuth2Client : AFHTTPClient
+@interface MSSAFOAuth2Client : MSSAFHTTPClient
 
 ///------------------------------------------
 /// @name Accessing OAuth 2 Client Properties
@@ -86,7 +86,7 @@
 
  @param credential The OAuth credential
  */
-- (void)setAuthorizationHeaderWithCredential:(AFOAuthCredential *)credential;
+- (void)setAuthorizationHeaderWithCredential:(MSSAFOAuthCredential *)credential;
 
 ///---------------------
 /// @name Authenticating
@@ -106,7 +106,7 @@
                               username:(NSString *)username
                               password:(NSString *)password
                                  scope:(NSString *)scope
-                               success:(void (^)(AFOAuthCredential *credential))success
+                               success:(void (^)(MSSAFOAuthCredential *credential))success
                                failure:(void (^)(NSError *error))failure;
 
 /**
@@ -119,7 +119,7 @@
  */
 - (void)authenticateUsingOAuthWithPath:(NSString *)path
                                  scope:(NSString *)scope
-                               success:(void (^)(AFOAuthCredential *credential))success
+                               success:(void (^)(MSSAFOAuthCredential *credential))success
                                failure:(void (^)(NSError *error))failure;
 
 /**
@@ -132,7 +132,7 @@
  */
 - (void)authenticateUsingOAuthWithPath:(NSString *)path
                           refreshToken:(NSString *)refreshToken
-                               success:(void (^)(AFOAuthCredential *credential))success
+                               success:(void (^)(MSSAFOAuthCredential *credential))success
                                failure:(void (^)(NSError *error))failure;
 
 /**
@@ -147,7 +147,7 @@
 - (void)authenticateUsingOAuthWithPath:(NSString *)path
                                   code:(NSString *)code
                            redirectURI:(NSString *)uri
-                               success:(void (^)(AFOAuthCredential *credential))success
+                               success:(void (^)(MSSAFOAuthCredential *credential))success
                                failure:(void (^)(NSError *error))failure;
 
 /**
@@ -160,7 +160,7 @@
  */
 - (void)authenticateUsingOAuthWithPath:(NSString *)path
                             parameters:(NSDictionary *)parameters
-                               success:(void (^)(AFOAuthCredential *credential))success
+                               success:(void (^)(MSSAFOAuthCredential *credential))success
                                failure:(void (^)(NSError *error))failure;
 
 @end
@@ -172,7 +172,7 @@
  
  OAuth credentials can be stored in the user's keychain, and retrieved on subsequent launches.
  */
-@interface AFOAuthCredential : NSObject <NSCoding>
+@interface MSSAFOAuthCredential : NSObject <NSCoding>
 
 ///--------------------------------------
 /// @name Accessing Credential Properties
@@ -247,7 +247,7 @@
  
  @return Whether or not the credential was stored in the keychain.
  */
-+ (BOOL)storeCredential:(AFOAuthCredential *)credential
++ (BOOL)storeCredential:(MSSAFOAuthCredential *)credential
          withIdentifier:(NSString *)identifier;
 
 /**
@@ -259,7 +259,7 @@
 
  @return Whether or not the credential was stored in the keychain.
  */
-+ (BOOL)storeCredential:(AFOAuthCredential *)credential
++ (BOOL)storeCredential:(MSSAFOAuthCredential *)credential
          withIdentifier:(NSString *)identifier
       withAccessibility:(id)securityAccessibility;
 
@@ -270,7 +270,7 @@
  
  @return The retrieved OAuth credential.
  */
-+ (AFOAuthCredential *)retrieveCredentialWithIdentifier:(NSString *)identifier;
++ (MSSAFOAuthCredential *)retrieveCredentialWithIdentifier:(NSString *)identifier;
 
 /**
  Deletes the OAuth credential stored with the specified service identifier from the Keychain.
@@ -293,12 +293,12 @@
  
  OAuth 2.0 provides several grant types, covering several different use cases. The following grant type string constants are provided:
 
- `kAFOAuthCodeGrantType`: "authorization_code"
- `kAFOAuthClientCredentialsGrantType`: "client_credentials"
- `kAFOAuthPasswordCredentialsGrantType`: "password"
- `kAFOAuthRefreshGrantType`: "refresh_token"
+ `kMSSAFOAuthCodeGrantType`: "authorization_code"
+ `kMSSAFOAuthClientCredentialsGrantType`: "client_credentials"
+ `kMSSAFOAuthPasswordCredentialsGrantType`: "password"
+ `kMSSAFOAuthRefreshGrantType`: "refresh_token"
  */
-extern NSString * const kAFOAuthCodeGrantType;
-extern NSString * const kAFOAuthClientCredentialsGrantType;
-extern NSString * const kAFOAuthPasswordCredentialsGrantType;
-extern NSString * const kAFOAuthRefreshGrantType;
+extern NSString * const kMSSAFOAuthCodeGrantType;
+extern NSString * const kMSSAFOAuthClientCredentialsGrantType;
+extern NSString * const kMSSAFOAuthPasswordCredentialsGrantType;
+extern NSString * const kMSSAFOAuthRefreshGrantType;

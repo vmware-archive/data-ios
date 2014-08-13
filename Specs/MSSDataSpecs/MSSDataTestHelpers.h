@@ -16,7 +16,7 @@ void (^setupForSuccessfulSilentAuth)(void);
 
 void (^setupMSSDataSignInInstance)(id<MSSSignInDelegate>);
 
-void (^stubKeychain)(AFOAuthCredential *);
+void (^stubKeychain)(MSSAFOAuthCredential *);
 
 NSError *(^unauthorizedError)(void);
 

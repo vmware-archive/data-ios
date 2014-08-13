@@ -1,4 +1,4 @@
-// UIImageView+AFNetworking.m
+// UIImageView+MSSAFNetworking.m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -24,9 +24,9 @@
 #import <objc/runtime.h>
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-#import "UIImageView+AFNetworking.h"
+#import "UIImageView+MSSAFNetworking.h"
 
-@interface AFImageCache : NSCache
+@interface MSSAFImageCache : NSCache
 - (UIImage *)cachedImageForRequest:(NSURLRequest *)request;
 - (void)cacheImage:(UIImage *)image
         forRequest:(NSURLRequest *)request;
@@ -34,47 +34,47 @@
 
 #pragma mark -
 
-static char kAFImageRequestOperationObjectKey;
+static char kMSSAFImageRequestOperationObjectKey;
 
-@interface UIImageView (_AFNetworking)
-@property (readwrite, nonatomic, strong, setter = af_setImageRequestOperation:) AFImageRequestOperation *af_imageRequestOperation;
+@interface UIImageView (_MSSAFNetworking)
+@property (readwrite, nonatomic, strong, setter = MSSAF_setImageRequestOperation:) MSSAFImageRequestOperation *MSSAF_imageRequestOperation;
 @end
 
-@implementation UIImageView (_AFNetworking)
-@dynamic af_imageRequestOperation;
+@implementation UIImageView (_MSSAFNetworking)
+@dynamic MSSAF_imageRequestOperation;
 @end
 
 #pragma mark -
 
-@implementation UIImageView (AFNetworking)
+@implementation UIImageView (MSSAFNetworking)
 
-- (AFHTTPRequestOperation *)af_imageRequestOperation {
-    return (AFHTTPRequestOperation *)objc_getAssociatedObject(self, &kAFImageRequestOperationObjectKey);
+- (MSSAFHTTPRequestOperation *)MSSAF_imageRequestOperation {
+    return (MSSAFHTTPRequestOperation *)objc_getAssociatedObject(self, &kMSSAFImageRequestOperationObjectKey);
 }
 
-- (void)af_setImageRequestOperation:(AFImageRequestOperation *)imageRequestOperation {
-    objc_setAssociatedObject(self, &kAFImageRequestOperationObjectKey, imageRequestOperation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)MSSAF_setImageRequestOperation:(MSSAFImageRequestOperation *)imageRequestOperation {
+    objc_setAssociatedObject(self, &kMSSAFImageRequestOperationObjectKey, imageRequestOperation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-+ (NSOperationQueue *)af_sharedImageRequestOperationQueue {
-    static NSOperationQueue *_af_imageRequestOperationQueue = nil;
++ (NSOperationQueue *)MSSAF_sharedImageRequestOperationQueue {
+    static NSOperationQueue *_MSSAF_imageRequestOperationQueue = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _af_imageRequestOperationQueue = [[NSOperationQueue alloc] init];
-        [_af_imageRequestOperationQueue setMaxConcurrentOperationCount:NSOperationQueueDefaultMaxConcurrentOperationCount];
+        _MSSAF_imageRequestOperationQueue = [[NSOperationQueue alloc] init];
+        [_MSSAF_imageRequestOperationQueue setMaxConcurrentOperationCount:NSOperationQueueDefaultMaxConcurrentOperationCount];
     });
 
-    return _af_imageRequestOperationQueue;
+    return _MSSAF_imageRequestOperationQueue;
 }
 
-+ (AFImageCache *)af_sharedImageCache {
-    static AFImageCache *_af_imageCache = nil;
++ (MSSAFImageCache *)MSSAF_sharedImageCache {
+    static MSSAFImageCache *_MSSAF_imageCache = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
-        _af_imageCache = [[AFImageCache alloc] init];
+        _MSSAF_imageCache = [[MSSAFImageCache alloc] init];
     });
 
-    return _af_imageCache;
+    return _MSSAF_imageCache;
 }
 
 #pragma mark -
@@ -99,9 +99,9 @@ static char kAFImageRequestOperationObjectKey;
 {
     [self cancelImageRequestOperation];
 
-    UIImage *cachedImage = [[[self class] af_sharedImageCache] cachedImageForRequest:urlRequest];
+    UIImage *cachedImage = [[[self class] MSSAF_sharedImageCache] cachedImageForRequest:urlRequest];
     if (cachedImage) {
-        self.af_imageRequestOperation = nil;
+        self.MSSAF_imageRequestOperation = nil;
 
         if (success) {
             success(nil, nil, cachedImage);
@@ -113,16 +113,16 @@ static char kAFImageRequestOperationObjectKey;
             self.image = placeholderImage;
         }
 
-        AFImageRequestOperation *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:urlRequest];
+        MSSAFImageRequestOperation *requestOperation = [[MSSAFImageRequestOperation alloc] initWithRequest:urlRequest];
 		
-#ifdef _AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
+#ifdef _MSSAFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
 		requestOperation.allowsInvalidSSLCertificate = YES;
 #endif
 		
-        [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-            if ([urlRequest isEqual:[self.af_imageRequestOperation request]]) {
-                if (self.af_imageRequestOperation == operation) {
-                    self.af_imageRequestOperation = nil;
+        [requestOperation setCompletionBlockWithSuccess:^(MSSAFHTTPRequestOperation *operation, id responseObject) {
+            if ([urlRequest isEqual:[self.MSSAF_imageRequestOperation request]]) {
+                if (self.MSSAF_imageRequestOperation == operation) {
+                    self.MSSAF_imageRequestOperation = nil;
                 }
 
                 if (success) {
@@ -132,11 +132,11 @@ static char kAFImageRequestOperationObjectKey;
                 }
             }
 
-            [[[self class] af_sharedImageCache] cacheImage:responseObject forRequest:urlRequest];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            if ([urlRequest isEqual:[self.af_imageRequestOperation request]]) {
-                if (self.af_imageRequestOperation == operation) {
-                    self.af_imageRequestOperation = nil;
+            [[[self class] MSSAF_sharedImageCache] cacheImage:responseObject forRequest:urlRequest];
+        } failure:^(MSSAFHTTPRequestOperation *operation, NSError *error) {
+            if ([urlRequest isEqual:[self.MSSAF_imageRequestOperation request]]) {
+                if (self.MSSAF_imageRequestOperation == operation) {
+                    self.MSSAF_imageRequestOperation = nil;
                 }
 
                 if (failure) {
@@ -145,26 +145,26 @@ static char kAFImageRequestOperationObjectKey;
             }
         }];
 
-        self.af_imageRequestOperation = requestOperation;
+        self.MSSAF_imageRequestOperation = requestOperation;
 
-        [[[self class] af_sharedImageRequestOperationQueue] addOperation:self.af_imageRequestOperation];
+        [[[self class] MSSAF_sharedImageRequestOperationQueue] addOperation:self.MSSAF_imageRequestOperation];
     }
 }
 
 - (void)cancelImageRequestOperation {
-    [self.af_imageRequestOperation cancel];
-    self.af_imageRequestOperation = nil;
+    [self.MSSAF_imageRequestOperation cancel];
+    self.MSSAF_imageRequestOperation = nil;
 }
 
 @end
 
 #pragma mark -
 
-static inline NSString * AFImageCacheKeyFromURLRequest(NSURLRequest *request) {
+static inline NSString * MSSAFImageCacheKeyFromURLRequest(NSURLRequest *request) {
     return [[request URL] absoluteString];
 }
 
-@implementation AFImageCache
+@implementation MSSAFImageCache
 
 - (UIImage *)cachedImageForRequest:(NSURLRequest *)request {
     switch ([request cachePolicy]) {
@@ -175,14 +175,14 @@ static inline NSString * AFImageCacheKeyFromURLRequest(NSURLRequest *request) {
             break;
     }
 
-	return [self objectForKey:AFImageCacheKeyFromURLRequest(request)];
+	return [self objectForKey:MSSAFImageCacheKeyFromURLRequest(request)];
 }
 
 - (void)cacheImage:(UIImage *)image
         forRequest:(NSURLRequest *)request
 {
     if (image && request) {
-        [self setObject:image forKey:AFImageCacheKeyFromURLRequest(request)];
+        [self setObject:image forKey:MSSAFImageCacheKeyFromURLRequest(request)];
     }
 }
 

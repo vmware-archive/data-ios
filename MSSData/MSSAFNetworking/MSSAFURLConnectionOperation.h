@@ -1,4 +1,4 @@
-// AFURLConnectionOperation.h
+// MSSAFURLConnectionOperation.h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -25,17 +25,17 @@
 #import <Availability.h>
 
 /**
- `AFURLConnectionOperation` is a subclass of `NSOperation` that implements `NSURLConnection` delegate methods.
+ `MSSAFURLConnectionOperation` is a subclass of `NSOperation` that implements `NSURLConnection` delegate methods.
 
  ## Subclassing Notes
 
  This is the base class of all network request operations. You may wish to create your own subclass in order to implement additional `NSURLConnection` delegate methods (see "`NSURLConnection` Delegate Methods" below), or to provide additional properties and/or class constructors.
 
- If you are creating a subclass that communicates over the HTTP or HTTPS protocols, you may want to consider subclassing `AFHTTPRequestOperation` instead, as it supports specifying acceptable content types or status codes.
+ If you are creating a subclass that communicates over the HTTP or HTTPS protocols, you may want to consider subclassing `MSSAFHTTPRequestOperation` instead, as it supports specifying acceptable content types or status codes.
 
  ## NSURLConnection Delegate Methods
 
- `AFURLConnectionOperation` implements the following `NSURLConnection` delegate methods:
+ `MSSAFURLConnectionOperation` implements the following `NSURLConnection` delegate methods:
 
  - `connection:didReceiveResponse:`
  - `connection:didReceiveData:`
@@ -50,13 +50,13 @@
 
  ## Class Constructors
 
- Class constructors, or methods that return an unowned instance, are the preferred way for subclasses to encapsulate any particular logic for handling the setup or parsing of response data. For instance, `AFJSONRequestOperation` provides `JSONRequestOperationWithRequest:success:failure:`, which takes block arguments, whose parameter on for a successful request is the JSON object initialized from the `response data`.
+ Class constructors, or methods that return an unowned instance, are the preferred way for subclasses to encapsulate any particular logic for handling the setup or parsing of response data. For instance, `MSSAFJSONRequestOperation` provides `JSONRequestOperationWithRequest:success:failure:`, which takes block arguments, whose parameter on for a successful request is the JSON object initialized from the `response data`.
 
  ## Callbacks and Completion Blocks
 
- The built-in `completionBlock` provided by `NSOperation` allows for custom behavior to be executed after the request finishes. It is a common pattern for class constructors in subclasses to take callback block parameters, and execute them conditionally in the body of its `completionBlock`. Make sure to handle cancelled operations appropriately when setting a `completionBlock` (i.e. returning early before parsing response data). See the implementation of any of the `AFHTTPRequestOperation` subclasses for an example of this.
+ The built-in `completionBlock` provided by `NSOperation` allows for custom behavior to be executed after the request finishes. It is a common pattern for class constructors in subclasses to take callback block parameters, and execute them conditionally in the body of its `completionBlock`. Make sure to handle cancelled operations appropriately when setting a `completionBlock` (i.e. returning early before parsing response data). See the implementation of any of the `MSSAFHTTPRequestOperation` subclasses for an example of this.
 
- Subclasses are strongly discouraged from overriding `setCompletionBlock:`, as `AFURLConnectionOperation`'s implementation includes a workaround to mitigate retain cycles, and what Apple rather ominously refers to as ["The Deallocation Problem"](http://developer.apple.com/library/ios/#technotes/tn2109/).
+ Subclasses are strongly discouraged from overriding `setCompletionBlock:`, as `MSSAFURLConnectionOperation`'s implementation includes a workaround to mitigate retain cycles, and what Apple rather ominously refers to as ["The Deallocation Problem"](http://developer.apple.com/library/ios/#technotes/tn2109/).
  
  ## SSL Pinning
  
@@ -64,11 +64,11 @@
  
  SSL with certificate pinning is strongly recommended for any application that transmits sensitive information to an external webservice.
 
- When `defaultSSLPinningMode` is defined on `AFHTTPClient` and the Security framework is linked, connections will be validated on all matching certificates with a `.cer` extension in the bundle root.
+ When `defaultSSLPinningMode` is defined on `MSSAFHTTPClient` and the Security framework is linked, connections will be validated on all matching certificates with a `.cer` extension in the bundle root.
 
  ## NSCoding & NSCopying Conformance
 
- `AFURLConnectionOperation` conforms to the `NSCoding` and `NSCopying` protocols, allowing operations to be archived to disk, and copied in memory, respectively. However, because of the intrinsic limitations of capturing the exact state of an operation at a particular moment, there are some important caveats to keep in mind:
+ `MSSAFURLConnectionOperation` conforms to the `NSCoding` and `NSCopying` protocols, allowing operations to be archived to disk, and copied in memory, respectively. However, because of the intrinsic limitations of capturing the exact state of an operation at a particular moment, there are some important caveats to keep in mind:
 
  ### NSCoding Caveats
 
@@ -83,12 +83,12 @@
  */
 
 typedef enum {
-    AFSSLPinningModeNone,
-    AFSSLPinningModePublicKey,
-    AFSSLPinningModeCertificate,
-} AFURLConnectionOperationSSLPinningMode;
+    MSSAFSSLPinningModeNone,
+    MSSAFSSLPinningModePublicKey,
+    MSSAFSSLPinningModeCertificate,
+} MSSAFURLConnectionOperationSSLPinningMode;
 
-@interface AFURLConnectionOperation : NSOperation <NSURLConnectionDelegate,
+@interface MSSAFURLConnectionOperation : NSOperation <NSURLConnectionDelegate,
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000) || \
     (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1080)
 NSURLConnectionDataDelegate, 
@@ -126,7 +126,7 @@ NSCoding, NSCopying>
 /**
  Whether the connection should accept an invalid SSL certificate.
  
- If `_AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_` is set, this property defaults to `YES` for backwards compatibility. Otherwise, this property defaults to `NO`.
+ If `_MSSAFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_` is set, this property defaults to `YES` for backwards compatibility. Otherwise, this property defaults to `NO`.
  */
 @property (nonatomic, assign) BOOL allowsInvalidSSLCertificate;
 
@@ -170,11 +170,11 @@ NSCoding, NSCopying>
 @property (nonatomic, strong) NSURLCredential *credential;
 
 /**
- The pinning mode which will be used for SSL connections. `AFSSLPinningModePublicKey` by default.
+ The pinning mode which will be used for SSL connections. `MSSAFSSLPinningModePublicKey` by default.
  
- SSL Pinning requires that the Security framework is linked with the binary. See the "SSL Pinning" section in the `AFURLConnectionOperation`" header for more information.
+ SSL Pinning requires that the Security framework is linked with the binary. See the "SSL Pinning" section in the `MSSAFURLConnectionOperation`" header for more information.
  */
-@property (nonatomic, assign) AFURLConnectionOperationSSLPinningMode SSLPinningMode;
+@property (nonatomic, assign) MSSAFURLConnectionOperationSSLPinningMode SSLPinningMode;
 
 ///------------------------
 /// @name Accessing Streams
@@ -204,7 +204,7 @@ NSCoding, NSCopying>
 @property (nonatomic, strong) NSDictionary *userInfo;
 
 ///------------------------------------------------------
-/// @name Initializing an AFURLConnectionOperation Object
+/// @name Initializing an MSSAFURLConnectionOperation Object
 ///------------------------------------------------------
 
 /**
@@ -237,7 +237,7 @@ NSCoding, NSCopying>
 /**
  Resumes the execution of the paused request operation.
 
- Pause/Resume behavior varies depending on the underlying implementation for the operation class. In its base implementation, resuming a paused requests restarts the original request. However, since HTTP defines a specification for how to request a specific content range, `AFHTTPRequestOperation` will resume downloading the request from where it left off, instead of restarting the original request.
+ Pause/Resume behavior varies depending on the underlying implementation for the operation class. In its base implementation, resuming a paused requests restarts the original request. However, since HTTP defines a specification for how to request a specific content range, `MSSAFHTTPRequestOperation` will resume downloading the request from where it left off, instead of restarting the original request.
  */
 - (void)resume;
 
@@ -308,52 +308,52 @@ NSCoding, NSCopying>
 /**
  ## SSL Pinning Options
 
- The following constants are provided by `AFURLConnectionOperation` as possible SSL Pinning options.
+ The following constants are provided by `MSSAFURLConnectionOperation` as possible SSL Pinning options.
 
  enum {
- AFSSLPinningModeNone,
- AFSSLPinningModePublicKey,
- AFSSLPinningModeCertificate,
+ MSSAFSSLPinningModeNone,
+ MSSAFSSLPinningModePublicKey,
+ MSSAFSSLPinningModeCertificate,
  }
  
- `AFSSLPinningModeNone`
+ `MSSAFSSLPinningModeNone`
  Do not pin SSL connections
 
- `AFSSLPinningModePublicKey`
+ `MSSAFSSLPinningModePublicKey`
  Pin SSL connections to certificate public key (SPKI).
 
- `AFSSLPinningModeCertificate`
+ `MSSAFSSLPinningModeCertificate`
  Pin SSL connections to exact certificate. This may cause problems when your certificate expires and needs re-issuance.
 
  ## User info dictionary keys
 
  These keys may exist in the user info dictionary, in addition to those defined for NSError.
 
- - `NSString * const AFNetworkingOperationFailingURLRequestErrorKey`
- - `NSString * const AFNetworkingOperationFailingURLResponseErrorKey`
+ - `NSString * const MSSAFNetworkingOperationFailingURLRequestErrorKey`
+ - `NSString * const MSSAFNetworkingOperationFailingURLResponseErrorKey`
 
  ### Constants
 
- `AFNetworkingOperationFailingURLRequestErrorKey`
- The corresponding value is an `NSURLRequest` containing the request of the operation associated with an error. This key is only present in the `AFNetworkingErrorDomain`.
+ `MSSAFNetworkingOperationFailingURLRequestErrorKey`
+ The corresponding value is an `NSURLRequest` containing the request of the operation associated with an error. This key is only present in the `MSSAFNetworkingErrorDomain`.
 
- `AFNetworkingOperationFailingURLResponseErrorKey`
- The corresponding value is an `NSURLResponse` containing the response of the operation associated with an error. This key is only present in the `AFNetworkingErrorDomain`.
+ `MSSAFNetworkingOperationFailingURLResponseErrorKey`
+ The corresponding value is an `NSURLResponse` containing the response of the operation associated with an error. This key is only present in the `MSSAFNetworkingErrorDomain`.
 
  ## Error Domains
 
  The following error domain is predefined.
 
- - `NSString * const AFNetworkingErrorDomain`
+ - `NSString * const MSSAFNetworkingErrorDomain`
 
  ### Constants
 
- `AFNetworkingErrorDomain`
- AFNetworking errors. Error codes for `AFNetworkingErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ `MSSAFNetworkingErrorDomain`
+ MSSAFNetworking errors. Error codes for `MSSAFNetworkingErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
-extern NSString * const AFNetworkingErrorDomain;
-extern NSString * const AFNetworkingOperationFailingURLRequestErrorKey;
-extern NSString * const AFNetworkingOperationFailingURLResponseErrorKey;
+extern NSString * const MSSAFNetworkingErrorDomain;
+extern NSString * const MSSAFNetworkingOperationFailingURLRequestErrorKey;
+extern NSString * const MSSAFNetworkingOperationFailingURLResponseErrorKey;
 
 ///--------------------
 /// @name Notifications
@@ -362,9 +362,9 @@ extern NSString * const AFNetworkingOperationFailingURLResponseErrorKey;
 /**
  Posted when an operation begins executing.
  */
-extern NSString * const AFNetworkingOperationDidStartNotification;
+extern NSString * const MSSAFNetworkingOperationDidStartNotification;
 
 /**
  Posted when an operation finishes.
  */
-extern NSString * const AFNetworkingOperationDidFinishNotification;
+extern NSString * const MSSAFNetworkingOperationDidFinishNotification;

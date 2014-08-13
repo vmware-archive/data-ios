@@ -4,21 +4,21 @@
 
 #import "MSSDataSignIn.h"
 
-@class AFOAuthCredential, MSSDataServiceClient;
+@class MSSAFOAuthCredential, MSSDataServiceClient;
 
 @interface MSSDataSignIn ()
 
 // The client used to make the OAuth requests to the OpenID connect server.
-- (AFOAuth2Client *)authClient;
+- (MSSAFOAuth2Client *)authClient;
 
-- (AFOAuthCredential *)credential;
+- (MSSAFOAuthCredential *)credential;
 
-- (AFHTTPClient *)dataServiceClient:(NSError **)error;
+- (MSSAFHTTPClient *)dataServiceClient:(NSError **)error;
 
-- (void)setCredential:(AFOAuthCredential *)credential;
+- (void)setCredential:(MSSAFOAuthCredential *)credential;
 
 - (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
-                                  success:(void (^)(AFOAuthCredential *credential))success
+                                  success:(void (^)(MSSAFOAuthCredential *credential))success
                                   failure:(void (^)(NSError *error))failure;
 
 + (void)setSharedInstance:(MSSDataSignIn *)sharedInstance;

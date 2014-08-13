@@ -2,8 +2,8 @@
 //  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
-#import "AFNetworking.h"
-#import "AFOAuth2Client.h"
+#import "MSSAFNetworking.h"
+#import "MSSAFOAuth2Client.h"
 
 #import "Kiwi.h"
 
@@ -20,12 +20,12 @@ void (^resetSharedInstance)(void) = ^{
 };
 
 void (^setupForFailedSilentAuth)(void) = ^{
-    [AFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
+    [MSSAFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
 };
 
 context(@"MSSDataSignIn Specification", ^{
     
-    __block AFOAuthCredential *credential;
+    __block MSSAFOAuthCredential *credential;
     
     beforeEach(^{
         resetSharedInstance();
@@ -90,12 +90,12 @@ context(@"MSSDataSignIn Specification", ^{
             instanceDelegate = nil;
         });
         
-        it(@"should try authentication with stored credential before defaulting to sigining in through Mobile Safari", ^{
+        it(@"should try authentication with stored credential before defaulting to sigining in through Mobile SMSSAFari", ^{
             [[sharedInstance should] receive:@selector(credential)];
             [sharedInstance authenticate];
         });
         
-        it(@"should call delegate 'finishedWithAuth:error:' method with a populated AFOAuthCredential object when silent authentication succeeds", ^{
+        it(@"should call delegate 'finishedWithAuth:error:' method with a populated MSSAFOAuthCredential object when silent authentication succeeds", ^{
             setupForSuccessfulSilentAuth();
             
             sharedInstance.dataServiceURL = kTestDataServiceURL;
@@ -113,7 +113,7 @@ context(@"MSSDataSignIn Specification", ^{
             [sharedInstance authenticate];
         });
         
-        it(@"should open Safari Mobile if silent auth fails to perform authentication", ^{
+        it(@"should open SMSSAFari Mobile if silent auth fails to perform authentication", ^{
             setupForFailedSilentAuth();
             
             NSString *scopes = [sharedInstance.scopes componentsJoinedByString:@"%%20"];
@@ -145,7 +145,7 @@ context(@"MSSDataSignIn Specification", ^{
             setupForSuccessfulSilentAuth();
             [sharedInstance setCredential:sharedInstance.credential];
             
-            AFHTTPClient *client = [sharedInstance dataServiceClient:nil];
+            MSSAFHTTPClient *client = [sharedInstance dataServiceClient:nil];
             NSString *headerValue1 = [client defaultValueForHeader:@"Authorization"];
             [[headerValue1 shouldNot] beNil];
             
@@ -163,7 +163,7 @@ context(@"MSSDataSignIn Specification", ^{
         
         __block NSURL *url;
         
-        static NSString *const authCode = @"4/qQvXtvkdOQ40l_TJP1aAFYLlRdbF.skN_a6n1694XmmS0T3UFEsO4VTJBjAI";
+        static NSString *const authCode = @"4/qQvXtvkdOQ40l_TJP1aMSSAFYLlRdbF.skN_a6n1694XmmS0T3UFEsO4VTJBjAI";
         SEL authSelector = @selector(authenticateUsingOAuthWithPath:code:redirectURI:success:failure:);
         
         NSURL *(^redirectURL)(NSString *) = ^NSURL *(NSString *authCode){
@@ -180,12 +180,12 @@ context(@"MSSDataSignIn Specification", ^{
             [[[[MSSDataSignIn sharedInstance] authClient] should] receive:authSelector
                                                             withArguments:any(), authCode, any(), any(), any()];
             
-            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesMSSAFari" annotation:nil];
         });
         
         it(@"should call delegate 'finishedWithAuth:error:' with a credential object if authentication is successful", ^{
             NSObject<MSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
-            AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken1 tokenType:kTestTokenType];
+            MSSAFOAuthCredential *credential = [MSSAFOAuthCredential credentialWithOAuthToken:kTestAccessToken1 tokenType:kTestTokenType];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:credential, nil];
             setupMSSDataSignInInstance(instanceDelegate);
@@ -194,18 +194,18 @@ context(@"MSSDataSignIn Specification", ^{
             sharedInstance.dataServiceURL = kTestDataServiceURL;
             [[sharedInstance authClient] stub:authSelector
                                     withBlock:^id(NSArray *params) {
-                                        void (^success)(AFOAuthCredential *) = params[3];
+                                        void (^success)(MSSAFOAuthCredential *) = params[3];
                                         success(credential);
                                         return nil;
                                     }];
             
-            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesMSSAFari" annotation:nil];
         });
         
         it(@"should call delegate 'finishedWithAuth:error:' method with an error object if authentication fails", ^{
             NSObject<MSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
             NSError *error = [NSError errorWithDomain:kMSSDataErrorDomain
-                                                 code:MSSDataFailedAuthenticationError
+                                                 code:MSSDatMSSAFailedAuthenticationError
                                              userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, error];
@@ -218,18 +218,18 @@ context(@"MSSDataSignIn Specification", ^{
                                                         return nil;
                                                     }];
             
-            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil];
+            [[MSSDataSignIn sharedInstance] handleURL:url sourceApplication:@"com.apple.mobilesMSSAFari" annotation:nil];
         });
     });
     
     describe(@"Sign out and disconnect", ^{
         
-        typedef void(^EnqueueBlock)(AFHTTPRequestOperation *operation);
+        typedef void(^EnqueueBlock)(MSSAFHTTPRequestOperation *operation);
         
         void (^stubEnqueueOperation)(EnqueueBlock) = ^(EnqueueBlock block) {
             [[MSSDataSignIn sharedInstance].authClient stub:@selector(enqueueHTTPRequestOperation:)
                                                   withBlock:^id(NSArray *params) {
-                                                      AFHTTPRequestOperation *operation = params[0];
+                                                      MSSAFHTTPRequestOperation *operation = params[0];
                                                       
                                                       if (block) {
                                                           block(operation);
@@ -245,7 +245,7 @@ context(@"MSSDataSignIn Specification", ^{
             setupMSSDataSignInInstance(nil);
             setupForSuccessfulSilentAuth();
             
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID] should] beNonNil];
+            [[[MSSAFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID] should] beNonNil];
         });
         
         afterEach(^{
@@ -257,29 +257,29 @@ context(@"MSSDataSignIn Specification", ^{
         });
         
         it(@"'disconnect' should try to revoke OAuth token from the OpenID Connect server", ^{
-            stubEnqueueOperation(^(AFHTTPRequestOperation *operation){
+            stubEnqueueOperation(^(MSSAFHTTPRequestOperation *operation){
                 [[operation.request.URL.relativePath should] equal:@"/revoke"];
             });
             
-            [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
+            [[MSSAFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
             [[MSSDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should remove the OAuth token from the keychain if disconnect is successful", ^{
             stubEnqueueOperation(nil);
             
-            [[AFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
+            [[MSSAFOAuthCredential shouldEventually] receive:@selector(deleteCredentialWithIdentifier:)];
             [[MSSDataSignIn sharedInstance] disconnect];
         });
         
         it(@"should not remove the OAuth token from the keychain if disconnect fails", ^{
-            stubEnqueueOperation(^(AFHTTPRequestOperation *operation){
+            stubEnqueueOperation(^(MSSAFHTTPRequestOperation *operation){
                 [operation setValue:[NSError errorWithDomain:@"FailedRevokeOperation" code:500 userInfo:nil]
                              forKey:@"HTTPError"];
             });
             
             [[MSSDataSignIn sharedInstance] disconnect];
-            [[[AFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
+            [[[MSSAFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID] shouldEventuallyBeforeTimingOutAfter(2)] beNonNil];
         });
     });
 });

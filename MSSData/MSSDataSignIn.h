@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class AFOAuthCredential, AFOAuth2Client;
+@class MSSAFOAuthCredential, MSSAFOAuth2Client;
 
 /**
  The 'MSSSignInDelegate' protocol is adopted by an object that manages the OpenID Connect authorization process.
@@ -14,7 +14,7 @@
 /**
  The authorization has finished and is successful if 'error' is 'nil'.
  */
-- (void)finishedWithAuth:(AFOAuthCredential *)auth
+- (void)finishedWithAuth:(MSSAFOAuthCredential *)auth
                    error:(NSError *)error;
 
 /**
@@ -35,7 +35,7 @@
 /**
  The credential object for the current user.
  */
-@property(nonatomic, strong, readonly) AFOAuthCredential *credential;
+@property(nonatomic, strong, readonly) MSSAFOAuthCredential *credential;
 
 ///----------------------------------------------
 /// @name Managing OpenID Connect Server Settings
@@ -113,7 +113,7 @@
 - (BOOL)trySilentAuthentication;
 
 /**
- Starts the authentication process. Use Mobile Safari for
+ Starts the authentication process. Use Mobile SMSSAFari for
  authentication. The delegate will be called at the end of this process.
  Note that this method should not be called when the app is starting up,
  (e.g in application:didFinishLaunchingWithOptions:). Instead use the
@@ -130,7 +130,7 @@
  'application:openURL:sourceApplication:annotation'. Returns 'YES' if
  'MSSDataSignIn' handled this URL.
  
- @param url The redirect URI defined on the OpenID Connect server to return to the application from the Safari Browser
+ @param url The redirect URI defined on the OpenID Connect server to return to the application from the SMSSAFari Browser
  @param sourceApplication  The bundle ID of the app that is requesting your app to open the URL (url).
  @param A property-list object supplied by the source app to communicate information to the receiving app.
  

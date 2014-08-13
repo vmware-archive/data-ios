@@ -1,4 +1,4 @@
-// AFHTTPClient.h
+// MSSAFHTTPClient.h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -21,30 +21,30 @@
 // THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import "AFURLConnectionOperation.h"
+#import "MSSAFURLConnectionOperation.h"
 
 #import <Availability.h>
 
 /**
- `AFHTTPClient` captures the common patterns of communicating with an web application over HTTP. It encapsulates information like base URL, authorization credentials, and HTTP headers, and uses them to construct and manage the execution of HTTP request operations.
+ `MSSAFHTTPClient` captures the common patterns of communicating with an web application over HTTP. It encapsulates information like base URL, authorization credentials, and HTTP headers, and uses them to construct and manage the execution of HTTP request operations.
 
  ## Automatic Content Parsing
 
- Instances of `AFHTTPClient` may specify which types of requests it expects and should handle by registering HTTP operation classes for automatic parsing. Registered classes will determine whether they can handle a particular request, and then construct a request operation accordingly in `enqueueHTTPRequestOperationWithRequest:success:failure`.
+ Instances of `MSSAFHTTPClient` may specify which types of requests it expects and should handle by registering HTTP operation classes for automatic parsing. Registered classes will determine whether they can handle a particular request, and then construct a request operation accordingly in `enqueueHTTPRequestOperationWithRequest:success:failure`.
 
  ## Subclassing Notes
 
- In most cases, one should create an `AFHTTPClient` subclass for each website or web application that your application communicates with. It is often useful, also, to define a class method that returns a singleton shared HTTP client in each subclass, that persists authentication credentials and other configuration across the entire application.
+ In most cases, one should create an `MSSAFHTTPClient` subclass for each website or web application that your application communicates with. It is often useful, also, to define a class method that returns a singleton shared HTTP client in each subclass, that persists authentication credentials and other configuration across the entire application.
 
  ## Methods to Override
 
- To change the behavior of all url request construction for an `AFHTTPClient` subclass, override `requestWithMethod:path:parameters`.
+ To change the behavior of all url request construction for an `MSSAFHTTPClient` subclass, override `requestWithMethod:path:parameters`.
 
- To change the behavior of all request operation construction for an `AFHTTPClient` subclass, override `HTTPRequestOperationWithRequest:success:failure`.
+ To change the behavior of all request operation construction for an `MSSAFHTTPClient` subclass, override `HTTPRequestOperationWithRequest:success:failure`.
 
  ## Default Headers
 
- By default, `AFHTTPClient` sets the following HTTP headers:
+ By default, `MSSAFHTTPClient` sets the following HTTP headers:
 
  - `Accept-Language: (comma-delimited preferred languages), en-us;q=0.8`
  - `User-Agent: (generated user agent)`
@@ -67,7 +67,7 @@
 
  ## NSCoding / NSCopying Conformance
 
- `AFHTTPClient`  conforms to the `NSCoding` and `NSCopying` protocols, allowing operations to be archived to disk, and copied in memory, respectively. There are a few minor caveats to keep in mind, however:
+ `MSSAFHTTPClient`  conforms to the `NSCoding` and `NSCopying` protocols, allowing operations to be archived to disk, and copied in memory, respectively. There are a few minor caveats to keep in mind, however:
 
  - Archives and copies of HTTP clients will be initialized with an empty operation queue.
  - NSCoding cannot serialize / deserialize block properties, so an archive of an HTTP client will not include any reachability callback block that may be set.
@@ -75,11 +75,11 @@
 
 #ifdef _SYSTEMCONFIGURATION_H
 typedef enum {
-    AFNetworkReachabilityStatusUnknown          = -1,
-    AFNetworkReachabilityStatusNotReachable     = 0,
-    AFNetworkReachabilityStatusReachableViaWWAN = 1,
-    AFNetworkReachabilityStatusReachableViaWiFi = 2,
-} AFNetworkReachabilityStatus;
+    MSSAFNetworkReachabilityStatusUnknown          = -1,
+    MSSAFNetworkReachabilityStatusNotReachable     = 0,
+    MSSAFNetworkReachabilityStatusReachableViaWWAN = 1,
+    MSSAFNetworkReachabilityStatusReachableViaWiFi = 2,
+} MSSAFNetworkReachabilityStatus;
 #else
 #pragma message("SystemConfiguration framework not found in project, or not included in precompiled header. Network reachability functionality will not be available.")
 #endif
@@ -93,15 +93,15 @@ typedef enum {
 #endif
 
 typedef enum {
-    AFFormURLParameterEncoding,
-    AFJSONParameterEncoding,
-    AFPropertyListParameterEncoding,
-} AFHTTPClientParameterEncoding;
+    MSSAFFormURLParameterEncoding,
+    MSSAFJSONParameterEncoding,
+    MSSAFPropertyListParameterEncoding,
+} MSSAFHTTPClientParameterEncoding;
 
-@class AFHTTPRequestOperation;
-@protocol AFMultipartFormData;
+@class MSSAFHTTPRequestOperation;
+@protocol MSSAFMultipartFormData;
 
-@interface AFHTTPClient : NSObject <NSCoding, NSCopying>
+@interface MSSAFHTTPClient : NSObject <NSCoding, NSCopying>
 
 ///---------------------------------------
 /// @name Accessing HTTP Client Properties
@@ -118,11 +118,11 @@ typedef enum {
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
 
 /**
- The `AFHTTPClientParameterEncoding` value corresponding to how parameters are encoded into a request body for request methods other than `GET`, `HEAD` or `DELETE`. This is `AFFormURLParameterEncoding` by default.
+ The `MSSAFHTTPClientParameterEncoding` value corresponding to how parameters are encoded into a request body for request methods other than `GET`, `HEAD` or `DELETE`. This is `MSSAFFormURLParameterEncoding` by default.
 
- @warning Some nested parameter structures, such as a keyed array of hashes containing inconsistent keys (i.e. `@{@"": @[@{@"a" : @(1)}, @{@"b" : @(2)}]}`), cannot be unambiguously represented in query strings. It is strongly recommended that an unambiguous encoding, such as `AFJSONParameterEncoding`, is used when posting complicated or nondeterministic parameter structures.
+ @warning Some nested parameter structures, such as a keyed array of hashes containing inconsistent keys (i.e. `@{@"": @[@{@"a" : @(1)}, @{@"b" : @(2)}]}`), cannot be unambiguously represented in query strings. It is strongly recommended that an unambiguous encoding, such as `MSSAFJSONParameterEncoding`, is used when posting complicated or nondeterministic parameter structures.
  */
-@property (nonatomic, assign) AFHTTPClientParameterEncoding parameterEncoding;
+@property (nonatomic, assign) MSSAFHTTPClientParameterEncoding parameterEncoding;
 
 /**
  The operation queue which manages operations enqueued by the HTTP client.
@@ -130,23 +130,23 @@ typedef enum {
 @property (readonly, nonatomic, strong) NSOperationQueue *operationQueue;
 
 /**
- The reachability status from the device to the current `baseURL` of the `AFHTTPClient`.
+ The reachability status from the device to the current `baseURL` of the `MSSAFHTTPClient`.
 
  @warning This property requires the `SystemConfiguration` framework. Add it in the active target's "Link Binary With Library" build phase, and add `#import <SystemConfiguration/SystemConfiguration.h>` to the header prefix of the project (`Prefix.pch`).
  */
 #ifdef _SYSTEMCONFIGURATION_H
-@property (readonly, nonatomic, assign) AFNetworkReachabilityStatus networkReachabilityStatus;
+@property (readonly, nonatomic, assign) MSSAFNetworkReachabilityStatus networkReachabilityStatus;
 #endif
 
 /**
- Default SSL pinning mode for each `AFHTTPRequestOperation` created by `HTTPRequestOperationWithRequest:success:failure:`.
+ Default SSL pinning mode for each `MSSAFHTTPRequestOperation` created by `HTTPRequestOperationWithRequest:success:failure:`.
  */
-@property (nonatomic, assign) AFURLConnectionOperationSSLPinningMode defaultSSLPinningMode;
+@property (nonatomic, assign) MSSAFURLConnectionOperationSSLPinningMode defaultSSLPinningMode;
 
 /**
- Whether each `AFHTTPRequestOperation` created by `HTTPRequestOperationWithRequest:success:failure:` should accept an invalid SSL certificate. 
+ Whether each `MSSAFHTTPRequestOperation` created by `HTTPRequestOperationWithRequest:success:failure:` should accept an invalid SSL certificate. 
  
- If `_AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_` is set, this property defaults to `YES` for backwards compatibility. Otherwise, this property defaults to `NO`.
+ If `_MSSAFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_` is set, this property defaults to `YES` for backwards compatibility. Otherwise, this property defaults to `NO`.
  */
 @property (nonatomic, assign) BOOL allowsInvalidSSLCertificate;
 
@@ -155,7 +155,7 @@ typedef enum {
 ///---------------------------------------------
 
 /**
- Creates and initializes an `AFHTTPClient` object with the specified base URL.
+ Creates and initializes an `MSSAFHTTPClient` object with the specified base URL.
 
  @param url The base URL for the HTTP client. This argument must not be `nil`.
 
@@ -164,7 +164,7 @@ typedef enum {
 + (instancetype)clientWithBaseURL:(NSURL *)url;
 
 /**
- Initializes an `AFHTTPClient` object with the specified base URL.
+ Initializes an `MSSAFHTTPClient` object with the specified base URL.
  
  This is the designated initializer.
 
@@ -186,7 +186,7 @@ typedef enum {
  @warning This method requires the `SystemConfiguration` framework. Add it in the active target's "Link Binary With Library" build phase, and add `#import <SystemConfiguration/SystemConfiguration.h>` to the header prefix of the project (`Prefix.pch`).
  */
 #ifdef _SYSTEMCONFIGURATION_H
-- (void)setReachabilityStatusChangeBlock:(void (^)(AFNetworkReachabilityStatus status))block;
+- (void)setReachabilityStatusChangeBlock:(void (^)(MSSAFNetworkReachabilityStatus status))block;
 #endif
 
 ///-------------------------------
@@ -194,20 +194,20 @@ typedef enum {
 ///-------------------------------
 
 /**
- Attempts to register a subclass of `AFHTTPRequestOperation`, adding it to a chain to automatically generate request operations from a URL request.
+ Attempts to register a subclass of `MSSAFHTTPRequestOperation`, adding it to a chain to automatically generate request operations from a URL request.
 
  When `enqueueHTTPRequestOperationWithRequest:success:failure` is invoked, each registered class is consulted in turn to see if it can handle the specific request. The first class to return `YES` when sent a `canProcessRequest:` message is used to create an operation using `initWithURLRequest:` and do `setCompletionBlockWithSuccess:failure:`. There is no guarantee that all registered classes will be consulted. Classes are consulted in the reverse order of their registration. Attempting to register an already-registered class will move it to the top of the list.
  
- @param operationClass The subclass of `AFHTTPRequestOperation` to register
+ @param operationClass The subclass of `MSSAFHTTPRequestOperation` to register
 
- @return `YES` if the registration is successful, `NO` otherwise. The only failure condition is if `operationClass` is not a subclass of `AFHTTPRequestOperation`.
+ @return `YES` if the registration is successful, `NO` otherwise. The only failure condition is if `operationClass` is not a subclass of `MSSAFHTTPRequestOperation`.
  */
 - (BOOL)registerHTTPOperationClass:(Class)operationClass;
 
 /**
- Unregisters the specified subclass of `AFHTTPRequestOperation` from the chain of classes consulted when `-requestWithMethod:path:parameters` is called.
+ Unregisters the specified subclass of `MSSAFHTTPRequestOperation` from the chain of classes consulted when `-requestWithMethod:path:parameters` is called.
 
- @param operationClass The subclass of `AFHTTPRequestOperation` to register
+ @param operationClass The subclass of `MSSAFHTTPRequestOperation` to register
  */
 - (void)unregisterHTTPOperationClass:(Class)operationClass;
 
@@ -293,47 +293,47 @@ typedef enum {
  @param method The HTTP method for the request. This parameter must not be `GET` or `HEAD`, or `nil`.
  @param path The path to be appended to the HTTP client's base URL and used as the request URL.
  @param parameters The parameters to be encoded and set in the request HTTP body.
- @param block A block that takes a single argument and appends data to the HTTP body. The block argument is an object adopting the `AFMultipartFormData` protocol. This can be used to upload files, encode HTTP body as JSON or XML, or specify multiple values for the same parameter, as one might for array values.
+ @param block A block that takes a single argument and appends data to the HTTP body. The block argument is an object adopting the `MSSAFMultipartFormData` protocol. This can be used to upload files, encode HTTP body as JSON or XML, or specify multiple values for the same parameter, as one might for array values.
 
  @return An `NSMutableURLRequest` object
  */
 - (NSMutableURLRequest *)multipartFormRequestWithMethod:(NSString *)method
                                                    path:(NSString *)path
                                              parameters:(NSDictionary *)parameters
-                              constructingBodyWithBlock:(void (^)(id <AFMultipartFormData> formData))block;
+                              constructingBodyWithBlock:(void (^)(id <MSSAFMultipartFormData> formData))block;
 
 ///-------------------------------
 /// @name Creating HTTP Operations
 ///-------------------------------
 
 /**
- Creates an `AFHTTPRequestOperation`.
+ Creates an `MSSAFHTTPRequestOperation`.
 
- In order to determine what kind of operation is created, each registered subclass conforming to the `AFHTTPClient` protocol is consulted (in reverse order of when they were specified) to see if it can handle the specific request. The first class to return `YES` when sent a `canProcessRequest:` message is used to generate an operation using `HTTPRequestOperationWithRequest:success:failure:`.
+ In order to determine what kind of operation is created, each registered subclass conforming to the `MSSAFHTTPClient` protocol is consulted (in reverse order of when they were specified) to see if it can handle the specific request. The first class to return `YES` when sent a `canProcessRequest:` message is used to generate an operation using `HTTPRequestOperationWithRequest:success:failure:`.
 
  @param urlRequest The request object to be loaded asynchronously during execution of the operation.
  @param success A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: the created request operation and the object created from the response data of request.
  @param failure A block object to be executed when the request operation finishes unsuccessfully, or that finishes successfully, but encountered an error while parsing the response data. This block has no return value and takes two arguments:, the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (AFHTTPRequestOperation *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
-                                                    success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                                                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+- (MSSAFHTTPRequestOperation *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                                    success:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+                                                    failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure;
 
 ///----------------------------------------
 /// @name Managing Enqueued HTTP Operations
 ///----------------------------------------
 
 /**
- Enqueues an `AFHTTPRequestOperation` to the HTTP client's operation queue.
+ Enqueues an `MSSAFHTTPRequestOperation` to the HTTP client's operation queue.
 
  @param operation The HTTP request operation to be enqueued.
  */
-- (void)enqueueHTTPRequestOperation:(AFHTTPRequestOperation *)operation;
+- (void)enqueueHTTPRequestOperation:(MSSAFHTTPRequestOperation *)operation;
 
 /**
  Cancels all operations in the HTTP client's operation queue whose URLs match the specified HTTP method and path.
  
- This method only cancels `AFHTTPRequestOperations` whose request URL matches the HTTP client base URL with the path appended. For complete control over the lifecycle of enqueued operations, you can access the `operationQueue` property directly, which allows you to, for instance, cancel operations filtered by a predicate, or simply use `-cancelAllRequests`. Note that the operation queue may include non-HTTP operations, so be sure to check the type before attempting to directly introspect an operation's `request` property.
+ This method only cancels `MSSAFHTTPRequestOperations` whose request URL matches the HTTP client base URL with the path appended. For complete control over the lifecycle of enqueued operations, you can access the `operationQueue` property directly, which allows you to, for instance, cancel operations filtered by a predicate, or simply use `-cancelAllRequests`. Note that the operation queue may include non-HTTP operations, so be sure to check the type before attempting to directly introspect an operation's `request` property.
 
  @param method The HTTP method to match for the cancelled requests, such as `GET`, `POST`, `PUT`, or `DELETE`. If `nil`, all request operations with URLs matching the path will be cancelled.
  @param path The path appended to the HTTP client base URL to match against the cancelled requests. If `nil`, no path will be appended to the base URL.
@@ -345,7 +345,7 @@ typedef enum {
 ///---------------------------------------
 
 /**
- Creates and enqueues an `AFHTTPRequestOperation` to the HTTP client's operation queue for each specified request object into a batch. When each request operation finishes, the specified progress block is executed, until all of the request operations have finished, at which point the completion block also executes.
+ Creates and enqueues an `MSSAFHTTPRequestOperation` to the HTTP client's operation queue for each specified request object into a batch. When each request operation finishes, the specified progress block is executed, until all of the request operations have finished, at which point the completion block also executes.
 
  Operations are created by passing the specified `NSURLRequest` objects in `requests`, using `-HTTPRequestOperationWithRequest:success:failure:`, with `nil` for both the `success` and `failure` parameters.
  
@@ -373,7 +373,7 @@ typedef enum {
 ///---------------------------
 
 /**
- Creates an `AFHTTPRequestOperation` with a `GET` request, and enqueues it to the HTTP client's operation queue.
+ Creates an `MSSAFHTTPRequestOperation` with a `GET` request, and enqueues it to the HTTP client's operation queue.
 
  @param path The path to be appended to the HTTP client's base URL and used as the request URL.
  @param parameters The parameters to be encoded and appended as the query string for the request URL.
@@ -384,11 +384,11 @@ typedef enum {
  */
 - (void)getPath:(NSString *)path
      parameters:(NSDictionary *)parameters
-        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+        success:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+        failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure;
 
 /**
- Creates an `AFHTTPRequestOperation` with a `POST` request, and enqueues it to the HTTP client's operation queue.
+ Creates an `MSSAFHTTPRequestOperation` with a `POST` request, and enqueues it to the HTTP client's operation queue.
 
  @param path The path to be appended to the HTTP client's base URL and used as the request URL.
  @param parameters The parameters to be encoded and set in the request HTTP body.
@@ -399,11 +399,11 @@ typedef enum {
  */
 - (void)postPath:(NSString *)path
       parameters:(NSDictionary *)parameters
-         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+         success:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+         failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure;
 
 /**
- Creates an `AFHTTPRequestOperation` with a `PUT` request, and enqueues it to the HTTP client's operation queue.
+ Creates an `MSSAFHTTPRequestOperation` with a `PUT` request, and enqueues it to the HTTP client's operation queue.
 
  @param path The path to be appended to the HTTP client's base URL and used as the request URL.
  @param parameters The parameters to be encoded and set in the request HTTP body.
@@ -414,11 +414,11 @@ typedef enum {
  */
 - (void)putPath:(NSString *)path
      parameters:(NSDictionary *)parameters
-        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+        success:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+        failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure;
 
 /**
- Creates an `AFHTTPRequestOperation` with a `DELETE` request, and enqueues it to the HTTP client's operation queue.
+ Creates an `MSSAFHTTPRequestOperation` with a `DELETE` request, and enqueues it to the HTTP client's operation queue.
 
  @param path The path to be appended to the HTTP client's base URL and used as the request URL.
  @param parameters The parameters to be encoded and appended as the query string for the request URL.
@@ -429,11 +429,11 @@ typedef enum {
  */
 - (void)deletePath:(NSString *)path
         parameters:(NSDictionary *)parameters
-           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+           success:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+           failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure;
 
 /**
- Creates an `AFHTTPRequestOperation` with a `PATCH` request, and enqueues it to the HTTP client's operation queue.
+ Creates an `MSSAFHTTPRequestOperation` with a `PATCH` request, and enqueues it to the HTTP client's operation queue.
 
  @param path The path to be appended to the HTTP client's base URL and used as the request URL.
  @param parameters The parameters to be encoded and set in the request HTTP body.
@@ -444,8 +444,8 @@ typedef enum {
  */
 - (void)patchPath:(NSString *)path
        parameters:(NSDictionary *)parameters
-          success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+          success:(void (^)(MSSAFHTTPRequestOperation *operation, id responseObject))success
+          failure:(void (^)(MSSAFHTTPRequestOperation *operation, NSError *error))failure;
 @end
 
 ///----------------
@@ -455,52 +455,52 @@ typedef enum {
 /**
  ## Network Reachability
 
- The following constants are provided by `AFHTTPClient` as possible network reachability statuses.
+ The following constants are provided by `MSSAFHTTPClient` as possible network reachability statuses.
 
  enum {
- AFNetworkReachabilityStatusUnknown,
- AFNetworkReachabilityStatusNotReachable,
- AFNetworkReachabilityStatusReachableViaWWAN,
- AFNetworkReachabilityStatusReachableViaWiFi,
+ MSSAFNetworkReachabilityStatusUnknown,
+ MSSAFNetworkReachabilityStatusNotReachable,
+ MSSAFNetworkReachabilityStatusReachableViaWWAN,
+ MSSAFNetworkReachabilityStatusReachableViaWiFi,
  }
 
- `AFNetworkReachabilityStatusUnknown`
+ `MSSAFNetworkReachabilityStatusUnknown`
  The `baseURL` host reachability is not known.
 
- `AFNetworkReachabilityStatusNotReachable`
+ `MSSAFNetworkReachabilityStatusNotReachable`
  The `baseURL` host cannot be reached.
 
- `AFNetworkReachabilityStatusReachableViaWWAN`
+ `MSSAFNetworkReachabilityStatusReachableViaWWAN`
  The `baseURL` host can be reached via a cellular connection, such as EDGE or GPRS.
 
- `AFNetworkReachabilityStatusReachableViaWiFi`
+ `MSSAFNetworkReachabilityStatusReachableViaWiFi`
  The `baseURL` host can be reached via a Wi-Fi connection.
 
  ### Keys for Notification UserInfo Dictionary
 
  Strings that are used as keys in a `userInfo` dictionary in a network reachability status change notification.
 
- `AFNetworkingReachabilityNotificationStatusItem`
- A key in the userInfo dictionary in a `AFNetworkingReachabilityDidChangeNotification` notification.
- The corresponding value is an `NSNumber` object representing the `AFNetworkReachabilityStatus` value for the current reachability status.
+ `MSSAFNetworkingReachabilityNotificationStatusItem`
+ A key in the userInfo dictionary in a `MSSAFNetworkingReachabilityDidChangeNotification` notification.
+ The corresponding value is an `NSNumber` object representing the `MSSAFNetworkReachabilityStatus` value for the current reachability status.
 
  ## Parameter Encoding
 
- The following constants are provided by `AFHTTPClient` as possible methods for serializing parameters into query string or message body values.
+ The following constants are provided by `MSSAFHTTPClient` as possible methods for serializing parameters into query string or message body values.
 
  enum {
- AFFormURLParameterEncoding,
- AFJSONParameterEncoding,
- AFPropertyListParameterEncoding,
+ MSSAFFormURLParameterEncoding,
+ MSSAFJSONParameterEncoding,
+ MSSAFPropertyListParameterEncoding,
  }
 
- `AFFormURLParameterEncoding`
+ `MSSAFFormURLParameterEncoding`
  Parameters are encoded into field/key pairs in the URL query string for `GET` `HEAD` and `DELETE` requests, and in the message body otherwise. Dictionary keys are sorted with the `caseInsensitiveCompare:` selector of their description, in order to mitigate the possibility of ambiguous query strings being generated non-deterministically. See the warning for the `parameterEncoding` property for additional information.
 
- `AFJSONParameterEncoding`
+ `MSSAFJSONParameterEncoding`
  Parameters are encoded into JSON in the message body.
 
- `AFPropertyListParameterEncoding`
+ `MSSAFPropertyListParameterEncoding`
  Parameters are encoded into a property list in the message body.
  */
 
@@ -520,7 +520,7 @@ typedef enum {
 
  @return A percent-escaped query string
  */
-extern NSString * AFQueryStringFromParametersWithEncoding(NSDictionary *parameters, NSStringEncoding encoding);
+extern NSString * MSSAFQueryStringFromParametersWithEncoding(NSDictionary *parameters, NSStringEncoding encoding);
 
 ///--------------------
 /// @name Notifications
@@ -528,24 +528,24 @@ extern NSString * AFQueryStringFromParametersWithEncoding(NSDictionary *paramete
 
 /**
  Posted when network reachability changes.
- This notification assigns no notification object. The `userInfo` dictionary contains an `NSNumber` object under the `AFNetworkingReachabilityNotificationStatusItem` key, representing the `AFNetworkReachabilityStatus` value for the current network reachability.
+ This notification assigns no notification object. The `userInfo` dictionary contains an `NSNumber` object under the `MSSAFNetworkingReachabilityNotificationStatusItem` key, representing the `MSSAFNetworkReachabilityStatus` value for the current network reachability.
 
  @warning In order for network reachability to be monitored, include the `SystemConfiguration` framework in the active target's "Link Binary With Library" build phase, and add `#import <SystemConfiguration/SystemConfiguration.h>` to the header prefix of the project (`Prefix.pch`).
  */
 #ifdef _SYSTEMCONFIGURATION_H
-extern NSString * const AFNetworkingReachabilityDidChangeNotification;
-extern NSString * const AFNetworkingReachabilityNotificationStatusItem;
+extern NSString * const MSSAFNetworkingReachabilityDidChangeNotification;
+extern NSString * const MSSAFNetworkingReachabilityNotificationStatusItem;
 #endif
 
 #pragma mark -
 
-extern NSUInteger const kAFUploadStream3GSuggestedPacketSize;
-extern NSTimeInterval const kAFUploadStream3GSuggestedDelay;
+extern NSUInteger const kMSSAFUploadStream3GSuggestedPacketSize;
+extern NSTimeInterval const kMSSAFUploadStream3GSuggestedDelay;
 
 /**
- The `AFMultipartFormData` protocol defines the methods supported by the parameter in the block argument of `AFHTTPClient -multipartFormRequestWithMethod:path:parameters:constructingBodyWithBlock:`.
+ The `MSSAFMultipartFormData` protocol defines the methods supported by the parameter in the block argument of `MSSAFHTTPClient -multipartFormRequestWithMethod:path:parameters:constructingBodyWithBlock:`.
  */
-@protocol AFMultipartFormData
+@protocol MSSAFMultipartFormData
 
 /**
  Appends the HTTP header `Content-Disposition: file; filename=#{generated filename}; name=#{name}"` and `Content-Type: #{generated mimeType}`, followed by the encoded file data and the multipart form boundary.
@@ -630,7 +630,7 @@ extern NSTimeInterval const kAFUploadStream3GSuggestedDelay;
 /**
  Throttles request bandwidth by limiting the packet size and adding a delay for each chunk read from the upload stream.
 
- When uploading over a 3G or EDGE connection, requests may fail with "request body stream exhausted". Setting a maximum packet size and delay according to the recommended values (`kAFUploadStream3GSuggestedPacketSize` and `kAFUploadStream3GSuggestedDelay`) lowers the risk of the input stream exceeding its allocated bandwidth. Unfortunately, as of iOS 6, there is no definite way to distinguish between a 3G, EDGE, or LTE connection. As such, it is not recommended that you throttle bandwidth based solely on network reachability. Instead, you should consider checking for the "request body stream exhausted" in a failure block, and then retrying the request with throttled bandwidth.
+ When uploading over a 3G or EDGE connection, requests may fail with "request body stream exhausted". Setting a maximum packet size and delay according to the recommended values (`kMSSAFUploadStream3GSuggestedPacketSize` and `kMSSAFUploadStream3GSuggestedDelay`) lowers the risk of the input stream exceeding its allocated bandwidth. Unfortunately, as of iOS 6, there is no definite way to distinguish between a 3G, EDGE, or LTE connection. As such, it is not recommended that you throttle bandwidth based solely on network reachability. Instead, you should consider checking for the "request body stream exhausted" in a failure block, and then retrying the request with throttled bandwidth.
 
  @param numberOfBytes Maximum packet size, in number of bytes. The default packet size for an input stream is 32kb.
  @param delay Duration of delay each time a packet is read. By default, no delay is set.

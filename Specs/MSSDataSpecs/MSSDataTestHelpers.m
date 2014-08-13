@@ -5,8 +5,8 @@
 
 #import <Kiwi/Kiwi.h>
 
-#import "AFOAuth2Client.h"
-#import "AFNetworking.h"
+#import "MSSAFOAuth2Client.h"
+#import "MSSAFNetworking.h"
 
 #import "MSSDataSignIn+Internal.h"
 #import "MSSDataTestHelpers.h"
@@ -15,9 +15,9 @@
 #import "MSSDataObject+Internal.h"
 
 void (^setupCredentialInKeychain)(NSString *, NSString *, NSInteger) = ^(NSString *accessToken, NSString *refreshToken, NSInteger expiresIn){
-    AFOAuthCredential *cred = [AFOAuthCredential credentialWithOAuthToken:accessToken tokenType:@"Bearer"];
+    MSSAFOAuthCredential *cred = [MSSAFOAuthCredential credentialWithOAuthToken:accessToken tokenType:@"Bearer"];
     [cred setRefreshToken:refreshToken expiration:[NSDate dateWithTimeIntervalSinceNow:expiresIn]];
-    [AFOAuthCredential storeCredential:cred withIdentifier:kMSSOAuthCredentialID];
+    [MSSAFOAuthCredential storeCredential:cred withIdentifier:kMSSOAuthCredentialID];
 };
 
 void (^setupDefaultCredentialInKeychain)(void) = ^{
@@ -26,11 +26,11 @@ void (^setupDefaultCredentialInKeychain)(void) = ^{
 
 void (^setupForSuccessfulSilentAuth)(void) = ^{
     setupDefaultCredentialInKeychain();
-    AFOAuth2Client *authClient = [[MSSDataSignIn sharedInstance] authClient];
+    MSSAFOAuth2Client *authClient = [[MSSDataSignIn sharedInstance] authClient];
     [authClient stub:@selector(authenticateUsingOAuthWithPath:refreshToken:success:failure:)
            withBlock:^id(NSArray *params) {
-               void (^success)(AFOAuthCredential *credential) = params[2];
-               AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:kTestAccessToken2 tokenType:kTestTokenType];
+               void (^success)(MSSAFOAuthCredential *credential) = params[2];
+               MSSAFOAuthCredential *credential = [MSSAFOAuthCredential credentialWithOAuthToken:kTestAccessToken2 tokenType:kTestTokenType];
                [credential setRefreshToken:kTestRefreshToken1 expiration:[NSDate dateWithTimeIntervalSinceNow:3600]];
                success(credential);
                return nil;
@@ -45,22 +45,22 @@ void (^setupMSSDataSignInInstance)(id<MSSSignInDelegate>) = ^(id<MSSSignInDelega
     [instance setDelegate:delegate];
 };
 
-void (^stubKeychain)(AFOAuthCredential *) = ^(AFOAuthCredential *credential){
+void (^stubKeychain)(MSSAFOAuthCredential *) = ^(MSSAFOAuthCredential *credential){
     
-    __block AFOAuthCredential *blockCredential = credential;
+    __block MSSAFOAuthCredential *blockCredential = credential;
     
-    //Stub out AFOAuthCredential as the Keychain is not available in a testing environment.
-    [AFOAuthCredential stub:@selector(storeCredential:withIdentifier:) withBlock:^id(NSArray *params) {
+    //Stub out MSSAFOAuthCredential as the Keychain is not available in a testing environment.
+    [MSSAFOAuthCredential stub:@selector(storeCredential:withIdentifier:) withBlock:^id(NSArray *params) {
         blockCredential = params[0];
         return @YES;
     }];
     
-    [AFOAuthCredential stub:@selector(deleteCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
+    [MSSAFOAuthCredential stub:@selector(deleteCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
         blockCredential = nil;
         return @YES;
     }];
     
-    [AFOAuthCredential stub:@selector(retrieveCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
+    [MSSAFOAuthCredential stub:@selector(retrieveCredentialWithIdentifier:) withBlock:^id(NSArray *params) {
         return blockCredential;
     }];
 };
@@ -83,7 +83,7 @@ void (^verifyAuthorizationInRequest)(id, NSURLRequest *) = ^(id self, NSURLReque
 
 void (^stubAsyncCall)(NSString *, NSError **, EnqueueAsyncBlock) = ^(NSString *method, NSError **error, EnqueueAsyncBlock block){
     SEL stubSel = NSSelectorFromString([NSString stringWithFormat:@"%@Path:parameters:success:failure:", [method lowercaseString]]);
-    AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:error];
+    MSSAFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:error];
     
     [client stub:stubSel
        withBlock:^id(NSArray *params) {

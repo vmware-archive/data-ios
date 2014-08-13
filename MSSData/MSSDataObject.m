@@ -2,8 +2,8 @@
 //  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
-#import "AFNetworking.h"
-#import "AFHTTPClient.h"
+#import "MSSAFNetworking.h"
+#import "MSSAFHTTPClient.h"
 
 #import "MSSDataObject+Internal.h"
 #import "MSSDataSignIn+Internal.h"
@@ -188,7 +188,7 @@
     }
     
     NSError *error;
-    AFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:&error];
+    MSSAFHTTPClient *client = [[MSSDataSignIn sharedInstance] dataServiceClient:&error];
     
     if (!client) {
         FAIL_AND_RETURN(error);
@@ -213,12 +213,12 @@
                                   failure:(void (^)(NSError *error))failure
 {
     if ([method isEqualToString:@"DELETE"] || [method isEqualToString:@"PUT"]) {
-        return ^(AFHTTPRequestOperation *operation, id responseObject) {
+        return ^(MSSAFHTTPRequestOperation *operation, id responseObject) {
             SUCCEED_AND_RETURN(self);
         };
         
     } else if ([method isEqualToString:@"GET"]) {
-        return ^(AFHTTPRequestOperation *operation, id responseObject) {
+        return ^(MSSAFHTTPRequestOperation *operation, id responseObject) {
             if (responseObject) {
                 NSError *error;
                 NSDictionary *fetchedContents = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
@@ -248,9 +248,9 @@
                                   success:(void (^)(MSSDataObject *object))success
                                   failure:(void (^)(NSError *error))failure
 {
-    return ^(AFHTTPRequestOperation *operation, NSError *error){
+    return ^(MSSAFHTTPRequestOperation *operation, NSError *error){
         if ([self isUnauthorizedAccessError:error]) {
-            [[MSSDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(AFOAuthCredential *credential) {
+            [[MSSDataSignIn sharedInstance] authenticateWithInteractiveOption:NO success:^(MSSAFOAuthCredential *credential) {
                 [self performMethod:method withNumberOfAttempts:attempts-1 parameters:parameters onSuccess:success failure:failure];
                 
             } failure:^(NSError *error) {

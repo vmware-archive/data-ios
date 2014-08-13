@@ -4,8 +4,8 @@
 
 #import "MSSDataObject.h"
 
-typedef void (^HTTPSuccessBlock)(AFHTTPRequestOperation *, id);
-typedef void (^HTTPFailureBlock)(AFHTTPRequestOperation *, NSError *);
+typedef void (^HTTPSuccessBlock)(MSSAFHTTPRequestOperation *, id);
+typedef void (^HTTPFailureBlock)(MSSAFHTTPRequestOperation *, NSError *);
 
 @interface MSSDataObject (Internal)
 

@@ -1,4 +1,4 @@
-// AFNetworking.h
+// MSSAFNetworking.h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 // 
@@ -23,21 +23,21 @@
 #import <Foundation/Foundation.h>
 #import <Availability.h>
 
-#ifndef _AFNETWORKING_
-    #define _AFNETWORKING_
+#ifndef _MSSAFNETWORKING_
+    #define _MSSAFNETWORKING_
 
-    #import "AFURLConnectionOperation.h"
+    #import "MSSAFURLConnectionOperation.h"
 
-    #import "AFHTTPRequestOperation.h"
-    #import "AFJSONRequestOperation.h"
-    #import "AFXMLRequestOperation.h"
-    #import "AFPropertyListRequestOperation.h"
-    #import "AFHTTPClient.h"
+    #import "MSSAFHTTPRequestOperation.h"
+    #import "MSSAFJSONRequestOperation.h"
+    #import "MSSAFXMLRequestOperation.h"
+    #import "MSSAFPropertyListRequestOperation.h"
+    #import "MSSAFHTTPClient.h"
 
-    #import "AFImageRequestOperation.h"
+    #import "MSSAFImageRequestOperation.h"
 
     #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-        #import "AFNetworkActivityIndicatorManager.h"
-        #import "UIImageView+AFNetworking.h"
+        #import "MSSAFNetworkActivityIndicatorManager.h"
+        #import "UIImageView+MSSAFNetworking.h"
     #endif
-#endif /* _AFNETWORKING_ */
+#endif /* _MSSAFNETWORKING_ */

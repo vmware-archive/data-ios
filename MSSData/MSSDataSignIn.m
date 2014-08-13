@@ -2,8 +2,8 @@
 //  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
-#import "AFOAuth2Client.h"
-#import "AFNetworking.h"
+#import "MSSAFOAuth2Client.h"
+#import "MSSAFNetworking.h"
 
 
 #import "MSSDataSignIn+Internal.h"
@@ -24,8 +24,8 @@ static
 
 @interface MSSDataSignIn ()
 
-@property (nonatomic) AFOAuth2Client *authClient;
-@property (nonatomic) AFHTTPClient *dataServiceClient;
+@property (nonatomic) MSSAFOAuth2Client *authClient;
+@property (nonatomic) MSSAFHTTPClient *dataServiceClient;
 
 @end
 
@@ -68,20 +68,20 @@ static
     }
 }
 
-- (AFOAuth2Client *)authClient
+- (MSSAFOAuth2Client *)authClient
 {
     if (!_authClient || _authClient.clientID != self.clientID) {
         NSURL *baseURL = [NSURL URLWithString:self.openIDConnectURL];
-        _authClient = [AFOAuth2Client clientWithBaseURL:baseURL
+        _authClient = [MSSAFOAuth2Client clientWithBaseURL:baseURL
                                                clientID:self.clientID
                                                  secret:self.clientSecret];
         
-        _authClient.parameterEncoding = AFFormURLParameterEncoding;
+        _authClient.parameterEncoding = MSSAFFormURLParameterEncoding;
     }
     return _authClient;
 }
 
-- (AFHTTPClient *)dataServiceClient:(NSError **)error
+- (MSSAFHTTPClient *)dataServiceClient:(NSError **)error
 {
     if (!self.dataServiceURL) {
         @throw [NSException exceptionWithName:NSObjectNotAvailableException reason:@"Requires dataServiceURL value to be set." userInfo:nil];
@@ -95,17 +95,17 @@ static
     }
     
     if (!_dataServiceClient) {
-        _dataServiceClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
+        _dataServiceClient = [MSSAFHTTPClient clientWithBaseURL:[NSURL URLWithString:self.dataServiceURL]];
         
-        _dataServiceClient.parameterEncoding = AFJSONParameterEncoding;
+        _dataServiceClient.parameterEncoding = MSSAFJSONParameterEncoding;
         [self setAuthorizationHeaderOnClient:_dataServiceClient withCredential:self.credential];
     }
     
     return _dataServiceClient;
 }
 
-- (void)setAuthorizationHeaderOnClient:(AFHTTPClient *)client
-                        withCredential:(AFOAuthCredential *)credential
+- (void)setAuthorizationHeaderOnClient:(MSSAFHTTPClient *)client
+                        withCredential:(MSSAFOAuthCredential *)credential
 {
     [client setDefaultHeader:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", credential.accessToken]];
 }
@@ -124,14 +124,14 @@ static
     return [self credential] ? YES : NO;
 }
 
-- (AFOAuthCredential *)credential
+- (MSSAFOAuthCredential *)credential
 {
-    return [AFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID];
+    return [MSSAFOAuthCredential retrieveCredentialWithIdentifier:kMSSOAuthCredentialID];
 }
 
-- (BOOL)storeCredentialInKeychain:(AFOAuthCredential *)credential
+- (BOOL)storeCredentialInKeychain:(MSSAFOAuthCredential *)credential
 {
-    return [AFOAuthCredential storeCredential:credential withIdentifier:kMSSOAuthCredentialID];
+    return [MSSAFOAuthCredential storeCredential:credential withIdentifier:kMSSOAuthCredentialID];
 }
 
 - (BOOL)trySilentAuthentication
@@ -150,7 +150,7 @@ static
 }
 
 - (BOOL)authenticateWithInteractiveOption:(BOOL)interactive
-                                  success:(void (^)(AFOAuthCredential *credential))success
+                                  success:(void (^)(MSSAFOAuthCredential *credential))success
                                   failure:(void (^)(NSError *error))failure
 {
     if (!self.clientID) {
@@ -168,7 +168,7 @@ static
         return NO;
     }
     
-    AFOAuthCredential *savedCredential = [self credential];
+    MSSAFOAuthCredential *savedCredential = [self credential];
     if (savedCredential) {
         
         void (^failureBlock)(NSError *) = ^(NSError *error) {
@@ -195,7 +195,7 @@ static
             [self.delegate finishedWithAuth:nil error:error];
         };
         
-        void (^successBlock)(AFOAuthCredential *) = ^(AFOAuthCredential *credential) {
+        void (^successBlock)(MSSAFOAuthCredential *) = ^(MSSAFOAuthCredential *credential) {
             if(success) {
                 success(credential);
             }
@@ -216,7 +216,7 @@ static
     return NO;
 }
 
-- (void)setCredential:(AFOAuthCredential *)credential
+- (void)setCredential:(MSSAFOAuthCredential *)credential
 {
     [self setAuthorizationHeaderOnClient:self.dataServiceClient withCredential:credential];
     [self storeCredentialInKeychain:credential];
@@ -234,7 +234,7 @@ static
                                  };
     
     NSURL *url = [NSURL URLWithString:kMSSOAuthPath relativeToURL:[NSURL URLWithString:self.openIDConnectURL]];
-    NSURL *urlWithParams = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[kMSSOAuthPath rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(parameters, NSUTF8StringEncoding)]];
+    NSURL *urlWithParams = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[kMSSOAuthPath rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", MSSAFQueryStringFromParametersWithEncoding(parameters, NSUTF8StringEncoding)]];
     
     if (!urlWithParams || !urlWithParams.scheme || !urlWithParams.host) {
         NSDictionary *userInfo =  @{ NSLocalizedDescriptionKey : @"The authorization URL was malformed. Please check the openIDConnectURL value." };
@@ -266,7 +266,7 @@ sourceApplication:(NSString *)sourceApplication
         [self.authClient authenticateUsingOAuthWithPath:kMSSOAuthTokenPath
                                                    code:code
                                             redirectURI:[self redirectURI]
-                                                success:^(AFOAuthCredential *credential) {
+                                                success:^(MSSAFOAuthCredential *credential) {
                                                     [self setCredential:credential];
                                                     [self.delegate finishedWithAuth:credential error:nil];
                                                 }
@@ -280,7 +280,7 @@ sourceApplication:(NSString *)sourceApplication
 
 - (void)signOut
 {
-    [AFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
+    [MSSAFOAuthCredential deleteCredentialWithIdentifier:kMSSOAuthCredentialID];
 }
 
 - (void)disconnect
@@ -289,10 +289,10 @@ sourceApplication:(NSString *)sourceApplication
     if (accessToken) {
         [self.authClient deletePath:kMSSOAuthRevokePath
                          parameters:@{ @"token" : accessToken }
-                            success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                            success:^(MSSAFHTTPRequestOperation *operation, id responseObject) {
                                 [self signOut];
                             }
-                            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                            failure:^(MSSAFHTTPRequestOperation *operation, NSError *error) {
                                 [self callDelegateWithError:error];
                             }];
     } else {

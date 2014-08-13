@@ -1,4 +1,4 @@
-// AFPropertyListRequestOperation.h
+// MSSAFPropertyListRequestOperation.h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -21,18 +21,18 @@
 // THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import "AFHTTPRequestOperation.h"
+#import "MSSAFHTTPRequestOperation.h"
 
 /**
- `AFPropertyListRequestOperation` is a subclass of `AFHTTPRequestOperation` for downloading and deserializing objects with property list (plist) response data.
+ `MSSAFPropertyListRequestOperation` is a subclass of `MSSAFHTTPRequestOperation` for downloading and deserializing objects with property list (plist) response data.
 
  ## Acceptable Content Types
 
- By default, `AFPropertyListRequestOperation` accepts the following MIME types:
+ By default, `MSSAFPropertyListRequestOperation` accepts the following MIME types:
 
  - `application/x-plist`
  */
-@interface AFPropertyListRequestOperation : AFHTTPRequestOperation
+@interface MSSAFPropertyListRequestOperation : MSSAFHTTPRequestOperation
 
 ///----------------------------
 /// @name Getting Response Data
@@ -53,7 +53,7 @@
 @property (nonatomic, assign) NSPropertyListReadOptions propertyListReadOptions;
 
 /**
- Creates and returns an `AFPropertyListRequestOperation` object and sets the specified success and failure callbacks.
+ Creates and returns an `MSSAFPropertyListRequestOperation` object and sets the specified success and failure callbacks.
 
  @param urlRequest The request object to be loaded asynchronously during execution of the operation
  @param success A block object to be executed when the operation finishes successfully. This block has no return value and takes three arguments: the request sent from the client, the response received from the server, and the object deserialized from a plist constructed using the response data.

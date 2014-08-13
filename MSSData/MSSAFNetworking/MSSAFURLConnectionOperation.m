@@ -1,4 +1,4 @@
-// AFURLConnectionOperation.m
+// MSSAFURLConnectionOperation.m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -20,92 +20,92 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "AFURLConnectionOperation.h"
+#import "MSSAFURLConnectionOperation.h"
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import <UIKit/UIKit.h>
 #endif
 
 #if !__has_feature(objc_arc)
-#error AFNetworking must be built with ARC.
-// You can turn on ARC for only AFNetworking files by adding -fobjc-arc to the build phase for each of its files.
+#error MSSAFNetworking must be built with ARC.
+// You can turn on ARC for only MSSAFNetworking files by adding -fobjc-arc to the build phase for each of its files.
 #endif
 
 typedef enum {
-    AFOperationPausedState      = -1,
-    AFOperationReadyState       = 1,
-    AFOperationExecutingState   = 2,
-    AFOperationFinishedState    = 3,
-} _AFOperationState;
+    MSSAFOperationPausedState      = -1,
+    MSSAFOperationReadyState       = 1,
+    MSSAFOperationExecutingState   = 2,
+    MSSAFOperationFinishedState    = 3,
+} _MSSAFOperationState;
 
-typedef signed short AFOperationState;
+typedef signed short MSSAFOperationState;
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-typedef UIBackgroundTaskIdentifier AFBackgroundTaskIdentifier;
+typedef UIBackgroundTaskIdentifier MSSAFBackgroundTaskIdentifier;
 #else
-typedef id AFBackgroundTaskIdentifier;
+typedef id MSSAFBackgroundTaskIdentifier;
 #endif
 
-static NSString * const kAFNetworkingLockName = @"com.alamofire.networking.operation.lock";
+static NSString * const kMSSAFNetworkingLockName = @"com.alamofire.networking.operation.lock";
 
-NSString * const AFNetworkingErrorDomain = @"AFNetworkingErrorDomain";
-NSString * const AFNetworkingOperationFailingURLRequestErrorKey = @"AFNetworkingOperationFailingURLRequestErrorKey";
-NSString * const AFNetworkingOperationFailingURLResponseErrorKey = @"AFNetworkingOperationFailingURLResponseErrorKey";
+NSString * const MSSAFNetworkingErrorDomain = @"MSSAFNetworkingErrorDomain";
+NSString * const MSSAFNetworkingOperationFailingURLRequestErrorKey = @"MSSAFNetworkingOperationFailingURLRequestErrorKey";
+NSString * const MSSAFNetworkingOperationFailingURLResponseErrorKey = @"MSSAFNetworkingOperationFailingURLResponseErrorKey";
 
-NSString * const AFNetworkingOperationDidStartNotification = @"com.alamofire.networking.operation.start";
-NSString * const AFNetworkingOperationDidFinishNotification = @"com.alamofire.networking.operation.finish";
+NSString * const MSSAFNetworkingOperationDidStartNotification = @"com.alamofire.networking.operation.start";
+NSString * const MSSAFNetworkingOperationDidFinishNotification = @"com.alamofire.networking.operation.finish";
 
-typedef void (^AFURLConnectionOperationProgressBlock)(NSUInteger bytes, long long totalBytes, long long totalBytesExpected);
-typedef void (^AFURLConnectionOperationAuthenticationChallengeBlock)(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge);
-typedef NSCachedURLResponse * (^AFURLConnectionOperationCacheResponseBlock)(NSURLConnection *connection, NSCachedURLResponse *cachedResponse);
-typedef NSURLRequest * (^AFURLConnectionOperationRedirectResponseBlock)(NSURLConnection *connection, NSURLRequest *request, NSURLResponse *redirectResponse);
+typedef void (^MSSAFURLConnectionOperationProgressBlock)(NSUInteger bytes, long long totalBytes, long long totalBytesExpected);
+typedef void (^MSSAFURLConnectionOperationAuthenticationChallengeBlock)(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge);
+typedef NSCachedURLResponse * (^MSSAFURLConnectionOperationCacheResponseBlock)(NSURLConnection *connection, NSCachedURLResponse *cachedResponse);
+typedef NSURLRequest * (^MSSAFURLConnectionOperationRedirectResponseBlock)(NSURLConnection *connection, NSURLRequest *request, NSURLResponse *redirectResponse);
 
-static inline NSString * AFKeyPathFromOperationState(AFOperationState state) {
+static inline NSString * MSSAFKeyPathFromOperationState(MSSAFOperationState state) {
     switch (state) {
-        case AFOperationReadyState:
+        case MSSAFOperationReadyState:
             return @"isReady";
-        case AFOperationExecutingState:
+        case MSSAFOperationExecutingState:
             return @"isExecuting";
-        case AFOperationFinishedState:
+        case MSSAFOperationFinishedState:
             return @"isFinished";
-        case AFOperationPausedState:
+        case MSSAFOperationPausedState:
             return @"isPaused";
         default:
             return @"state";
     }
 }
 
-static inline BOOL AFStateTransitionIsValid(AFOperationState fromState, AFOperationState toState, BOOL isCancelled) {
+static inline BOOL MSSAFStateTransitionIsValid(MSSAFOperationState fromState, MSSAFOperationState toState, BOOL isCancelled) {
     switch (fromState) {
-        case AFOperationReadyState:
+        case MSSAFOperationReadyState:
             switch (toState) {
-                case AFOperationPausedState:
-                case AFOperationExecutingState:
+                case MSSAFOperationPausedState:
+                case MSSAFOperationExecutingState:
                     return YES;
-                case AFOperationFinishedState:
+                case MSSAFOperationFinishedState:
                     return isCancelled;
                 default:
                     return NO;
             }
-        case AFOperationExecutingState:
+        case MSSAFOperationExecutingState:
             switch (toState) {
-                case AFOperationPausedState:
-                case AFOperationFinishedState:
+                case MSSAFOperationPausedState:
+                case MSSAFOperationFinishedState:
                     return YES;
                 default:
                     return NO;
             }
-        case AFOperationFinishedState:
+        case MSSAFOperationFinishedState:
             return NO;
-        case AFOperationPausedState:
-            return toState == AFOperationReadyState;
+        case MSSAFOperationPausedState:
+            return toState == MSSAFOperationReadyState;
         default:
             return YES;
     }
 }
 
 #if !defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-static NSData *AFSecKeyGetData(SecKeyRef key) {
+static NSData *MSSAFSecKeyGetData(SecKeyRef key) {
     CFDataRef data = NULL;
     
 #if defined(NS_BLOCK_ASSERTIONS)
@@ -121,16 +121,16 @@ static NSData *AFSecKeyGetData(SecKeyRef key) {
 }
 #endif
 
-static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
+static BOOL MSSAFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
     return [(__bridge id)key1 isEqual:(__bridge id)key2];
 #else
-    return [AFSecKeyGetData(key1) isEqual:AFSecKeyGetData(key2)];
+    return [MSSAFSecKeyGetData(key1) isEqual:MSSAFSecKeyGetData(key2)];
 #endif
 }
 
-@interface AFURLConnectionOperation ()
-@property (readwrite, nonatomic, assign) AFOperationState state;
+@interface MSSAFURLConnectionOperation ()
+@property (readwrite, nonatomic, assign) MSSAFOperationState state;
 @property (readwrite, nonatomic, assign, getter = isCancelled) BOOL cancelled;
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
 @property (readwrite, nonatomic, strong) NSURLConnection *connection;
@@ -141,19 +141,19 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 @property (readwrite, nonatomic, copy) NSString *responseString;
 @property (readwrite, nonatomic, assign) NSStringEncoding responseStringEncoding;
 @property (readwrite, nonatomic, assign) long long totalBytesRead;
-@property (readwrite, nonatomic, assign) AFBackgroundTaskIdentifier backgroundTaskIdentifier;
-@property (readwrite, nonatomic, copy) AFURLConnectionOperationProgressBlock uploadProgress;
-@property (readwrite, nonatomic, copy) AFURLConnectionOperationProgressBlock downloadProgress;
-@property (readwrite, nonatomic, copy) AFURLConnectionOperationAuthenticationChallengeBlock authenticationChallenge;
-@property (readwrite, nonatomic, copy) AFURLConnectionOperationCacheResponseBlock cacheResponse;
-@property (readwrite, nonatomic, copy) AFURLConnectionOperationRedirectResponseBlock redirectResponse;
+@property (readwrite, nonatomic, assign) MSSAFBackgroundTaskIdentifier backgroundTaskIdentifier;
+@property (readwrite, nonatomic, copy) MSSAFURLConnectionOperationProgressBlock uploadProgress;
+@property (readwrite, nonatomic, copy) MSSAFURLConnectionOperationProgressBlock downloadProgress;
+@property (readwrite, nonatomic, copy) MSSAFURLConnectionOperationAuthenticationChallengeBlock authenticationChallenge;
+@property (readwrite, nonatomic, copy) MSSAFURLConnectionOperationCacheResponseBlock cacheResponse;
+@property (readwrite, nonatomic, copy) MSSAFURLConnectionOperationRedirectResponseBlock redirectResponse;
 
 - (void)operationDidStart;
 - (void)finish;
 - (void)cancelConnection;
 @end
 
-@implementation AFURLConnectionOperation
+@implementation MSSAFURLConnectionOperation
 @synthesize state = _state;
 @synthesize cancelled = _cancelled;
 @synthesize connection = _connection;
@@ -182,7 +182,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 
 + (void)networkRequestThreadEntryPoint:(id __unused)object {
     @autoreleasepool {
-        [[NSThread currentThread] setName:@"AFNetworking"];
+        [[NSThread currentThread] setName:@"MSSAFNetworking"];
 
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
@@ -273,7 +273,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     }
     
     self.lock = [[NSRecursiveLock alloc] init];
-    self.lock.name = kAFNetworkingLockName;
+    self.lock.name = kMSSAFNetworkingLockName;
     
     self.runLoopModes = [NSSet setWithObject:NSRunLoopCommonModes];
     
@@ -282,11 +282,11 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     self.shouldUseCredentialStorage = YES;
 
     // #ifdef included for backwards-compatibility 
-#ifdef _AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
+#ifdef _MSSAFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
     self.allowsInvalidSSLCertificate = YES;
 #endif
 
-    self.state = AFOperationReadyState;
+    self.state = MSSAFOperationReadyState;
 
     return self;
 }
@@ -306,7 +306,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, state: %@, cancelled: %@ request: %@, response: %@>", NSStringFromClass([self class]), self, AFKeyPathFromOperationState(self.state), ([self isCancelled] ? @"YES" : @"NO"), self.request, self.response];
+    return [NSString stringWithFormat:@"<%@: %p, state: %@, cancelled: %@ request: %@, response: %@>", NSStringFromClass([self class]), self, MSSAFKeyPathFromOperationState(self.state), ([self isCancelled] ? @"YES" : @"NO"), self.request, self.response];
 }
 
 - (void)setCompletionBlock:(void (^)(void))block {
@@ -403,14 +403,14 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     self.redirectResponse = block;
 }
 
-- (void)setState:(AFOperationState)state {
-    if (!AFStateTransitionIsValid(self.state, state, [self isCancelled])) {
+- (void)setState:(MSSAFOperationState)state {
+    if (!MSSAFStateTransitionIsValid(self.state, state, [self isCancelled])) {
         return;
     }
     
     [self.lock lock];
-    NSString *oldStateKey = AFKeyPathFromOperationState(self.state);
-    NSString *newStateKey = AFKeyPathFromOperationState(state);
+    NSString *oldStateKey = MSSAFKeyPathFromOperationState(self.state);
+    NSString *newStateKey = MSSAFKeyPathFromOperationState(state);
     
     [self willChangeValueForKey:newStateKey];
     [self willChangeValueForKey:oldStateKey];
@@ -460,17 +460,17 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-            [notificationCenter postNotificationName:AFNetworkingOperationDidFinishNotification object:self];
+            [notificationCenter postNotificationName:MSSAFNetworkingOperationDidFinishNotification object:self];
         });
     }
     
-    self.state = AFOperationPausedState;
+    self.state = MSSAFOperationPausedState;
     
     [self.lock unlock];
 }
 
 - (BOOL)isPaused {
-    return self.state == AFOperationPausedState;
+    return self.state == MSSAFOperationPausedState;
 }
 
 - (void)resume {
@@ -479,7 +479,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     }
     
     [self.lock lock];
-    self.state = AFOperationReadyState;
+    self.state = MSSAFOperationReadyState;
     
     [self start];
     [self.lock unlock];
@@ -488,15 +488,15 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 #pragma mark - NSOperation
 
 - (BOOL)isReady {
-    return self.state == AFOperationReadyState && [super isReady];
+    return self.state == MSSAFOperationReadyState && [super isReady];
 }
 
 - (BOOL)isExecuting {
-    return self.state == AFOperationExecutingState;
+    return self.state == MSSAFOperationExecutingState;
 }
 
 - (BOOL)isFinished {
-    return self.state == AFOperationFinishedState;
+    return self.state == MSSAFOperationFinishedState;
 }
 
 - (BOOL)isConcurrent {
@@ -506,7 +506,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 - (void)start {
     [self.lock lock];
     if ([self isReady]) {
-        self.state = AFOperationExecutingState;
+        self.state = MSSAFOperationExecutingState;
         
         [self performSelector:@selector(operationDidStart) onThread:[[self class] networkRequestThread] withObject:nil waitUntilDone:NO modes:[self.runLoopModes allObjects]];
     }
@@ -529,7 +529,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     [self.lock unlock];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingOperationDidStartNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MSSAFNetworkingOperationDidStartNotification object:self];
     });
     
     if ([self isCancelled]) {
@@ -544,10 +544,10 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 }
 
 - (void)finish {
-    self.state = AFOperationFinishedState;
+    self.state = MSSAFOperationFinishedState;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingOperationDidFinishNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MSSAFNetworkingOperationDidFinishNotification object:self];
     });
 }
 
@@ -599,9 +599,9 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
         for (CFIndex i = 0; i < certificateCount; i++) {
             SecCertificateRef certificate = SecTrustGetCertificateAtIndex(serverTrust, i);
             
-            if (self.SSLPinningMode == AFSSLPinningModeCertificate) {
+            if (self.SSLPinningMode == MSSAFSSLPinningModeCertificate) {
                 [trustChain addObject:(__bridge_transfer NSData *)SecCertificateCopyData(certificate)];
-            } else if (self.SSLPinningMode == AFSSLPinningModePublicKey) {
+            } else if (self.SSLPinningMode == MSSAFSSLPinningModePublicKey) {
                 SecCertificateRef someCertificates[] = {certificate};
                 CFArrayRef certificates = CFArrayCreate(NULL, (const void **)someCertificates, 1, NULL);
                 
@@ -627,13 +627,13 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
         CFRelease(policy);
         
         switch (self.SSLPinningMode) {
-            case AFSSLPinningModePublicKey: {
+            case MSSAFSSLPinningModePublicKey: {
                 NSArray *pinnedPublicKeys = [self.class pinnedPublicKeys];
-                NSAssert([pinnedPublicKeys count] > 0, @"AFSSLPinningModePublicKey needs at least one key file in the application bundle");
+                NSAssert([pinnedPublicKeys count] > 0, @"MSSAFSSLPinningModePublicKey needs at least one key file in the application bundle");
 
                 for (id publicKey in trustChain) {
                     for (id pinnedPublicKey in pinnedPublicKeys) {
-                        if (AFSecKeyIsEqualToKey((__bridge SecKeyRef)publicKey, (__bridge SecKeyRef)pinnedPublicKey)) {
+                        if (MSSAFSecKeyIsEqualToKey((__bridge SecKeyRef)publicKey, (__bridge SecKeyRef)pinnedPublicKey)) {
                             NSURLCredential *credential = [NSURLCredential credentialForTrust:serverTrust];
                             [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
                             return;
@@ -645,8 +645,8 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
                 [[challenge sender] cancelAuthenticationChallenge:challenge];
                 break;
             }
-            case AFSSLPinningModeCertificate: {
-                NSAssert([[self.class pinnedCertificates] count] > 0, @"AFSSLPinningModeCertificate needs at least one certificate file in the application bundle");
+            case MSSAFSSLPinningModeCertificate: {
+                NSAssert([[self.class pinnedCertificates] count] > 0, @"MSSAFSSLPinningModeCertificate needs at least one certificate file in the application bundle");
                 for (id serverCertificateData in trustChain) {
                     if ([[self.class pinnedCertificates] containsObject:serverCertificateData]) {
                         NSURLCredential *credential = [NSURLCredential credentialForTrust:serverTrust];
@@ -659,7 +659,7 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
                 [[challenge sender] cancelAuthenticationChallenge:challenge];
                 break;
             }
-            case AFSSLPinningModeNone: {
+            case MSSAFSSLPinningModeNone: {
                 if (self.allowsInvalidSSLCertificate){
                     NSURLCredential *credential = [NSURLCredential credentialForTrust:serverTrust];
                     [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
@@ -810,7 +810,7 @@ didReceiveResponse:(NSURLResponse *)response
         return nil;
     }
     
-    self.state = (AFOperationState)[aDecoder decodeIntegerForKey:@"state"];
+    self.state = (MSSAFOperationState)[aDecoder decodeIntegerForKey:@"state"];
     self.cancelled = [aDecoder decodeBoolForKey:@"isCancelled"];
     self.response = [aDecoder decodeObjectForKey:@"response"];
     self.error = [aDecoder decodeObjectForKey:@"error"];
@@ -827,9 +827,9 @@ didReceiveResponse:(NSURLResponse *)response
     [aCoder encodeObject:self.request forKey:@"request"];
     
     switch (self.state) {
-        case AFOperationExecutingState:
-        case AFOperationPausedState:
-            [aCoder encodeInteger:AFOperationReadyState forKey:@"state"];
+        case MSSAFOperationExecutingState:
+        case MSSAFOperationPausedState:
+            [aCoder encodeInteger:MSSAFOperationReadyState forKey:@"state"];
             break;
         default:
             [aCoder encodeInteger:self.state forKey:@"state"];
@@ -847,7 +847,7 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    AFURLConnectionOperation *operation = [(AFURLConnectionOperation *)[[self class] allocWithZone:zone] initWithRequest:self.request];
+    MSSAFURLConnectionOperation *operation = [(MSSAFURLConnectionOperation *)[[self class] allocWithZone:zone] initWithRequest:self.request];
     
     operation.uploadProgress = self.uploadProgress;
     operation.downloadProgress = self.downloadProgress;
