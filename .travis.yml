@@ -1,6 +1,6 @@
 language: objective-c
-xcode_workspace: MSSDataServices.xcworkspace
-xcode_scheme: MSSDataServicesSpecs
+xcode_workspace: MSSData.xcworkspace
+xcode_scheme: MSSDataSpecs
 xcode_sdk: iphonesimulator7.0
 
 notifications:
