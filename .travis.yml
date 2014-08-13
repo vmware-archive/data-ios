@@ -14,4 +14,4 @@ before_install:
 
 before_script:
   - brew update
-  - brew upgrade xctool
+  - if brew outdated | grep -qx xctool; then brew upgrade xctool; fi
