@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2318E64F199BD0E40054C274 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2318E64E199BD0E40054C274 /* MobileCoreServices.framework */; };
+		2318E651199BD0F60054C274 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2318E650199BD0F60054C274 /* SystemConfiguration.framework */; };
 		23775810199BBDEB006A8068 /* MSSAFHTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 237757FA199BBDEB006A8068 /* MSSAFHTTPClient.h */; };
 		23775811199BBDEB006A8068 /* MSSAFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 237757FB199BBDEB006A8068 /* MSSAFHTTPClient.m */; };
 		23775812199BBDEB006A8068 /* MSSAFHTTPRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 237757FC199BBDEB006A8068 /* MSSAFHTTPRequestOperation.h */; };
@@ -42,6 +44,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2318E64E199BD0E40054C274 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		2318E650199BD0F60054C274 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		237757FA199BBDEB006A8068 /* MSSAFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSAFHTTPClient.h; sourceTree = "<group>"; };
 		237757FB199BBDEB006A8068 /* MSSAFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAFHTTPClient.m; sourceTree = "<group>"; };
 		237757FC199BBDEB006A8068 /* MSSAFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSAFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2318E651199BD0F60054C274 /* SystemConfiguration.framework in Frameworks */,
+				2318E64F199BD0E40054C274 /* MobileCoreServices.framework in Frameworks */,
 				E76B94451976F1D6003F37FA /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,6 +150,8 @@
 		E76B94431976F1D6003F37FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2318E650199BD0F60054C274 /* SystemConfiguration.framework */,
+				2318E64E199BD0E40054C274 /* MobileCoreServices.framework */,
 				E76B94441976F1D6003F37FA /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -369,6 +377,10 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MSSData/MSSData-Prefix.pch";
@@ -385,6 +397,10 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MSSData/MSSData-Prefix.pch";
