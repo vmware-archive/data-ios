@@ -6,6 +6,6 @@ target 'MSSDataSpecs' do
 
     platform :ios, '7.0'
     link_with 'MSSDataSpecs'
-    pod 'Kiwi/XCTest'
+    pod 'Kiwi'
     pod 'MSSData', :path => './'
 end

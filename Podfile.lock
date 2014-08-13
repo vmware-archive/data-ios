@@ -2,16 +2,12 @@ PODS:
   - AFNetworking (1.3.4)
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 1.3)
-  - Kiwi/ARC (2.2.4)
-  - Kiwi/NonARC (2.2.4)
-  - Kiwi/XCTest (2.2.4):
-    - Kiwi/ARC
-    - Kiwi/NonARC
-  - MSSData (0.1.0):
+  - Kiwi (2.3.0)
+  - MSSData (1.0.0):
     - AFOAuth2Client
 
 DEPENDENCIES:
-  - Kiwi/XCTest
+  - Kiwi
   - MSSData (from `./`)
 
 EXTERNAL SOURCES:
@@ -21,7 +17,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
   AFOAuth2Client: 4f05d29e0a26c7ddf529dd7c4480af6ee1e982c6
-  Kiwi: c73667f2b84cbf36f1a3830267c5a4ae8dcbd8ba
-  MSSData: 798d00155a9ef9b805dce61a9c3eee31ae79f7e6
+  Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
+  MSSData: df78635b9a0e25404852ae70091d1dc0f2d4de58
 
 COCOAPODS: 0.33.1
