@@ -2,7 +2,7 @@
 //  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
-#import <AFNetworking/AFNetworking.h>
+#import "AFNetworking.h"
 #import "AFOAuth2Client.h"
 
 #import "Kiwi.h"

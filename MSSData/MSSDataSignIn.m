@@ -2,9 +2,10 @@
 //  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
+#import "AFOAuth2Client.h"
 #import "AFNetworking.h"
 
-#import "AFOAuth2Client.h"
+
 #import "MSSDataSignIn+Internal.h"
 #import "MSSDataError.h"
 

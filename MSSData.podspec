@@ -10,8 +10,7 @@ Pod::Spec.new do |s|
   s.frameworks = 'SystemConfiguration', 'MobileCoreServices'
 
   s.ios.deployment_target = '6.0'
-  s.dependency 'AFOAuth2Client'
 
-  s.public_header_files = 'MSSData/*.h'
-  s.source_files = 'MSSData/*.{h,m}'
+  s.public_header_files = 'MSSData/**/*.h'
+  s.source_files = 'MSSData/**/*.{h,m}'
 end

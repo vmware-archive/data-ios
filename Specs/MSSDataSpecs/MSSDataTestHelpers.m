@@ -2,9 +2,11 @@
 //  Copyright (C) 2014 Pivotal Software, Inc. All rights reserved.
 //
 
-#import <AFNetworking/AFNetworking.h>
+
 #import <Kiwi/Kiwi.h>
-#import <AFOAuth2Client/AFOAuth2Client.h>
+
+#import "AFOAuth2Client.h"
+#import "AFNetworking.h"
 
 #import "MSSDataSignIn+Internal.h"
 #import "MSSDataTestHelpers.h"

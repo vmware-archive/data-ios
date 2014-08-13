@@ -3,7 +3,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import <AFNetworking/AFNetworking.h>
+#import "AFNetworking.h"
 #import "AFOAuth2Client.h"
 #import "AFHTTPClient.h"
 
