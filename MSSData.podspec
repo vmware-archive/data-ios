@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
   s.name     = 'MSSData'
-  s.version  = '1.0.0'
+  s.version  = '1.0.1'
   s.license  = { :type => 'CUSTOM', :file => 'LICENSE' }
   s.summary  = 'A OpenID Connect client framework for iOS.'
   s.homepage = 'https://github.com/cfmobile'
   s.authors  = 'Rob Szumlakowski'
-  s.source   = { :git => 'git@github.com:cfmobile/data-ios', :tag => "1.0.0" }
+  s.source   = { :git => 'git@github.com:cfmobile/data-ios', :tag => "1.0.1" }
   s.requires_arc = true
   s.frameworks = 'SystemConfiguration', 'MobileCoreServices'
 
