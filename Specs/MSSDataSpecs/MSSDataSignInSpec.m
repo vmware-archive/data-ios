@@ -205,7 +205,7 @@ context(@"MSSDataSignIn Specification", ^{
         it(@"should call delegate 'finishedWithAuth:error:' method with an error object if authentication fails", ^{
             NSObject<MSSSignInDelegate> *instanceDelegate = [KWMock mockForProtocol:@protocol(MSSSignInDelegate)];
             NSError *error = [NSError errorWithDomain:kMSSDataErrorDomain
-                                                 code:MSSDatMSSAFailedAuthenticationError
+                                                 code:MSSDataMSSAFailedAuthenticationError
                                              userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Auth token does not match" }];
             
             [[instanceDelegate should] receive:@selector(finishedWithAuth:error:) withArguments:nil, error];

@@ -12,7 +12,7 @@ typedef NS_ENUM(NSInteger, MSSDataErrorCode) {
     MSSDataNoClientIDError,
     MSSDataNoClientSecretError,
     MSSDataNoOpenIDConnectURLError,
-    MSSDatMSSAFailedAuthenticationError,
+    MSSDataMSSAFailedAuthenticationError,
     MSSDataMalformedURLError,
     MSSDataEmptyResponseData,
     MSSDataMissingAccessToken,
