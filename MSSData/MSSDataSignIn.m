@@ -14,6 +14,7 @@ NSString *const kMSSOAuthCredentialID = @"MSSDataOAuthCredential";
 NSString *const kMSSDataErrorDomain = @"MSSDataError";
 
 NSString *const kMSSOAuthPath = @"/oauth/authorize";
+NSString *const kMSSOAuthLogoutPath = @"/oauth/logout";
 NSString *const kMSSOAuthTokenPath = @"/token";
 NSString *const kMSSOAuthAccessTokensPath = @"/api/tokens/access";
 
@@ -287,10 +288,10 @@ sourceApplication:(NSString *)sourceApplication
 {
     NSString *accessToken = [[self credential] accessToken];
     if (accessToken) {
-        [self.authClient getPath:kMSSOAuthAccessTokensPath
+        [self.authClient getPath:kMSSOAuthLogoutPath
                       parameters:nil
                             success:^(MSSAFHTTPRequestOperation *operation, id responseObject) {
-                                [self continueDisconnectWithAccessToken:accessToken responseObject:responseObject];
+                                [self signOut];
                             }
                             failure:^(MSSAFHTTPRequestOperation *operation, NSError *error) {
                                 [self callDelegateWithError:error];
@@ -301,46 +302,6 @@ sourceApplication:(NSString *)sourceApplication
                                          userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Disconnect method called with no credential stored in keychain." }];
         [self callDelegateWithError:error];
     }
-}
-
-- (void)continueDisconnectWithAccessToken:(NSString*)accessToken responseObject:(id)responseObject
-{
-    NSError *error;
-    id responseDict = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
-    if (error) {
-        [self callDelegateWithError:error];
-        return;
-    }
-    
-    long tokenId = [self findTokenIdFromResponse:responseDict matchingAccessToken:accessToken];
-    if (tokenId == -1) {
-        NSError *error = [NSError errorWithDomain:kMSSDataErrorDomain
-                                             code:MSSDataMissingAccessToken
-                                         userInfo:@{ NSLocalizedFailureReasonErrorKey : @"Token ID for current access token not found on server." }];
-        [self callDelegateWithError:error];
-        return;
-    }
-    
-    NSString *deleteUrl = [NSString stringWithFormat:@"%@/%ld", kMSSOAuthAccessTokensPath, tokenId];
-    [self.authClient deletePath:deleteUrl
-                     parameters:nil
-                        success:^(MSSAFHTTPRequestOperation *operation, id responseObject) {
-                            [self signOut];
-                        }
-                        failure:^(MSSAFHTTPRequestOperation *operation, NSError *error) {
-                            [self callDelegateWithError:error];
-                        }];
-}
-
-- (long)findTokenIdFromResponse:(id)responseDict matchingAccessToken:(NSString*)accessToken
-{
-    for (id item in responseDict) {
-        NSString *itemAccessToken = item[@"value"];
-        if ([itemAccessToken isEqualToString:accessToken]) {
-            return [item[@"id"] longValue];
-        }
-    }
-    return -1;
 }
 
 - (void)callDelegateWithError:(NSError *)error
