@@ -19,6 +19,7 @@
 		E1F76C401A00267A002D5788 /* PCFDataObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C3A1A002018002D5788 /* PCFDataObject.h */; };
 		E1F76C431A002995002D5788 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C421A002995002D5788 /* PCFResponse.m */; };
 		E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C411A002995002D5788 /* PCFResponse.h */; };
+		E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		E1F76C3D1A002085002D5788 /* PCFData-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCFData-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1F76C411A002995002D5788 /* PCFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFResponse.h; sourceTree = "<group>"; };
 		E1F76C421A002995002D5788 /* PCFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponse.m; sourceTree = "<group>"; };
+		E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataObjectTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				E151D07A19FFEFBE00B48F2A /* Supporting Files */,
 				E151D08519FFF02A00B48F2A /* PCFDataTests.swift */,
 				E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */,
+				E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 			files = (
 				E151D08619FFF02A00B48F2A /* PCFDataTests.swift in Sources */,
 				E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */,
+				E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

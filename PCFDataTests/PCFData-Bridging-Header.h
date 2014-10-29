@@ -2,3 +2,4 @@
 
 #import "PCFData/PCFData.h"
 #import "PCFData/PCFLocalStore.h"
+#import "PCFData/PCFDataObject.h"

@@ -8,6 +8,31 @@
 
 #import "PCFDataObject.h"
 
+@interface PCFDataObject ()
+
+@property id<PCFDataStore> dataStore;
+@property NSString *key;
+
+@end
+
 @implementation PCFDataObject
+
+- (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key {
+    _key = key;
+    _dataStore = dataStore;
+    return self;
+}
+
+- (NSString *)getWithAccessToken:(NSString *)accessToken {
+    return [_dataStore getWithKey:_key accessToken:accessToken].value;
+}
+
+- (NSString *)putWithValue:(NSString *)value accessToken:(NSString *)accessToken {
+    return [_dataStore putWithKey:_key value:value accessToken:accessToken].value;
+}
+
+- (NSString *)deleteWithAccessToken:(NSString *)accessToken {
+    return [_dataStore deleteWithKey:_key accessToken:accessToken].value;
+}
 
 @end

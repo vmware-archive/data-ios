@@ -7,7 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PCFDataStore.h"
 
 @interface PCFDataObject : NSObject
+
+- (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key;
+
+- (NSString *)getWithAccessToken:(NSString *)accessToken;
+
+- (NSString *)putWithValue:(NSString *)value accessToken:(NSString *)accessToken;
+
+- (NSString *)deleteWithAccessToken:(NSString *)accessToken;
 
 @end
