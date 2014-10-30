@@ -41,7 +41,7 @@ static NSString *const PCFDataDefaultsKey = @"PCFData";
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     [self.values removeObjectForKey:key];
     [[NSUserDefaults standardUserDefaults] setObject:self.values forKey:PCFDataDefaultsKey];
-    return [[PCFResponse alloc] initWithKey:key value:nil];
+    return [[PCFResponse alloc] initWithKey:key value:@""];
 }
 
 @end

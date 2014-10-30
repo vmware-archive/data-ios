@@ -27,7 +27,7 @@
     return [_dataStore getWithKey:_key accessToken:accessToken].value;
 }
 
-- (NSString *)putWithValue:(NSString *)value accessToken:(NSString *)accessToken {
+- (NSString *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value {
     return [_dataStore putWithKey:_key value:value accessToken:accessToken].value;
 }
 

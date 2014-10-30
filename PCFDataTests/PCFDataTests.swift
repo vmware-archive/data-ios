@@ -11,7 +11,7 @@ import Foundation
 
 class PCFDataTests: XCTestCase {
 
-    func testExample() {
+    func test() {
         XCTAssert(true, "Pass")
     }
 

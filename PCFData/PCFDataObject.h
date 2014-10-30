@@ -15,7 +15,7 @@
 
 - (NSString *)getWithAccessToken:(NSString *)accessToken;
 
-- (NSString *)putWithValue:(NSString *)value accessToken:(NSString *)accessToken;
+- (NSString *)putWithAccessToken:(NSString *)acccessToken value:(NSString *)value;
 
 - (NSString *)deleteWithAccessToken:(NSString *)accessToken;
 

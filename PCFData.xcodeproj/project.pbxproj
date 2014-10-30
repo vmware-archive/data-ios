@@ -20,6 +20,12 @@
 		E1F76C431A002995002D5788 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C421A002995002D5788 /* PCFResponse.m */; };
 		E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C411A002995002D5788 /* PCFResponse.h */; };
 		E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */; };
+		E1F76C481A014B1B002D5788 /* PCFResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */; };
+		E1F76C4B1A01662F002D5788 /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */; };
+		E1F76C4C1A016643002D5788 /* PCFRemoteStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C491A01662F002D5788 /* PCFRemoteStore.h */; };
+		E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */; };
+		E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */; };
+		E1F76C521A0168B8002D5788 /* PCFRemoteClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +45,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				E1F76C521A0168B8002D5788 /* PCFRemoteClient.h in CopyFiles */,
+				E1F76C4C1A016643002D5788 /* PCFRemoteStore.h in CopyFiles */,
 				E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */,
 				E1F76C3E1A00267A002D5788 /* PCFDataStore.h in CopyFiles */,
 				E1F76C3F1A00267A002D5788 /* PCFLocalStore.h in CopyFiles */,
@@ -66,6 +74,12 @@
 		E1F76C411A002995002D5788 /* PCFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFResponse.h; sourceTree = "<group>"; };
 		E1F76C421A002995002D5788 /* PCFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponse.m; sourceTree = "<group>"; };
 		E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataObjectTests.swift; sourceTree = "<group>"; };
+		E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFResponseTests.swift; sourceTree = "<group>"; };
+		E1F76C491A01662F002D5788 /* PCFRemoteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteStore.h; sourceTree = "<group>"; };
+		E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStore.m; sourceTree = "<group>"; };
+		E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFRemoteStoreTests.swift; sourceTree = "<group>"; };
+		E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteClient.h; sourceTree = "<group>"; };
+		E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClient.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,13 +124,17 @@
 			children = (
 				E151D06D19FFEFBE00B48F2A /* PCFData.h */,
 				E151D06F19FFEFBE00B48F2A /* PCFData.m */,
-				E151D08719FFF48E00B48F2A /* PCFDataStore.h */,
-				E151D08A1A0015C200B48F2A /* PCFLocalStore.h */,
-				E151D08B1A0015C200B48F2A /* PCFLocalStore.m */,
 				E1F76C3A1A002018002D5788 /* PCFDataObject.h */,
 				E1F76C3B1A002018002D5788 /* PCFDataObject.m */,
+				E151D08719FFF48E00B48F2A /* PCFDataStore.h */,
 				E1F76C411A002995002D5788 /* PCFResponse.h */,
 				E1F76C421A002995002D5788 /* PCFResponse.m */,
+				E151D08A1A0015C200B48F2A /* PCFLocalStore.h */,
+				E151D08B1A0015C200B48F2A /* PCFLocalStore.m */,
+				E1F76C491A01662F002D5788 /* PCFRemoteStore.h */,
+				E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */,
+				E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */,
+				E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */,
 			);
 			path = PCFData;
 			sourceTree = "<group>";
@@ -126,8 +144,10 @@
 			children = (
 				E151D07A19FFEFBE00B48F2A /* Supporting Files */,
 				E151D08519FFF02A00B48F2A /* PCFDataTests.swift */,
-				E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */,
 				E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */,
+				E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */,
+				E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */,
+				E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -229,9 +249,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */,
 				E1F76C431A002995002D5788 /* PCFResponse.m in Sources */,
 				E151D07019FFEFBE00B48F2A /* PCFData.m in Sources */,
 				E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */,
+				E1F76C4B1A01662F002D5788 /* PCFRemoteStore.m in Sources */,
 				E1F76C3C1A002018002D5788 /* PCFDataObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,8 +262,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1F76C481A014B1B002D5788 /* PCFResponseTests.swift in Sources */,
 				E151D08619FFF02A00B48F2A /* PCFDataTests.swift in Sources */,
 				E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */,
+				E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */,
 				E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
