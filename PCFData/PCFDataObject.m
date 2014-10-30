@@ -12,10 +12,12 @@
 
 @property id<PCFDataStore> dataStore;
 @property NSString *key;
+@property NSString *collection;
 
 @end
 
 @implementation PCFDataObject
+
 
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key {
     _key = key;

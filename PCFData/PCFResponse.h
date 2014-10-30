@@ -19,3 +19,15 @@
 - (instancetype)initWithKey:(NSString *)key error:(NSError *)error;
 
 @end
+
+@interface PCFPendingResponse : PCFResponse
+
++ (PCFPendingResponse *)pendingResponse:(PCFResponse *)response;
+
+@end
+
+@interface PCFFailureResponse : PCFResponse
+
++ (PCFFailureResponse *)failureResponse:(PCFResponse *)response;
+
+@end

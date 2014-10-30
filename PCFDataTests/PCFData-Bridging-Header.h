@@ -5,3 +5,4 @@
 #import "PCFData/PCFLocalStore.h"
 #import "PCFData/PCFRemoteStore.h"
 #import "PCFData/PCFRemoteClient.h"
+#import "PCFData/PCFOfflineStore.h"

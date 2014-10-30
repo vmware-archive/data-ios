@@ -13,6 +13,7 @@
 		E151D08619FFF02A00B48F2A /* PCFDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E151D08519FFF02A00B48F2A /* PCFDataTests.swift */; };
 		E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */; };
 		E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E151D08B1A0015C200B48F2A /* PCFLocalStore.m */; };
+		E16AE3C11A02AF2000AEEB49 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16AE3C01A02AF2000AEEB49 /* TestHelpers.swift */; };
 		E1F76C3C1A002018002D5788 /* PCFDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C3B1A002018002D5788 /* PCFDataObject.m */; };
 		E1F76C3E1A00267A002D5788 /* PCFDataStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D08719FFF48E00B48F2A /* PCFDataStore.h */; };
 		E1F76C3F1A00267A002D5788 /* PCFLocalStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D08A1A0015C200B48F2A /* PCFLocalStore.h */; };
@@ -26,6 +27,9 @@
 		E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */; };
 		E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */; };
 		E1F76C521A0168B8002D5788 /* PCFRemoteClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */; };
+		E1F76C551A028A4C002D5788 /* PCFOfflineStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */; };
+		E1F76C571A028A6E002D5788 /* PCFOfflineStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C561A028A6E002D5788 /* PCFOfflineStoreTests.swift */; };
+		E1F76C581A028B6A002D5788 /* PCFOfflineStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +49,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				E1F76C581A028B6A002D5788 /* PCFOfflineStore.h in CopyFiles */,
 				E1F76C521A0168B8002D5788 /* PCFRemoteClient.h in CopyFiles */,
 				E1F76C4C1A016643002D5788 /* PCFRemoteStore.h in CopyFiles */,
 				E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */,
@@ -68,6 +73,7 @@
 		E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFLocalStoreTests.swift; sourceTree = "<group>"; };
 		E151D08A1A0015C200B48F2A /* PCFLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFLocalStore.h; sourceTree = "<group>"; };
 		E151D08B1A0015C200B48F2A /* PCFLocalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStore.m; sourceTree = "<group>"; };
+		E16AE3C01A02AF2000AEEB49 /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		E1F76C3A1A002018002D5788 /* PCFDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataObject.h; sourceTree = "<group>"; };
 		E1F76C3B1A002018002D5788 /* PCFDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObject.m; sourceTree = "<group>"; };
 		E1F76C3D1A002085002D5788 /* PCFData-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCFData-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -80,6 +86,9 @@
 		E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFRemoteStoreTests.swift; sourceTree = "<group>"; };
 		E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteClient.h; sourceTree = "<group>"; };
 		E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClient.m; sourceTree = "<group>"; };
+		E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFOfflineStore.h; sourceTree = "<group>"; };
+		E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStore.m; sourceTree = "<group>"; };
+		E1F76C561A028A6E002D5788 /* PCFOfflineStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFOfflineStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +144,8 @@
 				E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */,
 				E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */,
 				E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */,
+				E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */,
+				E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */,
 			);
 			path = PCFData;
 			sourceTree = "<group>";
@@ -148,6 +159,7 @@
 				E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */,
 				E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */,
 				E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */,
+				E1F76C561A028A6E002D5788 /* PCFOfflineStoreTests.swift */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -157,6 +169,7 @@
 			children = (
 				E1F76C3D1A002085002D5788 /* PCFData-Bridging-Header.h */,
 				E151D07B19FFEFBE00B48F2A /* Info.plist */,
+				E16AE3C01A02AF2000AEEB49 /* TestHelpers.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -252,6 +265,7 @@
 				E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */,
 				E1F76C431A002995002D5788 /* PCFResponse.m in Sources */,
 				E151D07019FFEFBE00B48F2A /* PCFData.m in Sources */,
+				E1F76C551A028A4C002D5788 /* PCFOfflineStore.m in Sources */,
 				E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */,
 				E1F76C4B1A01662F002D5788 /* PCFRemoteStore.m in Sources */,
 				E1F76C3C1A002018002D5788 /* PCFDataObject.m in Sources */,
@@ -264,9 +278,11 @@
 			files = (
 				E1F76C481A014B1B002D5788 /* PCFResponseTests.swift in Sources */,
 				E151D08619FFF02A00B48F2A /* PCFDataTests.swift in Sources */,
+				E16AE3C11A02AF2000AEEB49 /* TestHelpers.swift in Sources */,
 				E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */,
 				E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */,
 				E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */,
+				E1F76C571A028A6E002D5788 /* PCFOfflineStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

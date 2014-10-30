@@ -11,16 +11,19 @@
 @interface PCFRemoteStore ()
 
 @property PCFRemoteClient *client;
+@property NSString *collection;
+
 @end
 
 @implementation PCFRemoteStore
 
 - (instancetype)init {
-    return [self initWithClient:[[PCFRemoteClient alloc] init]];
+    return [self initWithClient:[[PCFRemoteClient alloc] init] collection:@""];
 }
 
-- (instancetype)initWithClient:(PCFRemoteClient *)client {
+- (instancetype)initWithClient:(PCFRemoteClient *)client collection:(NSString *)collection {
     _client = client;
+    _collection = collection;
     return self;
 }
 
@@ -85,7 +88,7 @@
 }
 
 - (NSURL *)urlForKey:(NSString *)key {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/", @"baseThing", @"collection", key]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/", @"serviceBaseUrl", _collection, key]];
 }
 
 @end

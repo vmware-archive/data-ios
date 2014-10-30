@@ -19,7 +19,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testGetSucceedsWithValue() {
         let client = MockRemoteClient(mockResult: value)
-        let dataStore = PCFRemoteStore(client: client)
+        let dataStore = PCFRemoteStore(client: client, collection: "")
         let response = dataStore.getWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -29,7 +29,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testGetFailsWithError() {
         let client = MockRemoteClient(mockError: error)
-        let dataStore = PCFRemoteStore(client: client)
+        let dataStore = PCFRemoteStore(client: client, collection: "")
         let response = dataStore.getWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -39,7 +39,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testPutSucceedsWithValue() {
         let client = MockRemoteClient(mockResult: value)
-        let dataStore = PCFRemoteStore(client: client)
+        let dataStore = PCFRemoteStore(client: client, collection: "")
         let response = dataStore.putWithKey(key, value: value, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -49,7 +49,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testPutFailsWithError() {
         let client = MockRemoteClient(mockError: error)
-        let dataStore = PCFRemoteStore(client: client)
+        let dataStore = PCFRemoteStore(client: client, collection: "")
         let response = dataStore.putWithKey(key, value: value, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -59,7 +59,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testDeleteSucceedsWithValue() {
         let client = MockRemoteClient(mockResult: value)
-        let dataStore = PCFRemoteStore(client: client)
+        let dataStore = PCFRemoteStore(client: client, collection: "")
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -69,48 +69,11 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testDeleteFailsWithError() {
         let client = MockRemoteClient(mockError: error)
-        let dataStore = PCFRemoteStore(client: client)
+        let dataStore = PCFRemoteStore(client: client, collection: "")
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.error, error, "Response contains error")
         XCTAssert(client.wasDeleteInvoked, "Delete was invoked")
-    }
-    
-    class MockRemoteClient : PCFRemoteClient {
-        
-        var result : NSString?, error : NSError?
-        var wasGetInvoked: Bool = false
-        var wasPutInvoked: Bool = false
-        var wasDeleteInvoked: Bool = false
-        
-        init(mockResult: String? = nil, mockError: NSError? = nil) {
-            result = mockResult
-            error = mockError
-        }
-        
-        override func getWithAccessToken(accessToken: String!, url: NSURL!, error: NSErrorPointer) -> String! {
-            wasGetInvoked = true
-            if error != nil {
-                error.memory = self.error
-            }
-            return result
-        }
-        
-        override func putWithAccessToken(accessToken: String!, value: String!, url: NSURL!, error: NSErrorPointer) -> String! {
-            wasPutInvoked = true
-            if error != nil {
-                error.memory = self.error
-            }
-            return result
-        }
-        
-        override func deleteWithAccessToken(accessToken: String!, url: NSURL!, error: NSErrorPointer) -> String! {
-            wasDeleteInvoked = true
-            if error != nil {
-                error.memory = self.error
-            }
-            return result
-        }
     }
 }
