@@ -12,7 +12,7 @@
 
 - (NSString *)getWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error;
 
-- (NSString *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value url:(NSURL *)url error:(NSError *__autoreleasing *)error;
+- (NSString *)putWithAccessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value error:(NSError *__autoreleasing *)error;
 
 - (NSString *)deleteWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error;
 

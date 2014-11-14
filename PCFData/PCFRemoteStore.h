@@ -12,7 +12,9 @@
 
 @interface PCFRemoteStore : NSObject <PCFDataStore>
 
-- (instancetype)initWithClient:(PCFRemoteClient *)client collection:(NSString *)collection;
+- (instancetype)initWithCollection:(NSString *)collection;
+
+- (instancetype)initWithCollection:(NSString *)collection client:(PCFRemoteClient *)client;
 
 - (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
 

@@ -11,6 +11,8 @@
 
 @interface PCFLocalStore : NSObject <PCFDataStore>
 
-- (instancetype)initWithValues:(NSMutableDictionary *)values;
+- (instancetype)initWithCollection:(NSString *)collection;
+
+- (instancetype)initWithCollection:(NSString *)collection defaults:(NSUserDefaults *)defaults;
 
 @end

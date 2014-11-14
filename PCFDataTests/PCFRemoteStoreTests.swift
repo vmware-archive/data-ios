@@ -13,13 +13,14 @@ class PCFRemoteStoreTests: XCTestCase {
 
     let key = NSUUID().UUIDString
     let value = NSUUID().UUIDString
+    let collection = NSUUID().UUIDString
     let accessToken = NSUUID().UUIDString
     
     let error = NSError()
     
     func testGetSucceedsWithValue() {
         let client = MockRemoteClient(mockResult: value)
-        let dataStore = PCFRemoteStore(client: client, collection: "")
+        let dataStore = PCFRemoteStore(collection: collection, client: client)
         let response = dataStore.getWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -29,7 +30,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testGetFailsWithError() {
         let client = MockRemoteClient(mockError: error)
-        let dataStore = PCFRemoteStore(client: client, collection: "")
+        let dataStore = PCFRemoteStore(collection: collection, client: client)
         let response = dataStore.getWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -39,7 +40,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testPutSucceedsWithValue() {
         let client = MockRemoteClient(mockResult: value)
-        let dataStore = PCFRemoteStore(client: client, collection: "")
+        let dataStore = PCFRemoteStore(collection: collection, client: client)
         let response = dataStore.putWithKey(key, value: value, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -49,7 +50,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testPutFailsWithError() {
         let client = MockRemoteClient(mockError: error)
-        let dataStore = PCFRemoteStore(client: client, collection: "")
+        let dataStore = PCFRemoteStore(collection: collection, client: client)
         let response = dataStore.putWithKey(key, value: value, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -59,7 +60,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testDeleteSucceedsWithValue() {
         let client = MockRemoteClient(mockResult: value)
-        let dataStore = PCFRemoteStore(client: client, collection: "")
+        let dataStore = PCFRemoteStore(collection: collection, client: client)
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")
@@ -69,7 +70,7 @@ class PCFRemoteStoreTests: XCTestCase {
     
     func testDeleteFailsWithError() {
         let client = MockRemoteClient(mockError: error)
-        let dataStore = PCFRemoteStore(client: client, collection: "")
+        let dataStore = PCFRemoteStore(collection: collection, client: client)
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains key")

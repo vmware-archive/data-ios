@@ -10,21 +10,26 @@
 
 @interface PCFRemoteStore ()
 
-@property PCFRemoteClient *client;
 @property NSString *collection;
+@property (strong, readonly) PCFRemoteClient *client;
 
 @end
 
 @implementation PCFRemoteStore
 
-- (instancetype)init {
-    return [self initWithClient:[[PCFRemoteClient alloc] init] collection:@""];
+
+- (instancetype)initWithCollection:(NSString *)collection {
+    return [self initWithCollection:collection client:[[PCFRemoteClient alloc] init]];
 }
 
-- (instancetype)initWithClient:(PCFRemoteClient *)client collection:(NSString *)collection {
+- (instancetype)initWithCollection:(NSString *)collection client:(PCFRemoteClient *)client {
     _client = client;
     _collection = collection;
     return self;
+}
+
+- (NSURL *)urlForKey:(NSString *)key {
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/", @"serviceBaseUrl", _collection, key]];
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
@@ -49,7 +54,8 @@
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
     NSError *error;
-    NSString *result = [_client putWithAccessToken:accessToken value:value url:[self urlForKey:key] error:&error];
+    NSString *result = [_client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error];
+    
     if (error) {
         return [[PCFResponse alloc] initWithKey:key error:error];
     } else {
@@ -70,6 +76,7 @@
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     NSError *error;
     NSString *result = [_client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
+    
     if (error) {
         return [[PCFResponse alloc] initWithKey:key error:error];
     } else {
@@ -85,10 +92,6 @@
             completionBlock(response);
         });
     });
-}
-
-- (NSURL *)urlForKey:(NSString *)key {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/", @"serviceBaseUrl", _collection, key]];
 }
 
 @end

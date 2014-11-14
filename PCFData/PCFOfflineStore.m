@@ -21,59 +21,70 @@
 
 @implementation PCFOfflineStore
 
+
 - (instancetype)initWithCollection:(NSString *)collection {
-    return [self initWithRemoteStore:[PCFRemoteStore new] localStore:[PCFLocalStore new] collection:collection];
+    PCFRemoteStore *remoteStore = [[PCFRemoteStore alloc] initWithCollection:collection];
+    PCFLocalStore *localStore = [[PCFLocalStore alloc] initWithCollection:collection];
+    return [self initWithCollection:collection remoteStore:remoteStore localStore:localStore];
 }
 
-- (instancetype)initWithRemoteStore:(id<PCFDataStore>)remoteStore localStore:(id<PCFDataStore>)localStore collection:(NSString *)collection {
+- (instancetype)initWithCollection:(NSString *)collection remoteStore:(PCFRemoteStore *)remoteStore localStore:(PCFLocalStore *)localStore {
     _collection = collection;
     _remoteStore = remoteStore;
     _localStore = localStore;
     return self;
 }
 
+- (BOOL)isConnected {
+    return true;
+}
+
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    PCFResponse *response = [_localStore getWithKey:key accessToken:accessToken];
+    
     if ([self isConnected]) {
         [_remoteStore getWithKey:key accessToken:accessToken completionBlock:^(PCFResponse *response) {
             if (response.error) {
-                // tell observers about error; maybe through a state change?
+                // tell observers/retry?
             } else {
-                // tell observers about change
                 [_localStore putWithKey:key value:response.value accessToken:accessToken];
             }
         }];
     }
-    return [PCFPendingResponse pendingResponse:[_localStore getWithKey:key accessToken:accessToken]];
+    
+    return [PCFPendingResponse pendingResponse:response];
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
+    PCFResponse *response = [_localStore putWithKey:key value:value accessToken:accessToken];
+    
     if ([self isConnected]) {
         [_remoteStore putWithKey:key value:value accessToken:accessToken completionBlock:^(PCFResponse *response) {
             if (response.error) {
                 // tell observers/retry?
             } else {
-                // should we re-update? What if the network call changes the new value somehow?
+                [_localStore putWithKey:key value:response.value accessToken:accessToken];
             }
         }];
     }
-    return [PCFPendingResponse pendingResponse:[_localStore putWithKey:key value:value accessToken:accessToken]];
+    
+    return [PCFPendingResponse pendingResponse:response];
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    PCFResponse *response = [_localStore deleteWithKey:key accessToken:accessToken];
+    
     if ([self isConnected]) {
         [_remoteStore deleteWithKey:key accessToken:accessToken completionBlock:^(PCFResponse *response) {
             if (response.error) {
-                // tell observers/retry? maybe when the offline request queue is inplace, we can add it there for later
-                // are there a class of errors where we should retry? next time someone does a get the value will return otherwise
+                // tell observers/retry?
+            } else {
+                [_localStore deleteWithKey:key accessToken:accessToken];
             }
         }];
     }
-    return [PCFPendingResponse pendingResponse:[_localStore deleteWithKey:key accessToken:accessToken]];
-}
-
-// TODO real connectivityz
-- (BOOL)isConnected {
-    return true;
+    
+    return [PCFPendingResponse pendingResponse:response];
 }
 
 @end

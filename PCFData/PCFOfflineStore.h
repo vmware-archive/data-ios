@@ -15,6 +15,6 @@
 
 - (instancetype)initWithCollection:(NSString *)collection;
 
-- (instancetype)initWithRemoteStore:(PCFRemoteStore *)remoteStore localStore:(PCFLocalStore *)localStore collection:(NSString *)collection;
+- (instancetype)initWithCollection:(NSString *)collection remoteStore:(PCFRemoteStore *)remoteStore localStore:(PCFLocalStore *)localStore;
 
 @end

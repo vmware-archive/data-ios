@@ -10,83 +10,97 @@ import XCTest
 import Foundation
 
 class PCFLocalStoreTests: XCTestCase {
-
+    
     let key = NSUUID().UUIDString
     let value = NSUUID().UUIDString
+    let collection = NSUUID().UUIDString
     let accessToken = NSUUID().UUIDString
     
     let error = NSError()
     
     
     func testGetSucceedsWithValue() {
-        let dataStore = PCFLocalStore(values: NSMutableDictionary(dictionary: [key: value]))
+        let defaults = MockUserDefaults(values: [key: value])!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.getWithKey(key, accessToken: accessToken)
 
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, value, "Response contains the value")
+
+        XCTAssertTrue(defaults.wasGetInvoked, "Get invoked")
     }
     
     func testGetSucceedsWithEmptyValue() {
-        let dataStore = PCFLocalStore(values: NSMutableDictionary())
+        let defaults = MockUserDefaults(values: NSDictionary())!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.getWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, "", "Response contains empty value")
+        
+        XCTAssertTrue(defaults.wasGetInvoked, "Get invoked")
     }
     
     func testPutSucceedsWithValue() {
-        var dictionary = NSMutableDictionary()
-        let dataStore = PCFLocalStore(values: dictionary)
+        var defaults = MockUserDefaults(values: [key: value])!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.putWithKey(key, value: value, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, value, "Response contains the value")
         
-        XCTAssertEqual(dictionary[key]! as String, value, "Key value pair added to backing dictionary")
+        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
+        XCTAssertTrue(defaults.assertValueForKey(key, expected: value), "Key value pair added to backing dictionary")
     }
     
     func testPutSucceedsWithEmptyValue() {
-        var dictionary = NSMutableDictionary(dictionary: [key: value])
-        let dataStore = PCFLocalStore(values: dictionary)
+        var defaults = MockUserDefaults(values: [key: value])!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.putWithKey(key, value: "", accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, "", "Response contains empty value")
         
-        XCTAssertEqual(dictionary[key]! as String, "", "Key value pair added to backing dictionary")
+        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
+        XCTAssertTrue(defaults.assertValueForKey(key, expected: ""), "Key value pair added to backing dictionary")
     }
     
     func testPutSucceedsWithNilValue() {
-        var dictionary = NSMutableDictionary(dictionary: [key: value])
-        let dataStore = PCFLocalStore(values: dictionary)
+        var defaults = MockUserDefaults(values: [key: value])!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.putWithKey(key, value: nil, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, "", "Response contains empty value")
         
-        XCTAssertEqual(dictionary[key]! as String, "", "Key value pair added to backing dictionary")
+        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
+        XCTAssertTrue(defaults.assertValueForKey(key, expected: ""), "Key value pair added to backing dictionary")
     }
     
     func testDeleteWithExistingKey() {
-        var dictionary = NSMutableDictionary(dictionary: [key: value])
-        let dataStore = PCFLocalStore(values: dictionary)
+        var defaults = MockUserDefaults(values: [key: value])!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, "", "Response contains empty value")
         
-        XCTAssertNil(dictionary[key], "Key value pair removed from backing dictionary")
+        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
+        XCTAssertTrue(defaults.assertValueForKey(key, expected: value), "Key value pair removed from backing defaults")
     }
     
     func testDeleteWithNonexistingKey() {
-        var dictionary = NSMutableDictionary(dictionary: ["not-key": "not-value"])
-        let dataStore = PCFLocalStore(values: dictionary)
+        var defaults = MockUserDefaults(values: ["not-key": "not-value"])!
+        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
         XCTAssertEqual(response.value, "", "Response contains empty value")
         
-        XCTAssertNil(dictionary[key], "Key value pair still doesn't exist in backing dictionary")
+        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
+        XCTAssertTrue(defaults.assertValueForKey(key, expected: nil), "Key value pair still doesn't exist in backing defaults")
     }
 
 }
+
+

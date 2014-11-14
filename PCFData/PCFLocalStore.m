@@ -12,36 +12,54 @@ static NSString *const PCFDataDefaultsKey = @"PCFData";
 
 @interface PCFLocalStore ()
 
-@property (strong) NSMutableDictionary *values;
+@property NSString *collection;
+@property (strong, readonly) NSUserDefaults *defaults;
 
 @end
 
 @implementation PCFLocalStore
 
-- (instancetype)init {
-    return [[PCFLocalStore alloc] initWithValues:[[NSUserDefaults standardUserDefaults] objectForKey:PCFDataDefaultsKey]];
+- (instancetype)initWithCollection:(NSString *)collection {
+    return [self initWithCollection:collection defaults:[NSUserDefaults standardUserDefaults]];
 }
 
-- (instancetype)initWithValues:(NSMutableDictionary *)values {
-    _values = values;
+- (instancetype)initWithCollection:(NSString *)collection defaults:(NSUserDefaults *)defaults {
+    _collection = collection;
+    _defaults = defaults;
+    [_defaults addObserver:self forKeyPath:PCFDataDefaultsKey options:NSKeyValueObservingOptionNew context:0];
     return self;
 }
 
+- (void)dealloc {
+    [_defaults removeObserver:self forKeyPath:PCFDataDefaultsKey];
+}
+
+- (NSMutableDictionary *)values {
+    return [NSMutableDictionary dictionaryWithDictionary:[_defaults objectForKey:PCFDataDefaultsKey]];
+}
+
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    NSString *value = self.values[key] ? self.values[key] : @"";
+    NSMutableDictionary *values = self.values;
+    NSString *value = values[key] ? values[key] : @"";
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    self.values[key] = value ? value : @"";
-    [[NSUserDefaults standardUserDefaults] setObject:self.values forKey:PCFDataDefaultsKey];
+    NSMutableDictionary *values = self.values;
+    values[key] = value ? value : @"";
+    [_defaults setObject:values forKey:PCFDataDefaultsKey];
     return [[PCFResponse alloc] initWithKey:key value:self.values[key]];
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     [self.values removeObjectForKey:key];
-    [[NSUserDefaults standardUserDefaults] setObject:self.values forKey:PCFDataDefaultsKey];
+    [_defaults setObject:self.values forKey:PCFDataDefaultsKey];
     return [[PCFResponse alloc] initWithKey:key value:@""];
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    // any change from nsuserdefaults
 }
 
 @end
