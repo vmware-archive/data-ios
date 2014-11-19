@@ -25,6 +25,7 @@ class PCFRemoteStoreTests: XCTestCase {
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.value, value, "Response contains value")
+        
         XCTAssert(client.wasGetInvoked, "Get was invoked")
     }
     
@@ -35,6 +36,7 @@ class PCFRemoteStoreTests: XCTestCase {
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.error, error, "Response contains error")
+        
         XCTAssert(client.wasGetInvoked, "Get was invoked")
     }
     
@@ -45,6 +47,7 @@ class PCFRemoteStoreTests: XCTestCase {
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.value, value, "Response contains value")
+        
         XCTAssert(client.wasPutInvoked, "Put was invoked")
     }
     
@@ -55,6 +58,7 @@ class PCFRemoteStoreTests: XCTestCase {
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.error, error, "Response contains error")
+        
         XCTAssert(client.wasPutInvoked, "Put was invoked")
     }
     
@@ -65,6 +69,7 @@ class PCFRemoteStoreTests: XCTestCase {
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.value, value, "Response contains value")
+        
         XCTAssert(client.wasDeleteInvoked, "Delete was invoked")
     }
     
@@ -75,6 +80,7 @@ class PCFRemoteStoreTests: XCTestCase {
         
         XCTAssertEqual(response.key, key, "Response contains key")
         XCTAssertEqual(response.error, error, "Response contains error")
+        
         XCTAssert(client.wasDeleteInvoked, "Delete was invoked")
     }
 }

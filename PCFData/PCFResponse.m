@@ -24,14 +24,6 @@
 
 @end
 
-@implementation PCFPendingResponse
-
-+ (PCFPendingResponse *)pendingResponse:(PCFResponse *)response {
-    return [[PCFPendingResponse alloc] initWithKey:response.key value:response.value];
-}
-
-@end
-
 @implementation PCFFailureResponse
 
 + (PCFFailureResponse *)failureResponse:(PCFResponse *)response {

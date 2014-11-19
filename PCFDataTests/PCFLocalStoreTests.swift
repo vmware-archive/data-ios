@@ -17,8 +17,7 @@ class PCFLocalStoreTests: XCTestCase {
     let accessToken = NSUUID().UUIDString
     
     let error = NSError()
-    
-    
+        
     func testGetSucceedsWithValue() {
         let defaults = MockUserDefaults(values: [key: value])!
         let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
@@ -36,7 +35,7 @@ class PCFLocalStoreTests: XCTestCase {
         let response = dataStore.getWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
-        XCTAssertEqual(response.value, "", "Response contains empty value")
+        XCTAssertNil(response.value, "Response value is nil");
         
         XCTAssertTrue(defaults.wasGetInvoked, "Get invoked")
     }
@@ -65,28 +64,16 @@ class PCFLocalStoreTests: XCTestCase {
         XCTAssertTrue(defaults.assertValueForKey(key, expected: ""), "Key value pair added to backing dictionary")
     }
     
-    func testPutSucceedsWithNilValue() {
-        var defaults = MockUserDefaults(values: [key: value])!
-        let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
-        let response = dataStore.putWithKey(key, value: nil, accessToken: accessToken)
-        
-        XCTAssertEqual(response.key, key, "Response contains the key")
-        XCTAssertEqual(response.value, "", "Response contains empty value")
-        
-        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
-        XCTAssertTrue(defaults.assertValueForKey(key, expected: ""), "Key value pair added to backing dictionary")
-    }
-    
     func testDeleteWithExistingKey() {
         var defaults = MockUserDefaults(values: [key: value])!
         let dataStore = PCFLocalStore(collection: collection, defaults: defaults)
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
-        XCTAssertEqual(response.value, "", "Response contains empty value")
+        XCTAssertNil(response.value, "Response value is nil");
         
-        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
-        XCTAssertTrue(defaults.assertValueForKey(key, expected: value), "Key value pair removed from backing defaults")
+        XCTAssertTrue(defaults.wasDeleteInvoked, "Delete invoked")
+        XCTAssertTrue(defaults.assertValueForKey(key, expected: nil), "Key value pair removed from backing defaults")
     }
     
     func testDeleteWithNonexistingKey() {
@@ -95,9 +82,9 @@ class PCFLocalStoreTests: XCTestCase {
         let response = dataStore.deleteWithKey(key, accessToken: accessToken)
         
         XCTAssertEqual(response.key, key, "Response contains the key")
-        XCTAssertEqual(response.value, "", "Response contains empty value")
+        XCTAssertNil(response.value, "Response value is nil");
         
-        XCTAssertTrue(defaults.wasSetInvoked, "Set invoked")
+        XCTAssertTrue(defaults.wasDeleteInvoked, "Delete invoked")
         XCTAssertTrue(defaults.assertValueForKey(key, expected: nil), "Key value pair still doesn't exist in backing defaults")
     }
 

@@ -8,7 +8,7 @@
 
 #import "PCFLocalStore.h"
 
-static NSString *const PCFDataDefaultsKey = @"PCFData";
+static NSString *const PCFDataPrefix = @"PCFData:";
 
 @interface PCFLocalStore ()
 
@@ -26,40 +26,62 @@ static NSString *const PCFDataDefaultsKey = @"PCFData";
 - (instancetype)initWithCollection:(NSString *)collection defaults:(NSUserDefaults *)defaults {
     _collection = collection;
     _defaults = defaults;
-    [_defaults addObserver:self forKeyPath:PCFDataDefaultsKey options:NSKeyValueObservingOptionNew context:0];
+//    [_defaults addObserver:self forKeyPath:PCFDataDefaultsKey options:NSKeyValueObservingOptionNew context:0];
     return self;
 }
 
 - (void)dealloc {
-    [_defaults removeObserver:self forKeyPath:PCFDataDefaultsKey];
-}
-
-- (NSMutableDictionary *)values {
-    return [NSMutableDictionary dictionaryWithDictionary:[_defaults objectForKey:PCFDataDefaultsKey]];
+//    [_defaults removeObserver:self forKeyPath:PCFDataDefaultsKey];
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    NSMutableDictionary *values = self.values;
-    NSString *value = values[key] ? values[key] : @"";
+    NSString *value = [_defaults objectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
 
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        PCFResponse *response = [self getWithKey:key accessToken:accessToken];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(response);
+        });
+    });
+}
+
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    NSMutableDictionary *values = self.values;
-    values[key] = value ? value : @"";
-    [_defaults setObject:values forKey:PCFDataDefaultsKey];
-    return [[PCFResponse alloc] initWithKey:key value:self.values[key]];
+    [_defaults setObject:value forKey:[PCFDataPrefix stringByAppendingString:key]];
+    return [[PCFResponse alloc] initWithKey:key value:value];
+}
+
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(response);
+        });
+    });
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    [self.values removeObjectForKey:key];
-    [_defaults setObject:self.values forKey:PCFDataDefaultsKey];
-    return [[PCFResponse alloc] initWithKey:key value:@""];
+    [_defaults removeObjectForKey:[PCFDataPrefix stringByAppendingString:key]];
+    return [[PCFResponse alloc] initWithKey:key value:nil];
+}
+
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        PCFResponse *response = [self deleteWithKey:key accessToken:accessToken];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(response);
+        });
+    });
 }
 
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    // any change from nsuserdefaults
-}
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+//    // any change from nsuserdefaults
+//}
 
 @end

@@ -35,6 +35,7 @@
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     NSError *error;
     NSString *result = [_client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
+
     if (error) {
         return [[PCFResponse alloc] initWithKey:key error:error];
     } else {

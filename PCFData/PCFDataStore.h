@@ -13,8 +13,14 @@
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken;
 
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
+
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken;
 
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
+
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken;
+
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
 
 @end

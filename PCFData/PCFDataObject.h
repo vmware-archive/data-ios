@@ -13,10 +13,16 @@
 
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key;
 
-- (NSString *)getWithAccessToken:(NSString *)accessToken;
+- (PCFResponse *)getWithAccessToken:(NSString *)accessToken;
 
-- (NSString *)putWithAccessToken:(NSString *)acccessToken value:(NSString *)value;
+- (void)getWithAccessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
 
-- (NSString *)deleteWithAccessToken:(NSString *)accessToken;
+- (PCFResponse *)putWithAccessToken:(NSString *)acccessToken value:(NSString *)value;
+
+- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(void (^)(PCFResponse *))completionBlock;
+
+- (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken;
+
+- (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
 
 @end

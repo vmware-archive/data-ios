@@ -16,10 +16,6 @@
 
 - (instancetype)initWithCollection:(NSString *)collection client:(PCFRemoteClient *)client;
 
-- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
-
-- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
-
-- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
+- (NSURL *)urlForKey:(NSString *)key;
 
 @end

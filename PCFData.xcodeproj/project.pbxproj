@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E14A9C341A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C301A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift */; };
+		E14A9C361A1D0116005D0A9E /* PCFDataTestsSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C321A1D0116005D0A9E /* PCFDataTestsSwift.swift */; };
+		E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */; };
+		E14A9C3C1A1D0173005D0A9E /* PCFDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C3A1A1D0173005D0A9E /* PCFDataTests.m */; };
+		E14A9C3E1A1D01C7005D0A9E /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E14A9C3D1A1D01C7005D0A9E /* libOCMock.a */; };
 		E151D06E19FFEFBE00B48F2A /* PCFData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D06D19FFEFBE00B48F2A /* PCFData.h */; };
 		E151D07019FFEFBE00B48F2A /* PCFData.m in Sources */ = {isa = PBXBuildFile; fileRef = E151D06F19FFEFBE00B48F2A /* PCFData.m */; };
 		E151D07619FFEFBE00B48F2A /* libPCFData.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E151D06A19FFEFBE00B48F2A /* libPCFData.a */; };
-		E151D08619FFF02A00B48F2A /* PCFDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E151D08519FFF02A00B48F2A /* PCFDataTests.swift */; };
 		E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */; };
 		E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E151D08B1A0015C200B48F2A /* PCFLocalStore.m */; };
 		E16AE3C11A02AF2000AEEB49 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16AE3C01A02AF2000AEEB49 /* TestHelpers.swift */; };
@@ -20,7 +24,6 @@
 		E1F76C401A00267A002D5788 /* PCFDataObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C3A1A002018002D5788 /* PCFDataObject.h */; };
 		E1F76C431A002995002D5788 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C421A002995002D5788 /* PCFResponse.m */; };
 		E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C411A002995002D5788 /* PCFResponse.h */; };
-		E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */; };
 		E1F76C481A014B1B002D5788 /* PCFResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */; };
 		E1F76C4B1A01662F002D5788 /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */; };
 		E1F76C4C1A016643002D5788 /* PCFRemoteStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C491A01662F002D5788 /* PCFRemoteStore.h */; };
@@ -63,12 +66,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E14A9C301A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataObjectTestsSwift.swift; sourceTree = "<group>"; };
+		E14A9C321A1D0116005D0A9E /* PCFDataTestsSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataTestsSwift.swift; sourceTree = "<group>"; };
+		E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObjectTests.m; sourceTree = "<group>"; };
+		E14A9C3A1A1D0173005D0A9E /* PCFDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataTests.m; sourceTree = "<group>"; };
+		E14A9C3D1A1D01C7005D0A9E /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
 		E151D06A19FFEFBE00B48F2A /* libPCFData.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPCFData.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E151D06D19FFEFBE00B48F2A /* PCFData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCFData.h; sourceTree = "<group>"; };
 		E151D06F19FFEFBE00B48F2A /* PCFData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCFData.m; sourceTree = "<group>"; };
 		E151D07519FFEFBE00B48F2A /* PCFDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E151D07B19FFEFBE00B48F2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E151D08519FFF02A00B48F2A /* PCFDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataTests.swift; sourceTree = "<group>"; };
 		E151D08719FFF48E00B48F2A /* PCFDataStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCFDataStore.h; sourceTree = "<group>"; };
 		E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFLocalStoreTests.swift; sourceTree = "<group>"; };
 		E151D08A1A0015C200B48F2A /* PCFLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFLocalStore.h; sourceTree = "<group>"; };
@@ -79,7 +86,6 @@
 		E1F76C3D1A002085002D5788 /* PCFData-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCFData-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1F76C411A002995002D5788 /* PCFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFResponse.h; sourceTree = "<group>"; };
 		E1F76C421A002995002D5788 /* PCFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponse.m; sourceTree = "<group>"; };
-		E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataObjectTests.swift; sourceTree = "<group>"; };
 		E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFResponseTests.swift; sourceTree = "<group>"; };
 		E1F76C491A01662F002D5788 /* PCFRemoteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteStore.h; sourceTree = "<group>"; };
 		E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStore.m; sourceTree = "<group>"; };
@@ -103,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E14A9C3E1A1D01C7005D0A9E /* libOCMock.a in Frameworks */,
 				E151D07619FFEFBE00B48F2A /* libPCFData.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,6 +120,7 @@
 		E151D06119FFEFBE00B48F2A = {
 			isa = PBXGroup;
 			children = (
+				E14A9C3D1A1D01C7005D0A9E /* libOCMock.a */,
 				E151D06C19FFEFBE00B48F2A /* PCFData */,
 				E151D07919FFEFBE00B48F2A /* PCFDataTests */,
 				E151D06B19FFEFBE00B48F2A /* Products */,
@@ -154,8 +162,10 @@
 			isa = PBXGroup;
 			children = (
 				E151D07A19FFEFBE00B48F2A /* Supporting Files */,
-				E151D08519FFF02A00B48F2A /* PCFDataTests.swift */,
-				E1F76C451A0128ED002D5788 /* PCFDataObjectTests.swift */,
+				E14A9C321A1D0116005D0A9E /* PCFDataTestsSwift.swift */,
+				E14A9C3A1A1D0173005D0A9E /* PCFDataTests.m */,
+				E14A9C301A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift */,
+				E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */,
 				E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */,
 				E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */,
 				E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */,
@@ -277,11 +287,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1F76C481A014B1B002D5788 /* PCFResponseTests.swift in Sources */,
-				E151D08619FFF02A00B48F2A /* PCFDataTests.swift in Sources */,
+				E14A9C3C1A1D0173005D0A9E /* PCFDataTests.m in Sources */,
 				E16AE3C11A02AF2000AEEB49 /* TestHelpers.swift in Sources */,
+				E14A9C341A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift in Sources */,
 				E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */,
 				E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */,
-				E1F76C461A0128ED002D5788 /* PCFDataObjectTests.swift in Sources */,
+				E14A9C361A1D0116005D0A9E /* PCFDataTestsSwift.swift in Sources */,
+				E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */,
 				E1F76C571A028A6E002D5788 /* PCFOfflineStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -403,8 +415,23 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS",
+				);
 				INFOPLIST_FILE = PCFDataTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS/**",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "PCFDataTests/PCFData-Bridging-Header.h";
@@ -420,8 +447,23 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS",
+				);
 				INFOPLIST_FILE = PCFDataTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS/**",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "PCFDataTests/PCFData-Bridging-Header.h";

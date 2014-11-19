@@ -11,6 +11,7 @@
 @interface PCFDataObject ()
 
 @property id<PCFDataStore> dataStore;
+
 @property NSString *key;
 @property NSString *collection;
 
@@ -18,23 +19,34 @@
 
 @implementation PCFDataObject
 
-
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key {
     _key = key;
     _dataStore = dataStore;
     return self;
 }
 
-- (NSString *)getWithAccessToken:(NSString *)accessToken {
-    return [_dataStore getWithKey:_key accessToken:accessToken].value;
+- (PCFResponse *)getWithAccessToken:(NSString *)accessToken {
+    return [_dataStore getWithKey:_key accessToken:accessToken];
 }
 
-- (NSString *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value {
-    return [_dataStore putWithKey:_key value:value accessToken:accessToken].value;
+- (void)getWithAccessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    [_dataStore getWithKey:_key accessToken:accessToken completionBlock:completionBlock];
 }
 
-- (NSString *)deleteWithAccessToken:(NSString *)accessToken {
-    return [_dataStore deleteWithKey:_key accessToken:accessToken].value;
+- (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value {
+    return [_dataStore putWithKey:_key value:value accessToken:accessToken];
+}
+
+- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(void (^)(PCFResponse *))completionBlock {
+    [_dataStore putWithKey:_key value:value accessToken:accessToken completionBlock:completionBlock];
+}
+
+- (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken {
+    return [_dataStore deleteWithKey:_key accessToken:accessToken];
+}
+
+- (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    [_dataStore deleteWithKey:_key accessToken:accessToken completionBlock:completionBlock];
 }
 
 @end

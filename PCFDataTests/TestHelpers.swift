@@ -25,14 +25,26 @@ class MockDataStore : NSObject, PCFDataStore {
         return response
     }
     
+    func getWithKey(key: String!, accessToken: String!, completionBlock: ((PCFResponse!) -> Void)!) {
+        
+    }
+    
     func putWithKey(key: String!, value: String!, accessToken: String!) -> PCFResponse! {
         wasPutInvoked = true
         return response
     }
     
+    func putWithKey(key: String!, value: String!, accessToken: String!, completionBlock: ((PCFResponse!) -> Void)!) {
+        
+    }
+    
     func deleteWithKey(key: String!, accessToken: String!) -> PCFResponse! {
         wasDeleteInvoked = true
         return response
+    }
+    
+    func deleteWithKey(key: String!, accessToken: String!, completionBlock: ((PCFResponse!) -> Void)!) {
+        
     }
 }
 
@@ -125,30 +137,41 @@ class MockOfflineStore : PCFOfflineStore {
 }
 
 class MockUserDefaults:  NSUserDefaults {
-    
+    let keyPrefix = "PCFData:";
+
     var mockValues : NSMutableDictionary
 
     var wasGetInvoked: Bool = false
     var wasSetInvoked: Bool = false
+    var wasDeleteInvoked: Bool = false
     
     init?(values: NSDictionary) {
-        mockValues = NSMutableDictionary(dictionary: ["PCFData": NSMutableDictionary(dictionary: values)])
+        mockValues = NSMutableDictionary(dictionary: values)
         super.init(suiteName: "")
     }
     
     override func objectForKey(defaultName: String) -> AnyObject? {
         wasGetInvoked = true;
-        return mockValues[defaultName] as NSMutableDictionary
+        return mockValues[stripKeyPrefix(defaultName)]
     }
     
     override func setObject(value: AnyObject?, forKey defaultName: String) {
         wasSetInvoked = true;
-        mockValues[defaultName] = value
+        mockValues[stripKeyPrefix(defaultName)] = value;
+    }
+    
+    override func removeObjectForKey(defaultName: String) {
+        wasDeleteInvoked = true;
+        mockValues.removeObjectForKey(stripKeyPrefix(defaultName))
+    }
+    
+    func stripKeyPrefix(defaultName: String) -> String {
+        let prefixRange = defaultName.rangeOfString(keyPrefix, options: NSStringCompareOptions.LiteralSearch, range: nil, locale: nil);
+        return defaultName.stringByReplacingCharactersInRange(prefixRange!, withString: "")
     }
     
     func assertValueForKey(key: String, expected: String?) -> Bool {
-        var values = mockValues["PCFData"] as NSMutableDictionary
-        return values[key] as String? == expected
+        return mockValues[key] as String? == expected
     }
 }
 

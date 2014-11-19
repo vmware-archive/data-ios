@@ -16,26 +16,29 @@ class PCFDataObjectTests: XCTestCase {
     let accessToken = NSUUID().UUIDString
     
     func testGet() {
-        let dataStore = MockDataStore(mockResponse: PCFResponse(key: key, value: value))
+        let response = PCFResponse(key: key, value: value)
+        let dataStore = MockDataStore(mockResponse: response)
         let dataObject = PCFDataObject(dataStore: dataStore, key: key)
         
-        XCTAssertEqual(dataObject.getWithAccessToken(accessToken), value, "Data exists")
+        XCTAssertEqual(dataObject.getWithAccessToken(accessToken), response, "Data exists")
         XCTAssert(dataStore.wasGetInvoked, "Get was invoked")
     }
     
     func testPut() {
-        let dataStore = MockDataStore(mockResponse: PCFResponse(key: key, value: value))
+        let response = PCFResponse(key: key, value: value)
+        let dataStore = MockDataStore(mockResponse: response)
         let dataObject = PCFDataObject(dataStore: dataStore, key: key)
         
-        XCTAssertEqual(dataObject.putWithAccessToken(accessToken, value: value), value, "Data was put")
+        XCTAssertEqual(dataObject.putWithAccessToken(accessToken, value: value), response, "Data was put")
         XCTAssert(dataStore.wasPutInvoked, "Put was invoked")
     }
     
     func testDelete() {
-        let dataStore = MockDataStore(mockResponse: PCFResponse(key: key, value: value))
+        let response = PCFResponse(key: key, value: value)
+        let dataStore = MockDataStore(mockResponse: response)
         let dataObject = PCFDataObject(dataStore: dataStore, key: key)
         
-        XCTAssertEqual(dataObject.deleteWithAccessToken(accessToken), value, "Data was deleted")
+        XCTAssertEqual(dataObject.deleteWithAccessToken(accessToken), response, "Data was deleted")
         XCTAssert(dataStore.wasDeleteInvoked, "Delete was invoked")
     }
 }

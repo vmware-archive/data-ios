@@ -40,51 +40,84 @@
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    PCFResponse *response = [_localStore getWithKey:key accessToken:accessToken];
-    
+
     if ([self isConnected]) {
-        [_remoteStore getWithKey:key accessToken:accessToken completionBlock:^(PCFResponse *response) {
-            if (response.error) {
-                // tell observers/retry?
-            } else {
-                [_localStore putWithKey:key value:response.value accessToken:accessToken];
-            }
-        }];
+        PCFResponse *response = [_remoteStore getWithKey:key accessToken:accessToken];
+        
+        if (!response.error) {
+            [_localStore putWithKey:key value:response.value accessToken:accessToken];
+        }
+        
+        return response;
+        
+    } else {
+        return [_localStore getWithKey:key accessToken:accessToken];
     }
-    
-    return [PCFPendingResponse pendingResponse:response];
+}
+
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        PCFResponse *response = nil;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(response);
+        });
+    });
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    PCFResponse *response = [_localStore putWithKey:key value:value accessToken:accessToken];
-    
+
     if ([self isConnected]) {
-        [_remoteStore putWithKey:key value:value accessToken:accessToken completionBlock:^(PCFResponse *response) {
-            if (response.error) {
-                // tell observers/retry?
-            } else {
-                [_localStore putWithKey:key value:response.value accessToken:accessToken];
-            }
-        }];
+        PCFResponse *response = [_remoteStore putWithKey:key value:value accessToken:accessToken];
+        
+        if (!response.error) {
+            [_localStore putWithKey:key value:response.value accessToken:accessToken];
+        }
+        
+        return response;
+        
+    } else {
+        return [_localStore putWithKey:key value:value accessToken:accessToken];
     }
-    
-    return [PCFPendingResponse pendingResponse:response];
+}
+
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        PCFResponse *response = nil;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(response);
+        });
+    });
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    PCFResponse *response = [_localStore deleteWithKey:key accessToken:accessToken];
     
     if ([self isConnected]) {
-        [_remoteStore deleteWithKey:key accessToken:accessToken completionBlock:^(PCFResponse *response) {
-            if (response.error) {
-                // tell observers/retry?
-            } else {
-                [_localStore deleteWithKey:key accessToken:accessToken];
-            }
-        }];
+        PCFResponse *response = [_remoteStore deleteWithKey:key accessToken:accessToken];
+        
+        if (!response.error) {
+            [_localStore deleteWithKey:key accessToken:accessToken];
+        }
+        
+        return response;
+        
+    } else {
+        return [_localStore deleteWithKey:key accessToken:accessToken];
     }
-    
-    return [PCFPendingResponse pendingResponse:response];
+}
+
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        PCFResponse *response = nil;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(response);
+        });
+    });
 }
 
 @end

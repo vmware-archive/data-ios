@@ -33,39 +33,36 @@ class PCFOfflineStoreTests: XCTestCase {
         }
     }
     
-    func testGetSucceedsWhileOnline() {
-        let response = PCFResponse(key: key, value: value)
-        let remoteStore = MockRemoteStore(mockResponse: response)
-        let localStore = MockLocalStore(mockResponse: response)
-        
-        let offlineStore = TestOfflineStore(online: true, collection: collection, remoteStore: remoteStore, localStore: localStore)
-        let result = offlineStore.getWithKey(key, accessToken: accessToken)
-        
-        XCTAssert(result.isMemberOfClass(PCFPendingResponse), "Response is a pending response")
-        XCTAssertEqual(result.key, key, "Response has key")
-        XCTAssertEqual(result.value, value, "Response has value")
-        
-        XCTAssertTrue(localStore.wasGetInvoked, "Get was invoked on local store")
-        XCTAssertTrue(remoteStore.wasAsyncGetInvoked, "Async get was invoked on remote store")
-        XCTAssertTrue(localStore.wasPutInvoked, "Put was invoked on local store")
-    }
-
-    func testGetFailsWhileOnline() {
-        let response = PCFResponse(key: key, error: error)
-        let remoteStore = MockRemoteStore(mockResponse: response)
-        let localStore = MockLocalStore(mockResponse: response)
-        
-        let offlineStore = TestOfflineStore(online: true, collection: collection, remoteStore: remoteStore, localStore: localStore)
-        let result = offlineStore.getWithKey(key, accessToken: accessToken)
-        
-        XCTAssert(result.isMemberOfClass(PCFPendingResponse), "Response is a pending response")
-        XCTAssertEqual(result.key, key, "Response has key")
-        
-        XCTAssertTrue(localStore.wasGetInvoked, "Get was invoked on local store")
-        XCTAssertTrue(remoteStore.wasAsyncGetInvoked, "Async get was invoked on remote store")
-    }
-    
-    
+//    func testGetSucceedsWhileOnline() {
+//        let response = PCFResponse(key: key, value: value)
+//        let remoteStore = MockRemoteStore(mockResponse: response)
+//        let localStore = MockLocalStore(mockResponse: response)
+//        
+//        let offlineStore = TestOfflineStore(online: true, collection: collection, remoteStore: remoteStore, localStore: localStore)
+//        let result = offlineStore.getWithKey(key, accessToken: accessToken)
+//        
+//        XCTAssertEqual(result.key, key, "Response has key")
+//        XCTAssertEqual(result.value, value, "Response has value")
+//        
+//        XCTAssertTrue(localStore.wasGetInvoked, "Get was invoked on local store")
+//        XCTAssertTrue(remoteStore.wasAsyncGetInvoked, "Async get was invoked on remote store")
+//        XCTAssertTrue(localStore.wasPutInvoked, "Put was invoked on local store")
+//    }
+//
+//    func testGetFailsWhileOnline() {
+//        let response = PCFResponse(key: key, error: error)
+//        let remoteStore = MockRemoteStore(mockResponse: response)
+//        let localStore = MockLocalStore(mockResponse: response)
+//        
+//        let offlineStore = TestOfflineStore(online: true, collection: collection, remoteStore: remoteStore, localStore: localStore)
+//        let result = offlineStore.getWithKey(key, accessToken: accessToken)
+//        
+//        XCTAssertEqual(result.key, key, "Response has key")
+//        
+//        XCTAssertTrue(localStore.wasGetInvoked, "Get was invoked on local store")
+//        XCTAssertTrue(remoteStore.wasAsyncGetInvoked, "Async get was invoked on remote store")
+//    }
+//
 //    func testGetFailsWhileOnline() {
 //        let remoteClient = MockRemoteClient(mockResult: nil, mockError: error)
 //        let remoteStore = MockRemoteStore(client: remoteClient, collection: collection)
