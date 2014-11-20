@@ -8,7 +8,6 @@
 
 #import "PCFLocalStore.h"
 
-static NSString *const PCFDataPrefix = @"PCFData:";
 
 @interface PCFLocalStore ()
 
@@ -18,6 +17,8 @@ static NSString *const PCFDataPrefix = @"PCFData:";
 @end
 
 @implementation PCFLocalStore
+
+static NSString *const PCFDataPrefix = @"PCFData:";
 
 - (instancetype)initWithCollection:(NSString *)collection {
     return [self initWithCollection:collection defaults:[NSUserDefaults standardUserDefaults]];

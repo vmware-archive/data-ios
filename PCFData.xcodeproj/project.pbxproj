@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E125215E1A1D493F006D3ECC /* PCFResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E125215D1A1D493F006D3ECC /* PCFResponseTests.m */; };
+		E12521601A1D4A87006D3ECC /* PCFLocalStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E125215F1A1D4A87006D3ECC /* PCFLocalStoreTests.m */; };
+		E12521621A1E50A4006D3ECC /* PCFRemoteStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */; };
 		E14A9C341A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C301A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift */; };
 		E14A9C361A1D0116005D0A9E /* PCFDataTestsSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C321A1D0116005D0A9E /* PCFDataTestsSwift.swift */; };
 		E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */; };
@@ -66,6 +69,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E125215D1A1D493F006D3ECC /* PCFResponseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponseTests.m; sourceTree = "<group>"; };
+		E125215F1A1D4A87006D3ECC /* PCFLocalStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStoreTests.m; sourceTree = "<group>"; };
+		E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStoreTests.m; sourceTree = "<group>"; };
 		E14A9C301A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataObjectTestsSwift.swift; sourceTree = "<group>"; };
 		E14A9C321A1D0116005D0A9E /* PCFDataTestsSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PCFDataTestsSwift.swift; sourceTree = "<group>"; };
 		E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObjectTests.m; sourceTree = "<group>"; };
@@ -167,8 +173,11 @@
 				E14A9C301A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift */,
 				E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */,
 				E1F76C471A014B1B002D5788 /* PCFResponseTests.swift */,
+				E125215D1A1D493F006D3ECC /* PCFResponseTests.m */,
 				E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */,
+				E125215F1A1D4A87006D3ECC /* PCFLocalStoreTests.m */,
 				E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */,
+				E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */,
 				E1F76C561A028A6E002D5788 /* PCFOfflineStoreTests.swift */,
 			);
 			path = PCFDataTests;
@@ -287,11 +296,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1F76C481A014B1B002D5788 /* PCFResponseTests.swift in Sources */,
+				E12521621A1E50A4006D3ECC /* PCFRemoteStoreTests.m in Sources */,
 				E14A9C3C1A1D0173005D0A9E /* PCFDataTests.m in Sources */,
 				E16AE3C11A02AF2000AEEB49 /* TestHelpers.swift in Sources */,
 				E14A9C341A1D0116005D0A9E /* PCFDataObjectTestsSwift.swift in Sources */,
 				E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */,
 				E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */,
+				E12521601A1D4A87006D3ECC /* PCFLocalStoreTests.m in Sources */,
+				E125215E1A1D493F006D3ECC /* PCFResponseTests.m in Sources */,
 				E14A9C361A1D0116005D0A9E /* PCFDataTestsSwift.swift in Sources */,
 				E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */,
 				E1F76C571A028A6E002D5788 /* PCFOfflineStoreTests.swift in Sources */,

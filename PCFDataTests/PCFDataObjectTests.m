@@ -13,95 +13,93 @@
 #import "PCFDataObject.h"
 
 
-//typedef PCFResponse* (^PCFResponseBlock)(PCFResponse *);
-
 @interface PCFDataObjectTests : XCTestCase
+
+@property NSString *key;
+@property NSString *value;
+@property NSString *token;
 
 @end
 
 @implementation PCFDataObjectTests
 
+
+- (void)setUp {
+    [super setUp];
+    
+    self.key = [NSUUID UUID].UUIDString;
+    self.value = [NSUUID UUID].UUIDString;
+    self.token = [NSUUID UUID].UUIDString;
+}
+
+
 - (void)testGetInvokesDataStore {
-    NSString *key = [NSUUID UUID].UUIDString;
-    NSString *token = [NSUUID UUID].UUIDString;
     PCFResponse *response = OCMClassMock([PCFResponse class]);
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
-    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:key];
+    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
-    OCMStub([dataStore getWithKey:key accessToken:token]).andReturn(response);
+    OCMStub([dataStore getWithKey:self.key accessToken:self.token]).andReturn(response);
     
-    XCTAssertEqual([object getWithAccessToken:token], response);
+    XCTAssertEqual([object getWithAccessToken:self.token], response);
     
-    OCMVerify([dataStore getWithKey:key accessToken:token]);
+    OCMVerify([dataStore getWithKey:self.key accessToken:self.token]);
 }
 
 - (void)testAsyncGetInvokesDataStore {
-    NSString *key = [NSUUID UUID].UUIDString;
-    NSString *token = [NSUUID UUID].UUIDString;
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
-    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:key];
+    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
     void (^block)(PCFResponse *) = ^(PCFResponse *response) {};
     
-    [object getWithAccessToken:token completionBlock:block];
+    [object getWithAccessToken:self.token completionBlock:block];
     
-    OCMVerify([dataStore getWithKey:key accessToken:token completionBlock:block]);
+    OCMVerify([dataStore getWithKey:self.key accessToken:self.token completionBlock:block]);
 }
 
 - (void)testPutInvokesDataStore {
-    NSString *key = [NSUUID UUID].UUIDString;
-    NSString *value = [NSUUID UUID].UUIDString;
-    NSString *token = [NSUUID UUID].UUIDString;
     PCFResponse *response = OCMClassMock([PCFResponse class]);
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
-    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:key];
+    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
-    OCMStub([dataStore putWithKey:key value:value accessToken:token]).andReturn(response);
+    OCMStub([dataStore putWithKey:self.key value:self.value accessToken:self.token]).andReturn(response);
     
-    XCTAssertEqual([object putWithAccessToken:token value:value], response);
+    XCTAssertEqual([object putWithAccessToken:self.token value:self.value], response);
     
-    OCMVerify([dataStore putWithKey:key value:value accessToken:token]);
+    OCMVerify([dataStore putWithKey:self.key value:self.value accessToken:self.token]);
 }
 
 - (void)testAsyncPutInvokesDataStore {
-    NSString *key = [NSUUID UUID].UUIDString;
-    NSString *value = [NSUUID UUID].UUIDString;
-    NSString *token = [NSUUID UUID].UUIDString;
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
-    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:key];
+    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
     void (^block)(PCFResponse *) = ^(PCFResponse *response) {};
     
-    [object putWithAccessToken:token value:value completionBlock:block];
+    [object putWithAccessToken:self.token value:self.value completionBlock:block];
     
-    OCMVerify([dataStore putWithKey:key value:value accessToken:token completionBlock:block]);
+    OCMVerify([dataStore putWithKey:self.key value:self.value accessToken:self.token completionBlock:block]);
 }
 
 - (void)testDeleteInvokesDataStore {
-    NSString *key = [NSUUID UUID].UUIDString;
-    NSString *token = [NSUUID UUID].UUIDString;
     PCFResponse *response = OCMClassMock([PCFResponse class]);
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
-    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:key];
+    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
-    OCMStub([dataStore deleteWithKey:key accessToken:token]).andReturn(response);
+    OCMStub([dataStore deleteWithKey:self.key accessToken:self.token]).andReturn(response);
     
-    XCTAssertEqual([object deleteWithAccessToken:token], response);
+    XCTAssertEqual([object deleteWithAccessToken:self.token], response);
     
-    OCMVerify([dataStore deleteWithKey:key accessToken:token]);
+    OCMVerify([dataStore deleteWithKey:self.key accessToken:self.token]);
 }
 
 - (void)testAsyncDeleteInvokesDataStore {
-    NSString *key = [NSUUID UUID].UUIDString;
-    NSString *token = [NSUUID UUID].UUIDString;
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
-    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:key];
+    PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
     void (^block)(PCFResponse *) = ^(PCFResponse *response) {};
     
-    [object deleteWithAccessToken:token completionBlock:block];
+    [object deleteWithAccessToken:self.token completionBlock:block];
     
-    OCMVerify([dataStore deleteWithKey:key accessToken:token completionBlock:block]);
+    OCMVerify([dataStore deleteWithKey:self.key accessToken:self.token completionBlock:block]);
 }
 
 @end
