@@ -9,12 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "PCFDataStore.h"
 
-@class PCFRemoteStore, PCFLocalStore;
+@class PCFRemoteStore, PCFLocalStore, PCFRequestCache;
 
 @interface PCFOfflineStore : NSObject <PCFDataStore>
 
+@property (readonly) PCFRequestCache *requestCache;
+
 - (instancetype)initWithCollection:(NSString *)collection;
 
-- (instancetype)initWithCollection:(NSString *)collection remoteStore:(PCFRemoteStore *)remoteStore localStore:(PCFLocalStore *)localStore;
+- (instancetype)initWithCollection:(NSString *)collection localStore:(PCFLocalStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore;
+
+- (PCFResponse *)noConnectionErrorResponseWithKey:(NSString *)key;
+
+- (BOOL)isSyncSupported;
+
+- (BOOL)isConnected;
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PCFResponse.h"
+
+@class PCFResponse;
 
 @protocol PCFDataStore <NSObject>
 

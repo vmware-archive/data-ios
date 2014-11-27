@@ -21,6 +21,8 @@
 		E151D08919FFF76800B48F2A /* PCFLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E151D08819FFF76800B48F2A /* PCFLocalStoreTests.swift */; };
 		E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E151D08B1A0015C200B48F2A /* PCFLocalStore.m */; };
 		E16AE3C11A02AF2000AEEB49 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16AE3C01A02AF2000AEEB49 /* TestHelpers.swift */; };
+		E1A07C6A1A1E8D17003C0AAC /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A07C691A1E8D17003C0AAC /* PCFOfflineStoreTests.m */; };
+		E1A07C6F1A1F9E2C003C0AAC /* PCFRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A07C6E1A1F9E2C003C0AAC /* PCFRequestCache.m */; };
 		E1F76C3C1A002018002D5788 /* PCFDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C3B1A002018002D5788 /* PCFDataObject.m */; };
 		E1F76C3E1A00267A002D5788 /* PCFDataStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D08719FFF48E00B48F2A /* PCFDataStore.h */; };
 		E1F76C3F1A00267A002D5788 /* PCFLocalStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D08A1A0015C200B48F2A /* PCFLocalStore.h */; };
@@ -87,6 +89,9 @@
 		E151D08A1A0015C200B48F2A /* PCFLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFLocalStore.h; sourceTree = "<group>"; };
 		E151D08B1A0015C200B48F2A /* PCFLocalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStore.m; sourceTree = "<group>"; };
 		E16AE3C01A02AF2000AEEB49 /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		E1A07C691A1E8D17003C0AAC /* PCFOfflineStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStoreTests.m; sourceTree = "<group>"; };
+		E1A07C6D1A1F9E2C003C0AAC /* PCFRequestCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRequestCache.h; sourceTree = "<group>"; };
+		E1A07C6E1A1F9E2C003C0AAC /* PCFRequestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCache.m; sourceTree = "<group>"; };
 		E1F76C3A1A002018002D5788 /* PCFDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataObject.h; sourceTree = "<group>"; };
 		E1F76C3B1A002018002D5788 /* PCFDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObject.m; sourceTree = "<group>"; };
 		E1F76C3D1A002085002D5788 /* PCFData-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCFData-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -156,10 +161,12 @@
 				E151D08B1A0015C200B48F2A /* PCFLocalStore.m */,
 				E1F76C491A01662F002D5788 /* PCFRemoteStore.h */,
 				E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */,
-				E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */,
-				E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */,
 				E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */,
 				E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */,
+				E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */,
+				E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */,
+				E1A07C6D1A1F9E2C003C0AAC /* PCFRequestCache.h */,
+				E1A07C6E1A1F9E2C003C0AAC /* PCFRequestCache.m */,
 			);
 			path = PCFData;
 			sourceTree = "<group>";
@@ -179,6 +186,7 @@
 				E1F76C4D1A01668A002D5788 /* PCFRemoteStoreTests.swift */,
 				E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */,
 				E1F76C561A028A6E002D5788 /* PCFOfflineStoreTests.swift */,
+				E1A07C691A1E8D17003C0AAC /* PCFOfflineStoreTests.m */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -283,6 +291,7 @@
 			files = (
 				E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */,
 				E1F76C431A002995002D5788 /* PCFResponse.m in Sources */,
+				E1A07C6F1A1F9E2C003C0AAC /* PCFRequestCache.m in Sources */,
 				E151D07019FFEFBE00B48F2A /* PCFData.m in Sources */,
 				E1F76C551A028A4C002D5788 /* PCFOfflineStore.m in Sources */,
 				E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */,
@@ -304,6 +313,7 @@
 				E1F76C4E1A01668A002D5788 /* PCFRemoteStoreTests.swift in Sources */,
 				E12521601A1D4A87006D3ECC /* PCFLocalStoreTests.m in Sources */,
 				E125215E1A1D493F006D3ECC /* PCFResponseTests.m in Sources */,
+				E1A07C6A1A1E8D17003C0AAC /* PCFOfflineStoreTests.m in Sources */,
 				E14A9C361A1D0116005D0A9E /* PCFDataTestsSwift.swift in Sources */,
 				E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */,
 				E1F76C571A028A6E002D5788 /* PCFOfflineStoreTests.swift in Sources */,

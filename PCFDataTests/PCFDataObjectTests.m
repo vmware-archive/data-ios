@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "PCFLocalStore.h"
 #import "PCFDataObject.h"
+#import "PCFResponse.h"
 
 
 @interface PCFDataObjectTests : XCTestCase

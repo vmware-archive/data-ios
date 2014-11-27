@@ -6,3 +6,4 @@
 #import "PCFData/PCFRemoteStore.h"
 #import "PCFData/PCFRemoteClient.h"
 #import "PCFData/PCFOfflineStore.h"
+#import "PCFData/PCFResponse.h"

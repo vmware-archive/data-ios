@@ -130,7 +130,7 @@ class MockOfflineStore : PCFOfflineStore {
     
     var isOnline: Bool = true;
     
-    func isConnected() -> Bool {
+    override func isConnected() -> Bool {
         return isOnline
     }
     

@@ -7,7 +7,7 @@
 //
 
 #import "PCFLocalStore.h"
-
+#import "PCFResponse.h"
 
 @interface PCFLocalStore ()
 

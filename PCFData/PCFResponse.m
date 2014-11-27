@@ -23,11 +23,3 @@
 }
 
 @end
-
-@implementation PCFFailureResponse
-
-+ (PCFFailureResponse *)failureResponse:(PCFResponse *)response {
-    return [[PCFFailureResponse alloc] initWithKey:response.key error:response.error];
-}
-
-@end

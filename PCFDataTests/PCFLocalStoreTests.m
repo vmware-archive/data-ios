@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "PCFLocalStore.h"
-
+#import "PCFResponse.h"
 
 @interface PCFLocalStoreTests : XCTestCase
 

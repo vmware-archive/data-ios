@@ -7,6 +7,8 @@
 //
 
 #import "PCFRemoteStore.h"
+#import "PCFRemoteClient.h"
+#import "PCFResponse.h"
 
 @interface PCFRemoteStore ()
 

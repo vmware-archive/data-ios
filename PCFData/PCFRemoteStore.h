@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "PCFDataStore.h"
-#import "PCFRemoteClient.h"
+
+@class PCFRemoteClient;
 
 @interface PCFRemoteStore : NSObject <PCFDataStore>
 
