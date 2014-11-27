@@ -15,14 +15,14 @@
 
 - (PCFResponse *)getWithAccessToken:(NSString *)accessToken;
 
-- (void)getWithAccessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
+- (void)getWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
 - (PCFResponse *)putWithAccessToken:(NSString *)acccessToken value:(NSString *)value;
 
-- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(void (^)(PCFResponse *))completionBlock;
+- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock;
 
 - (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken;
 
-- (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock;
+- (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
 @end

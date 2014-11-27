@@ -13,9 +13,6 @@
 #import "PCFResponse.h"
 
 
-#define kNoConnectionErrorDomain    @"No Connection"
-#define kNoConnectionErrorCode      100
-
 @interface PCFOfflineStore () {
     PCFRequestCache *_requestCache;
 }
@@ -25,6 +22,11 @@
 @property PCFLocalStore *localStore;
 
 @end
+
+
+#define kNoConnectionErrorDomain    @"No Connection"
+#define kNoConnectionErrorCode      100
+
 
 @implementation PCFOfflineStore
 
@@ -39,14 +41,6 @@
     _remoteStore = remoteStore;
     _localStore = localStore;
     return self;
-}
-
-- (BOOL)isConnected {
-    return true;
-}
-
-- (BOOL)isSyncSupported {
-    return false;
 }
 
 - (PCFRequestCache *)requestCache {
@@ -78,7 +72,7 @@
     }
 }
 
-- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         PCFResponse *response = [self getWithKey:key accessToken:accessToken];
         
@@ -112,7 +106,7 @@
     }
 }
 
-- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken];
         
@@ -146,7 +140,7 @@
     }
 }
 
-- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *))completionBlock {
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         PCFResponse *response = [self deleteWithKey:key accessToken:accessToken];
         
@@ -159,6 +153,14 @@
 - (PCFResponse *)noConnectionErrorResponseWithKey:(NSString *)key {
     NSError *error = [[NSError alloc] initWithDomain:kNoConnectionErrorDomain code:kNoConnectionErrorCode userInfo:nil];
     return [[PCFResponse alloc] initWithKey:key error:error];
+}
+
+- (BOOL)isConnected {
+    return true;
+}
+
+- (BOOL)isSyncSupported {
+    return false;
 }
 
 @end
