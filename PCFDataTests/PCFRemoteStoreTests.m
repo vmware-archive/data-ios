@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "PCFRemoteStore.h"
-#import "PCFResponse.h"
-#import "PCFRemoteClient.h"
+#import <PCFData/PCFRemoteStore.h>
+#import <PCFData/PCFResponse.h>
+#import <PCFData/PCFRemoteClient.h>
 
 @interface PCFRemoteStoreTests : XCTestCase
 

@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "PCFLocalStore.h"
-#import "PCFRemoteStore.h"
-#import "PCFOfflineStore.h"
-#import "PCFRequestCache.h"
-#import "PCFResponse.h"
+#import <PCFData/PCFLocalStore.h>
+#import <PCFData/PCFRemoteStore.h>
+#import <PCFData/PCFOfflineStore.h>
+#import <PCFData/PCFRequestCache.h>
+#import <PCFData/PCFResponse.h>
 
 @interface PCFOfflineStoreTests : XCTestCase
 

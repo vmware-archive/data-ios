@@ -7,187 +7,195 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E125215E1A1D493F006D3ECC /* PCFResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E125215D1A1D493F006D3ECC /* PCFResponseTests.m */; };
-		E12521601A1D4A87006D3ECC /* PCFLocalStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E125215F1A1D4A87006D3ECC /* PCFLocalStoreTests.m */; };
-		E12521621A1E50A4006D3ECC /* PCFRemoteStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */; };
-		E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */; };
-		E14A9C3C1A1D0173005D0A9E /* PCFDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E14A9C3A1A1D0173005D0A9E /* PCFDataTests.m */; };
-		E14A9C3E1A1D01C7005D0A9E /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E14A9C3D1A1D01C7005D0A9E /* libOCMock.a */; };
-		E151D06E19FFEFBE00B48F2A /* PCFData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D06D19FFEFBE00B48F2A /* PCFData.h */; };
-		E151D07019FFEFBE00B48F2A /* PCFData.m in Sources */ = {isa = PBXBuildFile; fileRef = E151D06F19FFEFBE00B48F2A /* PCFData.m */; };
-		E151D07619FFEFBE00B48F2A /* libPCFData.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E151D06A19FFEFBE00B48F2A /* libPCFData.a */; };
-		E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E151D08B1A0015C200B48F2A /* PCFLocalStore.m */; };
-		E1A07C6A1A1E8D17003C0AAC /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A07C691A1E8D17003C0AAC /* PCFOfflineStoreTests.m */; };
-		E1A07C6F1A1F9E2C003C0AAC /* PCFRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A07C6E1A1F9E2C003C0AAC /* PCFRequestCache.m */; };
-		E1F76C3C1A002018002D5788 /* PCFDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C3B1A002018002D5788 /* PCFDataObject.m */; };
-		E1F76C3E1A00267A002D5788 /* PCFDataStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D08719FFF48E00B48F2A /* PCFDataStore.h */; };
-		E1F76C3F1A00267A002D5788 /* PCFLocalStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E151D08A1A0015C200B48F2A /* PCFLocalStore.h */; };
-		E1F76C401A00267A002D5788 /* PCFDataObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C3A1A002018002D5788 /* PCFDataObject.h */; };
-		E1F76C431A002995002D5788 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C421A002995002D5788 /* PCFResponse.m */; };
-		E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C411A002995002D5788 /* PCFResponse.h */; };
-		E1F76C4B1A01662F002D5788 /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */; };
-		E1F76C4C1A016643002D5788 /* PCFRemoteStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C491A01662F002D5788 /* PCFRemoteStore.h */; };
-		E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */; };
-		E1F76C521A0168B8002D5788 /* PCFRemoteClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */; };
-		E1F76C551A028A4C002D5788 /* PCFOfflineStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */; };
-		E1F76C581A028B6A002D5788 /* PCFOfflineStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */; };
+		E12CCF781A27D27B00EFC209 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
+		E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFA81A27D36000EFC209 /* PCFData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFBC1A27D36000EFC209 /* PCFDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */; };
+		E12CCFBD1A27D36000EFC209 /* PCFDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFBE1A27D36000EFC209 /* PCFLocalStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAD1A27D36000EFC209 /* PCFLocalStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFBF1A27D36000EFC209 /* PCFLocalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFAE1A27D36000EFC209 /* PCFLocalStore.m */; };
+		E12CCFC01A27D36000EFC209 /* PCFOfflineStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAF1A27D36000EFC209 /* PCFOfflineStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC11A27D36000EFC209 /* PCFOfflineStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB01A27D36000EFC209 /* PCFOfflineStore.m */; };
+		E12CCFC21A27D36000EFC209 /* PCFRemoteClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB11A27D36000EFC209 /* PCFRemoteClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC31A27D36000EFC209 /* PCFRemoteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB21A27D36000EFC209 /* PCFRemoteClient.m */; };
+		E12CCFC41A27D36000EFC209 /* PCFRemoteStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB31A27D36000EFC209 /* PCFRemoteStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */; };
+		E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */; };
+		E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB81A27D36000EFC209 /* PCFResponse.m */; };
+		E12CCFDD1A27D37D00EFC209 /* PCFDataObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCA1A27D37D00EFC209 /* PCFDataObjectTests.m */; };
+		E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCB1A27D37D00EFC209 /* PCFDataTests.m */; };
+		E12CCFDF1A27D37D00EFC209 /* PCFLocalStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCC1A27D37D00EFC209 /* PCFLocalStoreTests.m */; };
+		E12CCFE11A27D37D00EFC209 /* PCFRemoteStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */; };
+		E12CCFE21A27D37D00EFC209 /* PCFResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */; };
+		E12CCFE51A27D3B500EFC209 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCFE41A27D3B500EFC209 /* libOCMock.a */; };
+		E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E151D07719FFEFBE00B48F2A /* PBXContainerItemProxy */ = {
+		E12CCF791A27D27B00EFC209 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = E151D06219FFEFBE00B48F2A /* Project object */;
+			containerPortal = E12CCF631A27D27B00EFC209 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = E151D06919FFEFBE00B48F2A;
+			remoteGlobalIDString = E12CCF6B1A27D27B00EFC209;
 			remoteInfo = PCFData;
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		E151D06819FFEFBE00B48F2A /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-				E1F76C581A028B6A002D5788 /* PCFOfflineStore.h in CopyFiles */,
-				E1F76C521A0168B8002D5788 /* PCFRemoteClient.h in CopyFiles */,
-				E1F76C4C1A016643002D5788 /* PCFRemoteStore.h in CopyFiles */,
-				E1F76C441A002A56002D5788 /* PCFResponse.h in CopyFiles */,
-				E1F76C3E1A00267A002D5788 /* PCFDataStore.h in CopyFiles */,
-				E1F76C3F1A00267A002D5788 /* PCFLocalStore.h in CopyFiles */,
-				E1F76C401A00267A002D5788 /* PCFDataObject.h in CopyFiles */,
-				E151D06E19FFEFBE00B48F2A /* PCFData.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		E125215D1A1D493F006D3ECC /* PCFResponseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponseTests.m; sourceTree = "<group>"; };
-		E125215F1A1D4A87006D3ECC /* PCFLocalStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStoreTests.m; sourceTree = "<group>"; };
-		E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStoreTests.m; sourceTree = "<group>"; };
-		E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObjectTests.m; sourceTree = "<group>"; };
-		E14A9C3A1A1D0173005D0A9E /* PCFDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataTests.m; sourceTree = "<group>"; };
-		E14A9C3D1A1D01C7005D0A9E /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
-		E151D06A19FFEFBE00B48F2A /* libPCFData.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPCFData.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E151D06D19FFEFBE00B48F2A /* PCFData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCFData.h; sourceTree = "<group>"; };
-		E151D06F19FFEFBE00B48F2A /* PCFData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCFData.m; sourceTree = "<group>"; };
-		E151D07519FFEFBE00B48F2A /* PCFDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E151D07B19FFEFBE00B48F2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E151D08719FFF48E00B48F2A /* PCFDataStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCFDataStore.h; sourceTree = "<group>"; };
-		E151D08A1A0015C200B48F2A /* PCFLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFLocalStore.h; sourceTree = "<group>"; };
-		E151D08B1A0015C200B48F2A /* PCFLocalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStore.m; sourceTree = "<group>"; };
-		E1A07C691A1E8D17003C0AAC /* PCFOfflineStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStoreTests.m; sourceTree = "<group>"; };
-		E1A07C6D1A1F9E2C003C0AAC /* PCFRequestCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRequestCache.h; sourceTree = "<group>"; };
-		E1A07C6E1A1F9E2C003C0AAC /* PCFRequestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCache.m; sourceTree = "<group>"; };
-		E1F76C3A1A002018002D5788 /* PCFDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataObject.h; sourceTree = "<group>"; };
-		E1F76C3B1A002018002D5788 /* PCFDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObject.m; sourceTree = "<group>"; };
-		E1F76C411A002995002D5788 /* PCFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFResponse.h; sourceTree = "<group>"; };
-		E1F76C421A002995002D5788 /* PCFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponse.m; sourceTree = "<group>"; };
-		E1F76C491A01662F002D5788 /* PCFRemoteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteStore.h; sourceTree = "<group>"; };
-		E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStore.m; sourceTree = "<group>"; };
-		E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteClient.h; sourceTree = "<group>"; };
-		E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClient.m; sourceTree = "<group>"; };
-		E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFOfflineStore.h; sourceTree = "<group>"; };
-		E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStore.m; sourceTree = "<group>"; };
+		E12CCF6C1A27D27B00EFC209 /* PCFData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PCFData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E12CCF701A27D27B00EFC209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E12CCF771A27D27B00EFC209 /* PCFDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E12CCF7D1A27D27B00EFC209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E12CCFA81A27D36000EFC209 /* PCFData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFData.h; sourceTree = "<group>"; };
+		E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataObject.h; sourceTree = "<group>"; };
+		E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObject.m; sourceTree = "<group>"; };
+		E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataStore.h; sourceTree = "<group>"; };
+		E12CCFAD1A27D36000EFC209 /* PCFLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFLocalStore.h; sourceTree = "<group>"; };
+		E12CCFAE1A27D36000EFC209 /* PCFLocalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStore.m; sourceTree = "<group>"; };
+		E12CCFAF1A27D36000EFC209 /* PCFOfflineStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFOfflineStore.h; sourceTree = "<group>"; };
+		E12CCFB01A27D36000EFC209 /* PCFOfflineStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStore.m; sourceTree = "<group>"; };
+		E12CCFB11A27D36000EFC209 /* PCFRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteClient.h; sourceTree = "<group>"; };
+		E12CCFB21A27D36000EFC209 /* PCFRemoteClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClient.m; sourceTree = "<group>"; };
+		E12CCFB31A27D36000EFC209 /* PCFRemoteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRemoteStore.h; sourceTree = "<group>"; };
+		E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStore.m; sourceTree = "<group>"; };
+		E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRequestCache.h; sourceTree = "<group>"; };
+		E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCache.m; sourceTree = "<group>"; };
+		E12CCFB71A27D36000EFC209 /* PCFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFResponse.h; sourceTree = "<group>"; };
+		E12CCFB81A27D36000EFC209 /* PCFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponse.m; sourceTree = "<group>"; };
+		E12CCFCA1A27D37D00EFC209 /* PCFDataObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObjectTests.m; sourceTree = "<group>"; };
+		E12CCFCB1A27D37D00EFC209 /* PCFDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataTests.m; sourceTree = "<group>"; };
+		E12CCFCC1A27D37D00EFC209 /* PCFLocalStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLocalStoreTests.m; sourceTree = "<group>"; };
+		E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStoreTests.m; sourceTree = "<group>"; };
+		E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStoreTests.m; sourceTree = "<group>"; };
+		E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponseTests.m; sourceTree = "<group>"; };
+		E12CCFE41A27D3B500EFC209 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E151D06719FFEFBE00B48F2A /* Frameworks */ = {
+		E12CCF681A27D27B00EFC209 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E151D07219FFEFBE00B48F2A /* Frameworks */ = {
+		E12CCF741A27D27B00EFC209 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E14A9C3E1A1D01C7005D0A9E /* libOCMock.a in Frameworks */,
-				E151D07619FFEFBE00B48F2A /* libPCFData.a in Frameworks */,
+				E12CCFE51A27D3B500EFC209 /* libOCMock.a in Frameworks */,
+				E12CCF781A27D27B00EFC209 /* PCFData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E151D06119FFEFBE00B48F2A = {
+		E12CCF621A27D27B00EFC209 = {
 			isa = PBXGroup;
 			children = (
-				E14A9C3D1A1D01C7005D0A9E /* libOCMock.a */,
-				E151D06C19FFEFBE00B48F2A /* PCFData */,
-				E151D07919FFEFBE00B48F2A /* PCFDataTests */,
-				E151D06B19FFEFBE00B48F2A /* Products */,
+				E12CCFE41A27D3B500EFC209 /* libOCMock.a */,
+				E12CCF6E1A27D27B00EFC209 /* PCFData */,
+				E12CCF7B1A27D27B00EFC209 /* PCFDataTests */,
+				E12CCF6D1A27D27B00EFC209 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		E151D06B19FFEFBE00B48F2A /* Products */ = {
+		E12CCF6D1A27D27B00EFC209 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E151D06A19FFEFBE00B48F2A /* libPCFData.a */,
-				E151D07519FFEFBE00B48F2A /* PCFDataTests.xctest */,
+				E12CCF6C1A27D27B00EFC209 /* PCFData.framework */,
+				E12CCF771A27D27B00EFC209 /* PCFDataTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E151D06C19FFEFBE00B48F2A /* PCFData */ = {
+		E12CCF6E1A27D27B00EFC209 /* PCFData */ = {
 			isa = PBXGroup;
 			children = (
-				E151D06D19FFEFBE00B48F2A /* PCFData.h */,
-				E151D06F19FFEFBE00B48F2A /* PCFData.m */,
-				E1F76C3A1A002018002D5788 /* PCFDataObject.h */,
-				E1F76C3B1A002018002D5788 /* PCFDataObject.m */,
-				E151D08719FFF48E00B48F2A /* PCFDataStore.h */,
-				E1F76C411A002995002D5788 /* PCFResponse.h */,
-				E1F76C421A002995002D5788 /* PCFResponse.m */,
-				E151D08A1A0015C200B48F2A /* PCFLocalStore.h */,
-				E151D08B1A0015C200B48F2A /* PCFLocalStore.m */,
-				E1F76C491A01662F002D5788 /* PCFRemoteStore.h */,
-				E1F76C4A1A01662F002D5788 /* PCFRemoteStore.m */,
-				E1F76C531A028A4C002D5788 /* PCFOfflineStore.h */,
-				E1F76C541A028A4C002D5788 /* PCFOfflineStore.m */,
-				E1F76C4F1A0168B0002D5788 /* PCFRemoteClient.h */,
-				E1F76C501A0168B0002D5788 /* PCFRemoteClient.m */,
-				E1A07C6D1A1F9E2C003C0AAC /* PCFRequestCache.h */,
-				E1A07C6E1A1F9E2C003C0AAC /* PCFRequestCache.m */,
+				E12CCF6F1A27D27B00EFC209 /* Supporting Files */,
+				E12CCFA81A27D36000EFC209 /* PCFData.h */,
+				E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */,
+				E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */,
+				E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */,
+				E12CCFAD1A27D36000EFC209 /* PCFLocalStore.h */,
+				E12CCFAE1A27D36000EFC209 /* PCFLocalStore.m */,
+				E12CCFAF1A27D36000EFC209 /* PCFOfflineStore.h */,
+				E12CCFB01A27D36000EFC209 /* PCFOfflineStore.m */,
+				E12CCFB11A27D36000EFC209 /* PCFRemoteClient.h */,
+				E12CCFB21A27D36000EFC209 /* PCFRemoteClient.m */,
+				E12CCFB31A27D36000EFC209 /* PCFRemoteStore.h */,
+				E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */,
+				E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */,
+				E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */,
+				E12CCFB71A27D36000EFC209 /* PCFResponse.h */,
+				E12CCFB81A27D36000EFC209 /* PCFResponse.m */,
 			);
 			path = PCFData;
 			sourceTree = "<group>";
 		};
-		E151D07919FFEFBE00B48F2A /* PCFDataTests */ = {
+		E12CCF6F1A27D27B00EFC209 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E151D07A19FFEFBE00B48F2A /* Supporting Files */,
-				E14A9C3A1A1D0173005D0A9E /* PCFDataTests.m */,
-				E14A9C391A1D0173005D0A9E /* PCFDataObjectTests.m */,
-				E125215D1A1D493F006D3ECC /* PCFResponseTests.m */,
-				E125215F1A1D4A87006D3ECC /* PCFLocalStoreTests.m */,
-				E12521611A1E50A4006D3ECC /* PCFRemoteStoreTests.m */,
-				E1A07C691A1E8D17003C0AAC /* PCFOfflineStoreTests.m */,
+				E12CCF701A27D27B00EFC209 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E12CCF7B1A27D27B00EFC209 /* PCFDataTests */ = {
+			isa = PBXGroup;
+			children = (
+				E12CCF7C1A27D27B00EFC209 /* Supporting Files */,
+				E12CCFCB1A27D37D00EFC209 /* PCFDataTests.m */,
+				E12CCFCA1A27D37D00EFC209 /* PCFDataObjectTests.m */,
+				E12CCFCC1A27D37D00EFC209 /* PCFLocalStoreTests.m */,
+				E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */,
+				E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */,
+				E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
 		};
-		E151D07A19FFEFBE00B48F2A /* Supporting Files */ = {
+		E12CCF7C1A27D27B00EFC209 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E151D07B19FFEFBE00B48F2A /* Info.plist */,
+				E12CCF7D1A27D27B00EFC209 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		E12CCF691A27D27B00EFC209 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */,
+				E12CCFC01A27D36000EFC209 /* PCFOfflineStore.h in Headers */,
+				E12CCFBD1A27D36000EFC209 /* PCFDataStore.h in Headers */,
+				E12CCFC21A27D36000EFC209 /* PCFRemoteClient.h in Headers */,
+				E12CCFBE1A27D36000EFC209 /* PCFLocalStore.h in Headers */,
+				E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */,
+				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
+				E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */,
+				E12CCFC41A27D36000EFC209 /* PCFRemoteStore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		E151D06919FFEFBE00B48F2A /* PCFData */ = {
+		E12CCF6B1A27D27B00EFC209 /* PCFData */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E151D07E19FFEFBE00B48F2A /* Build configuration list for PBXNativeTarget "PCFData" */;
+			buildConfigurationList = E12CCF821A27D27B00EFC209 /* Build configuration list for PBXNativeTarget "PCFData" */;
 			buildPhases = (
-				E151D06619FFEFBE00B48F2A /* Sources */,
-				E151D06719FFEFBE00B48F2A /* Frameworks */,
-				E151D06819FFEFBE00B48F2A /* CopyFiles */,
+				E12CCF671A27D27B00EFC209 /* Sources */,
+				E12CCF681A27D27B00EFC209 /* Frameworks */,
+				E12CCF691A27D27B00EFC209 /* Headers */,
+				E12CCF6A1A27D27B00EFC209 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -195,64 +203,71 @@
 			);
 			name = PCFData;
 			productName = PCFData;
-			productReference = E151D06A19FFEFBE00B48F2A /* libPCFData.a */;
-			productType = "com.apple.product-type.library.static";
+			productReference = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */;
+			productType = "com.apple.product-type.framework";
 		};
-		E151D07419FFEFBE00B48F2A /* PCFDataTests */ = {
+		E12CCF761A27D27B00EFC209 /* PCFDataTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E151D08119FFEFBE00B48F2A /* Build configuration list for PBXNativeTarget "PCFDataTests" */;
+			buildConfigurationList = E12CCF851A27D27B00EFC209 /* Build configuration list for PBXNativeTarget "PCFDataTests" */;
 			buildPhases = (
-				E151D07119FFEFBE00B48F2A /* Sources */,
-				E151D07219FFEFBE00B48F2A /* Frameworks */,
-				E151D07319FFEFBE00B48F2A /* Resources */,
+				E12CCF731A27D27B00EFC209 /* Sources */,
+				E12CCF741A27D27B00EFC209 /* Frameworks */,
+				E12CCF751A27D27B00EFC209 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E151D07819FFEFBE00B48F2A /* PBXTargetDependency */,
+				E12CCF7A1A27D27B00EFC209 /* PBXTargetDependency */,
 			);
 			name = PCFDataTests;
 			productName = PCFDataTests;
-			productReference = E151D07519FFEFBE00B48F2A /* PCFDataTests.xctest */;
+			productReference = E12CCF771A27D27B00EFC209 /* PCFDataTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		E151D06219FFEFBE00B48F2A /* Project object */ = {
+		E12CCF631A27D27B00EFC209 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Pivotal;
 				TargetAttributes = {
-					E151D06919FFEFBE00B48F2A = {
+					E12CCF6B1A27D27B00EFC209 = {
 						CreatedOnToolsVersion = 6.1;
 					};
-					E151D07419FFEFBE00B48F2A = {
+					E12CCF761A27D27B00EFC209 = {
 						CreatedOnToolsVersion = 6.1;
 					};
 				};
 			};
-			buildConfigurationList = E151D06519FFEFBE00B48F2A /* Build configuration list for PBXProject "PCFData" */;
+			buildConfigurationList = E12CCF661A27D27B00EFC209 /* Build configuration list for PBXProject "PCFData" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = E151D06119FFEFBE00B48F2A;
-			productRefGroup = E151D06B19FFEFBE00B48F2A /* Products */;
+			mainGroup = E12CCF621A27D27B00EFC209;
+			productRefGroup = E12CCF6D1A27D27B00EFC209 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E151D06919FFEFBE00B48F2A /* PCFData */,
-				E151D07419FFEFBE00B48F2A /* PCFDataTests */,
+				E12CCF6B1A27D27B00EFC209 /* PCFData */,
+				E12CCF761A27D27B00EFC209 /* PCFDataTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		E151D07319FFEFBE00B48F2A /* Resources */ = {
+		E12CCF6A1A27D27B00EFC209 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E12CCF751A27D27B00EFC209 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -262,46 +277,45 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E151D06619FFEFBE00B48F2A /* Sources */ = {
+		E12CCF671A27D27B00EFC209 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1F76C511A0168B0002D5788 /* PCFRemoteClient.m in Sources */,
-				E1F76C431A002995002D5788 /* PCFResponse.m in Sources */,
-				E1A07C6F1A1F9E2C003C0AAC /* PCFRequestCache.m in Sources */,
-				E151D07019FFEFBE00B48F2A /* PCFData.m in Sources */,
-				E1F76C551A028A4C002D5788 /* PCFOfflineStore.m in Sources */,
-				E151D08C1A0015C200B48F2A /* PCFLocalStore.m in Sources */,
-				E1F76C4B1A01662F002D5788 /* PCFRemoteStore.m in Sources */,
-				E1F76C3C1A002018002D5788 /* PCFDataObject.m in Sources */,
+				E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */,
+				E12CCFBC1A27D36000EFC209 /* PCFDataObject.m in Sources */,
+				E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */,
+				E12CCFC11A27D36000EFC209 /* PCFOfflineStore.m in Sources */,
+				E12CCFBF1A27D36000EFC209 /* PCFLocalStore.m in Sources */,
+				E12CCFC31A27D36000EFC209 /* PCFRemoteClient.m in Sources */,
+				E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E151D07119FFEFBE00B48F2A /* Sources */ = {
+		E12CCF731A27D27B00EFC209 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E12521621A1E50A4006D3ECC /* PCFRemoteStoreTests.m in Sources */,
-				E14A9C3C1A1D0173005D0A9E /* PCFDataTests.m in Sources */,
-				E12521601A1D4A87006D3ECC /* PCFLocalStoreTests.m in Sources */,
-				E125215E1A1D493F006D3ECC /* PCFResponseTests.m in Sources */,
-				E1A07C6A1A1E8D17003C0AAC /* PCFOfflineStoreTests.m in Sources */,
-				E14A9C3B1A1D0173005D0A9E /* PCFDataObjectTests.m in Sources */,
+				E12CCFDF1A27D37D00EFC209 /* PCFLocalStoreTests.m in Sources */,
+				E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */,
+				E12CCFDD1A27D37D00EFC209 /* PCFDataObjectTests.m in Sources */,
+				E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */,
+				E12CCFE21A27D37D00EFC209 /* PCFResponseTests.m in Sources */,
+				E12CCFE11A27D37D00EFC209 /* PCFRemoteStoreTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E151D07819FFEFBE00B48F2A /* PBXTargetDependency */ = {
+		E12CCF7A1A27D27B00EFC209 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E151D06919FFEFBE00B48F2A /* PCFData */;
-			targetProxy = E151D07719FFEFBE00B48F2A /* PBXContainerItemProxy */;
+			target = E12CCF6B1A27D27B00EFC209 /* PCFData */;
+			targetProxy = E12CCF791A27D27B00EFC209 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		E151D07C19FFEFBE00B48F2A /* Debug */ = {
+		E12CCF801A27D27B00EFC209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -318,7 +332,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -338,10 +354,13 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		E151D07D19FFEFBE00B48F2A /* Release */ = {
+		E12CCF811A27D27B00EFC209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -358,7 +377,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -371,34 +392,48 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		E151D07F19FFEFBE00B48F2A /* Debug */ = {
+		E12CCF831A27D27B00EFC209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = PCFData/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
-		E151D08019FFEFBE00B48F2A /* Release */ = {
+		E12CCF841A27D27B00EFC209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = PCFData/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
-		E151D08219FFEFBE00B48F2A /* Debug */ = {
+		E12CCF861A27D27B00EFC209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -416,7 +451,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS/**",
+					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -425,16 +460,12 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INSTALL_OBJC_HEADER = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "PCFDataTests/PCFData-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		E151D08319FFEFBE00B48F2A /* Release */ = {
+		E12CCF871A27D27B00EFC209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -448,7 +479,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS/**",
+					"$(PROJECT_DIR)/PCFDataTests/ThirdParty/OCMockiOS",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -457,42 +488,40 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INSTALL_OBJC_HEADER = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "PCFDataTests/PCFData-Bridging-Header.h";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E151D06519FFEFBE00B48F2A /* Build configuration list for PBXProject "PCFData" */ = {
+		E12CCF661A27D27B00EFC209 /* Build configuration list for PBXProject "PCFData" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E151D07C19FFEFBE00B48F2A /* Debug */,
-				E151D07D19FFEFBE00B48F2A /* Release */,
+				E12CCF801A27D27B00EFC209 /* Debug */,
+				E12CCF811A27D27B00EFC209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E151D07E19FFEFBE00B48F2A /* Build configuration list for PBXNativeTarget "PCFData" */ = {
+		E12CCF821A27D27B00EFC209 /* Build configuration list for PBXNativeTarget "PCFData" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E151D07F19FFEFBE00B48F2A /* Debug */,
-				E151D08019FFEFBE00B48F2A /* Release */,
+				E12CCF831A27D27B00EFC209 /* Debug */,
+				E12CCF841A27D27B00EFC209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E151D08119FFEFBE00B48F2A /* Build configuration list for PBXNativeTarget "PCFDataTests" */ = {
+		E12CCF851A27D27B00EFC209 /* Build configuration list for PBXNativeTarget "PCFDataTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E151D08219FFEFBE00B48F2A /* Debug */,
-				E151D08319FFEFBE00B48F2A /* Release */,
+				E12CCF861A27D27B00EFC209 /* Debug */,
+				E12CCF871A27D27B00EFC209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = E151D06219FFEFBE00B48F2A /* Project object */;
+	rootObject = E12CCF631A27D27B00EFC209 /* Project object */;
 }
