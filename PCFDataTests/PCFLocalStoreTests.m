@@ -9,8 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <PCFData/PCFLocalStore.h>
-#import <PCFData/PCFResponse.h>
+#import <PCFData/PCFData.h>
 
 @interface PCFLocalStoreTests : XCTestCase
 
@@ -38,7 +37,7 @@ static NSString *const PCFDataPrefix = @"PCFData:";
     NSUserDefaults *defaults = OCMClassMock([NSUserDefaults class]);
     PCFLocalStore *dataStore = [[PCFLocalStore alloc] initWithCollection:self.collection defaults:defaults];
 
-    OCMStub([defaults objectForKey:self.prefixedKey]).andReturn(self.value);
+    OCMStub([defaults objectForKey:[OCMArg any]]).andReturn(self.value);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
@@ -52,7 +51,7 @@ static NSString *const PCFDataPrefix = @"PCFData:";
     NSUserDefaults *defaults = OCMClassMock([NSUserDefaults class]);
     PCFLocalStore *dataStore = [[PCFLocalStore alloc] initWithCollection:self.collection defaults:defaults];
     
-    OCMStub([defaults objectForKey:self.prefixedKey]).andReturn(self.value);
+    OCMStub([defaults objectForKey:[OCMArg any]]).andReturn(self.value);
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
     

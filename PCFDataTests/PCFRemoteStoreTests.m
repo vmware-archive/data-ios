@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <PCFData/PCFRemoteStore.h>
-#import <PCFData/PCFResponse.h>
-#import <PCFData/PCFRemoteClient.h>
+#import <PCFData/PCFData.h>
 
 @interface PCFRemoteStoreTests : XCTestCase
 
@@ -42,14 +40,15 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andReturn(self.value);
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client getWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.value);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response.key, self.key);
     XCTAssertEqual(response.value, self.value);
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -57,8 +56,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client getWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
         NSError *__autoreleasing *errorPtrPtr;
         [invocation getArgument:&errorPtrPtr atIndex:4];
         *errorPtrPtr = self.error;
@@ -69,6 +68,7 @@
     XCTAssertEqual(response.key, self.key);
     XCTAssertEqual(response.error, self.error);
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -76,8 +76,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andReturn(self.value);
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client getWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.value);
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
     
@@ -89,6 +89,7 @@
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -96,8 +97,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client getWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
         NSError *__autoreleasing *errorPtrPtr;
         [invocation getArgument:&errorPtrPtr atIndex:4];
         *errorPtrPtr = self.error;
@@ -113,6 +114,7 @@
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client getWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -121,14 +123,15 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]).andReturn(self.value);
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client putWithAccessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.value);
     
     PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
     
     XCTAssertEqual(response.key, self.key);
     XCTAssertEqual(response.value, self.value);
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]);
 }
 
@@ -136,8 +139,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client putWithAccessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
         NSError *__autoreleasing *errorPtrPtr;
         [invocation getArgument:&errorPtrPtr atIndex:5];
         *errorPtrPtr = self.error;
@@ -148,6 +151,7 @@
     XCTAssertEqual(response.key, self.key);
     XCTAssertEqual(response.error, self.error);
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]);
 }
 
@@ -155,8 +159,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]).andReturn(self.value);
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client putWithAccessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.value);
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
     
@@ -168,6 +172,7 @@
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]);
 }
 
@@ -175,8 +180,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client putWithAccessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
         NSError *__autoreleasing *errorPtrPtr;
         [invocation getArgument:&errorPtrPtr atIndex:5];
         *errorPtrPtr = self.error;
@@ -192,6 +197,7 @@
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client putWithAccessToken:self.token url:self.url value:self.value error:[OCMArg anyObjectRef]]);
 }
 
@@ -200,14 +206,15 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andReturn(self.value);
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client deleteWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.value);
     
     PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response.key, self.key);
     XCTAssertEqual(response.value, self.value);
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -215,8 +222,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client deleteWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
         NSError *__autoreleasing *errorPtrPtr;
         [invocation getArgument:&errorPtrPtr atIndex:4];
         *errorPtrPtr = self.error;
@@ -227,6 +234,7 @@
     XCTAssertEqual(response.key, self.key);
     XCTAssertEqual(response.error, self.error);
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -234,8 +242,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andReturn(self.value);
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client deleteWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.value);
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
     
@@ -247,6 +255,7 @@
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 
@@ -254,8 +263,8 @@
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = OCMPartialMock([[PCFRemoteStore alloc] initWithCollection:self.collection client:client]);
     
-    OCMStub([dataStore urlForKey:self.key]).andReturn(self.url);
-    OCMStub([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
+    OCMStub([client deleteWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef]]).andDo(^(NSInvocation *invocation) {
         NSError *__autoreleasing *errorPtrPtr;
         [invocation getArgument:&errorPtrPtr atIndex:4];
         *errorPtrPtr = self.error;
@@ -271,6 +280,7 @@
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
     
+    OCMVerify([dataStore urlForKey:self.key]);
     OCMVerify([client deleteWithAccessToken:self.token url:self.url error:[OCMArg anyObjectRef]]);
 }
 

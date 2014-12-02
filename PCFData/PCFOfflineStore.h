@@ -19,7 +19,7 @@
 
 - (instancetype)initWithCollection:(NSString *)collection localStore:(PCFLocalStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore;
 
-- (PCFResponse *)noConnectionErrorResponseWithKey:(NSString *)key;
+- (PCFResponse *)errorNoConnectionWithKey:(NSString *)key;
 
 - (BOOL)isSyncSupported;
 

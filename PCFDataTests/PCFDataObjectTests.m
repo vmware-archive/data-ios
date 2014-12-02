@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <PCFData/PCFLocalStore.h>
-#import <PCFData/PCFDataObject.h>
-#import <PCFData/PCFResponse.h>
+#import <PCFData/PCFData.h>
 
 
 @interface PCFDataObjectTests : XCTestCase
@@ -39,7 +37,7 @@
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
     PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
-    OCMStub([dataStore getWithKey:self.key accessToken:self.token]).andReturn(response);
+    OCMStub([dataStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual([object getWithAccessToken:self.token], response);
     
@@ -62,7 +60,7 @@
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
     PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
-    OCMStub([dataStore putWithKey:self.key value:self.value accessToken:self.token]).andReturn(response);
+    OCMStub([dataStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual([object putWithAccessToken:self.token value:self.value], response);
     
@@ -85,7 +83,7 @@
     PCFLocalStore *dataStore = OCMClassMock([PCFLocalStore class]);
     PCFDataObject *object = [[PCFDataObject alloc] initWithDataStore:dataStore key:self.key];
     
-    OCMStub([dataStore deleteWithKey:self.key accessToken:self.token]).andReturn(response);
+    OCMStub([dataStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual([object deleteWithAccessToken:self.token], response);
     

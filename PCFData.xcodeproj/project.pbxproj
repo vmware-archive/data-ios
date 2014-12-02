@@ -31,6 +31,8 @@
 		E12CCFE21A27D37D00EFC209 /* PCFResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */; };
 		E12CCFE51A27D3B500EFC209 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCFE41A27D3B500EFC209 /* libOCMock.a */; };
 		E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */; };
+		E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */; };
+		E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +73,8 @@
 		E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStoreTests.m; sourceTree = "<group>"; };
 		E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponseTests.m; sourceTree = "<group>"; };
 		E12CCFE41A27D3B500EFC209 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
+		E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClientTests.m; sourceTree = "<group>"; };
+		E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCacheTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +156,9 @@
 				E12CCFCA1A27D37D00EFC209 /* PCFDataObjectTests.m */,
 				E12CCFCC1A27D37D00EFC209 /* PCFLocalStoreTests.m */,
 				E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */,
+				E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */,
 				E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */,
+				E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */,
 				E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */,
 			);
 			path = PCFDataTests;
@@ -297,8 +303,10 @@
 			files = (
 				E12CCFDF1A27D37D00EFC209 /* PCFLocalStoreTests.m in Sources */,
 				E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */,
+				E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */,
 				E12CCFDD1A27D37D00EFC209 /* PCFDataObjectTests.m in Sources */,
 				E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */,
+				E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */,
 				E12CCFE21A27D37D00EFC209 /* PCFResponseTests.m in Sources */,
 				E12CCFE11A27D37D00EFC209 /* PCFRemoteStoreTests.m in Sources */,
 			);

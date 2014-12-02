@@ -102,7 +102,7 @@
         return response;
         
     } else {
-        return [self noConnectionErrorResponseWithKey:key];
+        return [self errorNoConnectionWithKey:key];
     }
 }
 
@@ -136,7 +136,7 @@
         return response;
         
     } else {
-        return [self noConnectionErrorResponseWithKey:key];
+        return [self errorNoConnectionWithKey:key];
     }
 }
 
@@ -150,7 +150,7 @@
     });
 }
 
-- (PCFResponse *)noConnectionErrorResponseWithKey:(NSString *)key {
+- (PCFResponse *)errorNoConnectionWithKey:(NSString *)key {
     NSError *error = [[NSError alloc] initWithDomain:kNoConnectionErrorDomain code:kNoConnectionErrorCode userInfo:nil];
     return [[PCFResponse alloc] initWithKey:key error:error];
 }

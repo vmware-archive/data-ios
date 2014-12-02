@@ -10,21 +10,21 @@
 
 @class PCFResponse;
 
-typedef void(^PCFResponseBlock)(PCFResponse *);
+typedef void(^PCFResponseBlock)(PCFResponse *response);
 
 @protocol PCFDataStore <NSObject>
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken;
 
-- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *response))completionBlock;
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken;
 
-- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *response))completionBlock;
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken;
 
-- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(void (^)(PCFResponse *response))completionBlock;
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
 @end
 

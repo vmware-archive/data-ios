@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import <PCFData/PCFResponse.h>
+#import <PCFData/PCFData.h>
 
 @interface PCFResponseTests : XCTestCase
 
