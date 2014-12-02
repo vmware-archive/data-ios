@@ -16,6 +16,6 @@
 
 - (NSString *)deleteWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error;
 
-- (NSURLRequest *)requestWithAccessToken:(NSString *)accessToken url:(NSURL *)url;
+- (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value;
 
 @end

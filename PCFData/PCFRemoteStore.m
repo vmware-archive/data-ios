@@ -31,7 +31,7 @@
 }
 
 - (NSURL *)urlForKey:(NSString *)key {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/", @"serviceBaseUrl", _collection, key]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@", @"http://datasync-backend.kona.coffee.cfms-apps.com", _collection, key]];
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
