@@ -18,7 +18,7 @@
 
 @implementation PCFLocalStore
 
-static NSString *const PCFDataPrefix = @"PCFData:";
+static NSString* const PCFDataPrefix = @"PCFData:";
 
 - (instancetype)initWithCollection:(NSString *)collection {
     return [self initWithCollection:collection defaults:[NSUserDefaults standardUserDefaults]];
