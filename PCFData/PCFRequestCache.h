@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@class PCFPendingRequest, PCFOfflineStore, PCFLocalStore;
+@class PCFPendingRequest, PCFOfflineStore, PCFLocalStore, PCFResponse;
 
 @interface PCFRequestCache : NSObject
 

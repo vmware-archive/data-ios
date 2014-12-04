@@ -113,7 +113,7 @@ static NSString* const PCFDataRequestCache = @"PCFDataRequestCache";
                 
             case HTTP_PUT: {
                 PCFResponse *response = [offlineStore putWithKey:request.key value:request.value accessToken:token];
-                if ([self shouldRevert:response]) {
+                if (response.error) {
                     PCFLocalStore *localStore = [self createLocalStoreWithCollection:request.collection];
                     [localStore putWithKey:request.key value:request.fallback accessToken:token];
                 }
@@ -122,7 +122,7 @@ static NSString* const PCFDataRequestCache = @"PCFDataRequestCache";
                 
             case HTTP_DELETE: {
                 PCFResponse *response = [offlineStore deleteWithKey:request.key accessToken:token];
-                if ([self shouldRevert:response]) {
+                if (response.error) {
                     PCFLocalStore *localStore = [self createLocalStoreWithCollection:request.collection];
                     [localStore putWithKey:request.key value:request.fallback accessToken:token];
                 }
@@ -133,10 +133,6 @@ static NSString* const PCFDataRequestCache = @"PCFDataRequestCache";
                 break;
         }
     }
-}
-
-- (BOOL)shouldRevert:(PCFResponse *)response {
-    return response.error && (response.error.code != 304);
 }
 
 @end
