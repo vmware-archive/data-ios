@@ -17,8 +17,8 @@
 
 @end
 
-@implementation PCFRemoteStore
 
+@implementation PCFRemoteStore
 
 - (instancetype)initWithCollection:(NSString *)collection {
     return [self initWithCollection:collection client:[[PCFRemoteClient alloc] init]];
@@ -31,12 +31,12 @@
 }
 
 - (NSURL *)urlForKey:(NSString *)key {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@", @"http://datasync-backend.kona.coffee.cfms-apps.com", _collection, key]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@", kHostUrl, _collection, key]];
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     NSError *error;
-    NSString *result = [_client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
+    NSString *result = [self.client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
 
     if (error) {
         return [[PCFResponse alloc] initWithKey:key error:error];
@@ -57,7 +57,7 @@
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
     NSError *error;
-    NSString *result = [_client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error];
+    NSString *result = [self.client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error];
     
     if (error) {
         return [[PCFResponse alloc] initWithKey:key error:error];
@@ -78,7 +78,7 @@
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     NSError *error;
-    NSString *result = [_client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
+    NSString *result = [self.client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
     
     if (error) {
         return [[PCFResponse alloc] initWithKey:key error:error];

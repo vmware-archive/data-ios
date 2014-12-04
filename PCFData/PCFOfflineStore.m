@@ -11,22 +11,16 @@
 #import "PCFLocalStore.h"
 #import "PCFRequestCache.h"
 #import "PCFResponse.h"
+#import "PCFReachability.h"
 
 
-@interface PCFOfflineStore () {
-    PCFRequestCache *_requestCache;
-}
+@interface PCFOfflineStore ()
 
 @property NSString *collection;
 @property PCFRemoteStore *remoteStore;
 @property PCFLocalStore *localStore;
 
 @end
-
-
-#define kNoConnectionErrorDomain    @"No Connection"
-#define kNoConnectionErrorCode      100
-
 
 @implementation PCFOfflineStore
 
@@ -44,10 +38,7 @@
 }
 
 - (PCFRequestCache *)requestCache {
-    if (!_requestCache) {
-        _requestCache = [[PCFRequestCache alloc] init];
-    }
-    return _requestCache;
+    return [PCFRequestCache sharedInstance];
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
@@ -156,11 +147,13 @@
 }
 
 - (BOOL)isConnected {
-    return true;
+    PCFReachability *reachability = [PCFReachability reachabilityWithHostName:kHostUrl];
+    PCFNetworkStatus netStatus = [reachability currentReachabilityStatus];
+    return netStatus != NotReachable;
 }
 
 - (BOOL)isSyncSupported {
-    return false;
+    return true;//return [[UIApplication sharedApplication] backgroundRefreshStatus] == UIBackgroundRefreshStatusAvailable;
 }
 
 @end

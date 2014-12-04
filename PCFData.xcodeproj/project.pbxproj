@@ -47,6 +47,8 @@
 		E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */; };
 		E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */; };
 		E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */; };
+		E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */; };
+		E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,8 @@
 		E12CCFE41A27D3B500EFC209 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
 		E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClientTests.m; sourceTree = "<group>"; };
 		E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCacheTests.m; sourceTree = "<group>"; };
+		E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFReachability.h; sourceTree = "<group>"; };
+		E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFReachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +161,8 @@
 		E12CCF6F1A27D27B00EFC209 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */,
+				E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */,
 				E12CCF701A27D27B00EFC209 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -202,6 +208,7 @@
 				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
 				E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */,
 				E12CCFC41A27D36000EFC209 /* PCFRemoteStore.h in Headers */,
+				E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +328,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */,
 				E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */,
 				E12CCFBC1A27D36000EFC209 /* PCFDataObject.m in Sources */,
 				E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */,
@@ -585,6 +593,7 @@
 				E12CD02C1A2E2E6600EFC209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -11,6 +11,9 @@
 
 @class PCFRemoteStore, PCFLocalStore, PCFRequestCache;
 
+#define kNoConnectionErrorDomain    @"No Connection"
+#define kNoConnectionErrorCode      100
+
 @interface PCFOfflineStore : NSObject <PCFDataStore>
 
 @property (readonly) PCFRequestCache *requestCache;

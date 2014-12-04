@@ -10,6 +10,9 @@
 
 @implementation PCFRemoteClient
 
+static NSString* const PCFBearerPrefix = @"Bearer ";
+
+
 - (NSString *)getWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error {
     NSHTTPURLResponse *response;
     NSURLRequest *request = [self requestWithMethod:@"GET" accessToken:accessToken url:url value:nil];
@@ -60,7 +63,7 @@
     request.HTTPMethod = method;
 
     if (accessToken) {
-        NSString *token = [@"Bearer " stringByAppendingString:accessToken];
+        NSString *token = [PCFBearerPrefix stringByAppendingString:accessToken];
         [request addValue:token forHTTPHeaderField:@"Authorization"];
     }
 

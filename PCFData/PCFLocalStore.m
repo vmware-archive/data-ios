@@ -36,7 +36,7 @@ static NSString* const PCFDataPrefix = @"PCFData:";
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    NSString *value = [_defaults objectForKey:[PCFDataPrefix stringByAppendingString:key]];
+    NSString *value = [self.defaults objectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
 
@@ -51,7 +51,7 @@ static NSString* const PCFDataPrefix = @"PCFData:";
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    [_defaults setObject:value forKey:[PCFDataPrefix stringByAppendingString:key]];
+    [self.defaults setObject:value forKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
 
@@ -66,7 +66,7 @@ static NSString* const PCFDataPrefix = @"PCFData:";
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    [_defaults removeObjectForKey:[PCFDataPrefix stringByAppendingString:key]];
+    [self.defaults removeObjectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:nil];
 }
 
@@ -79,7 +79,6 @@ static NSString* const PCFDataPrefix = @"PCFData:";
         });
     });
 }
-
 
 //- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 //    // any change from nsuserdefaults
