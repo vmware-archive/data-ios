@@ -48,6 +48,10 @@
         
         if (!response.error) {
             return [self.localStore putWithKey:key value:response.value accessToken:accessToken];
+            
+        } else if (response.error.code == 304) {
+            return [self.localStore getWithKey:key accessToken:accessToken];
+            
         } else {
             return response;
         }

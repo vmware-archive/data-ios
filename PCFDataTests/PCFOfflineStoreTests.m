@@ -70,6 +70,27 @@
     OCMVerify([remoteStore getWithKey:self.key accessToken:self.token]);
 }
 
+- (void)testGetInvokesRemoteAndLocalStoreWhenConnectionIsAvailableAndNotModifiedErrorOccurs {
+    NSError *error = [[NSError alloc] initWithDomain:@"Not Modified" code:304 userInfo:nil];
+    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key error:error];
+    
+    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
+    
+    OCMStub([dataStore isConnected]).andReturn(true);
+    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
+    
+    PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
+    
+    XCTAssertEqual(response, localResponse);
+    
+    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token]);
+    OCMVerify([localStore getWithKey:self.key accessToken:self.token]);
+}
+
 - (void)testGetInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
     PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
     
