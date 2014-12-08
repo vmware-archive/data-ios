@@ -2,6 +2,8 @@
 # This script is based on Jacob Van Order's answer on apple dev forums https://devforums.apple.com/message/971277
 # See also http://spin.atomicobject.com/2011/12/13/building-a-universal-framework-for-ios/ for the start
 
+set -e
+set -x
 
 # To get this to work with a Xcode 6 Cocoa Touch Framework, create Framework
 # Then create a new Aggregate Target. Throw this script into a Build Script Phrase on the Aggregate
@@ -67,6 +69,7 @@ lipo "${SIMULATOR_LIBRARY_PATH}/${FRAMEWORK_NAME}" "${DEVICE_LIBRARY_PATH}/${FRA
 ######################
 
 if [ "${CONFIGURATION}" == "Release" ]; then
+    rm -rf "${HOME}/Desktop/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/"
     mkdir "${HOME}/Desktop/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/"
     cp -r "${FRAMEWORK}" "${HOME}/Desktop/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/"
 fi
