@@ -35,7 +35,7 @@ static NSString* const PCFKey = @"PCFData:key";
 static NSString* const PCFValue = @"PCFData:value";
 static NSString* const PCFFallback = @"PCFData:fallback";
 
-static NSString* const PCFDataRequestCache = @"PCFDataRequestCache";
+static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 
 - (void)setUp {
     [super setUp];

@@ -23,7 +23,7 @@ static int const HTTP_GET = 0;
 static int const HTTP_PUT = 1;
 static int const HTTP_DELETE = 2;
 
-static NSString* const PCFDataRequestCache = @"PCFDataRequestCache";
+static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 
 
 + (PCFRequestCache *)sharedInstance {

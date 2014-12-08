@@ -12,13 +12,13 @@
 @interface PCFLocalStore ()
 
 @property NSString *collection;
-@property (strong, readonly) NSUserDefaults *defaults;
+@property (readonly) NSUserDefaults *defaults;
 
 @end
 
 @implementation PCFLocalStore
 
-static NSString* const PCFDataPrefix = @"PCFData:";
+static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
 - (instancetype)initWithCollection:(NSString *)collection {
     return [self initWithCollection:collection defaults:[NSUserDefaults standardUserDefaults]];

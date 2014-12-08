@@ -21,6 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		E11765871A325BF800EF6B01 /* PCFEtagStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765861A325BF800EF6B01 /* PCFEtagStoreTests.m */; };
+		E117658B1A35F87C00EF6B01 /* PCFEtagStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E117658A1A35F87C00EF6B01 /* PCFEtagStore.m */; };
+		E11765A61A362E7800EF6B01 /* PCFEtagStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765891A35F5A600EF6B01 /* PCFEtagStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCF781A27D27B00EFC209 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
 		E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFA81A27D36000EFC209 /* PCFData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,6 +65,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E11765861A325BF800EF6B01 /* PCFEtagStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFEtagStoreTests.m; sourceTree = "<group>"; };
+		E11765891A35F5A600EF6B01 /* PCFEtagStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCFEtagStore.h; sourceTree = "<group>"; };
+		E117658A1A35F87C00EF6B01 /* PCFEtagStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFEtagStore.m; sourceTree = "<group>"; };
 		E12CCF6C1A27D27B00EFC209 /* PCFData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PCFData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12CCF701A27D27B00EFC209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E12CCF771A27D27B00EFC209 /* PCFDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +148,8 @@
 				E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */,
 				E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */,
 				E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */,
+				E11765891A35F5A600EF6B01 /* PCFEtagStore.h */,
+				E117658A1A35F87C00EF6B01 /* PCFEtagStore.m */,
 				E12CCFAD1A27D36000EFC209 /* PCFLocalStore.h */,
 				E12CCFAE1A27D36000EFC209 /* PCFLocalStore.m */,
 				E12CCFAF1A27D36000EFC209 /* PCFOfflineStore.h */,
@@ -180,6 +188,7 @@
 				E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */,
 				E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */,
 				E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */,
+				E11765861A325BF800EF6B01 /* PCFEtagStoreTests.m */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -202,6 +211,7 @@
 				E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */,
 				E12CCFC01A27D36000EFC209 /* PCFOfflineStore.h in Headers */,
 				E12CCFBD1A27D36000EFC209 /* PCFDataStore.h in Headers */,
+				E11765A61A362E7800EF6B01 /* PCFEtagStore.h in Headers */,
 				E12CCFC21A27D36000EFC209 /* PCFRemoteClient.h in Headers */,
 				E12CCFBE1A27D36000EFC209 /* PCFLocalStore.h in Headers */,
 				E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */,
@@ -331,6 +341,7 @@
 				E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */,
 				E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */,
 				E12CCFBC1A27D36000EFC209 /* PCFDataObject.m in Sources */,
+				E117658B1A35F87C00EF6B01 /* PCFEtagStore.m in Sources */,
 				E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */,
 				E12CCFC11A27D36000EFC209 /* PCFOfflineStore.m in Sources */,
 				E12CCFBF1A27D36000EFC209 /* PCFLocalStore.m in Sources */,
@@ -345,6 +356,7 @@
 			files = (
 				E12CCFDF1A27D37D00EFC209 /* PCFLocalStoreTests.m in Sources */,
 				E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */,
+				E11765871A325BF800EF6B01 /* PCFEtagStoreTests.m in Sources */,
 				E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */,
 				E12CCFDD1A27D37D00EFC209 /* PCFDataObjectTests.m in Sources */,
 				E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */,

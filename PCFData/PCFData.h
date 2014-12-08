@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <PCFData/PCFDataObject.h>
 #import <PCFData/PCFDataStore.h>
+#import <PCFData/PCFEtagStore.h>
 #import <PCFData/PCFLocalStore.h>
 #import <PCFData/PCFRemoteStore.h>
 #import <PCFData/PCFOfflineStore.h>

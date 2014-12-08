@@ -22,7 +22,7 @@
 
 @implementation PCFLocalStoreTests
 
-static NSString* const PCFDataPrefix = @"PCFData:";
+static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
 - (void)setUp {
     [super setUp];

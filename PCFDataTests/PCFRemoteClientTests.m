@@ -18,6 +18,7 @@
 @property NSError *error;
 @property NSURL *url;
 @property int httpErrorCode;
+@property NSString *etag;
 
 @end
 
@@ -33,6 +34,7 @@
     self.url = [NSURL URLWithString:@"http://test.com"];
     
     self.httpErrorCode = 300 + (arc4random() % 200);
+    self.etag = [NSUUID UUID].UUIDString;
 }
 
 - (void)testGetSucceeds {
@@ -246,7 +248,6 @@
 }
 
 - (void)testRequestWithMethodWithAccessTokenAndValue {
-    
     PCFRemoteClient *client = [[PCFRemoteClient alloc] init];
     
     NSString *method = [NSUUID UUID].UUIDString;
@@ -260,6 +261,19 @@
     XCTAssertEqualObjects(token, authHeader);
     XCTAssertEqualObjects(self.url, request.URL);
     XCTAssertEqualObjects(self.result, decodedBody);
+}
+
+- (void)testRequestWithMethodSetsEtagWhenExists {
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([etagStore getEtagForUrl:[OCMArg any]]).andReturn(self.etag);
+    
+    NSURLRequest *request = [client requestWithMethod:nil accessToken:nil url:self.url value:nil];
+    
+    XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"Etag"]);
+    
+    OCMVerify([etagStore getEtagForUrl:[self.url absoluteString]]);
 }
 
 @end

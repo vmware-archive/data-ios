@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class PCFEtagStore;
+
 @interface PCFRemoteClient : NSObject
+
+- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
 
 - (NSString *)getWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error;
 
