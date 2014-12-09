@@ -13,8 +13,8 @@
 
 @interface PCFEtagStoreTests : XCTestCase
 
-@property NSString *url;
 @property NSString *etag;
+@property NSURL *url;
 
 @end
 
@@ -25,8 +25,9 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 - (void)setUp {
     [super setUp];
     
-    self.url = [NSUUID UUID].UUIDString;
     self.etag = [NSUUID UUID].UUIDString;
+    
+    self.url = [NSURL URLWithString:@"http://example.com"];
 }
 
 - (void)testPutEtagForUrl {
@@ -52,7 +53,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 }
 
 - (NSString *)prefixedUrl {
-    return [PCFDataEtagPrefix stringByAppendingString:self.url];
+    return [PCFDataEtagPrefix stringByAppendingString:[self.url absoluteString]];
 }
 
 @end

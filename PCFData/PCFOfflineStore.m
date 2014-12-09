@@ -12,6 +12,7 @@
 #import "PCFRequestCache.h"
 #import "PCFResponse.h"
 #import "PCFReachability.h"
+#import "PCFConfig.h"
 
 
 @interface PCFOfflineStore ()
@@ -151,7 +152,7 @@
 }
 
 - (BOOL)isConnected {
-    PCFReachability *reachability = [PCFReachability reachabilityWithHostName:kHostUrl];
+    PCFReachability *reachability = [PCFReachability reachabilityWithHostName:[PCFConfig serviceUrl]];
     PCFNetworkStatus netStatus = [reachability currentReachabilityStatus];
     return netStatus != NotReachable;
 }

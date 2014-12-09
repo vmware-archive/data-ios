@@ -32,21 +32,24 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     NSHTTPURLResponse *response;
     NSURLRequest *request = [self requestWithMethod:@"GET" accessToken:accessToken url:url value:nil];
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    return [self handleResponse:response error:error data:data];
+    
+    return [self handleResponse:response data:data error:error];
 }
 
 - (NSString *)putWithAccessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value error:(NSError *__autoreleasing *)error {
     NSHTTPURLResponse *response;
     NSURLRequest *request = [self requestWithMethod:@"PUT" accessToken:accessToken url:url value:value];
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    return [self handleResponse:response error:error data:data];
+    
+    return [self handleResponse:response data:data error:error];
 }
 
 - (NSString *)deleteWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error {
     NSHTTPURLResponse *response;
     NSURLRequest *request = [self requestWithMethod:@"DELETE" accessToken:accessToken url:url value:nil];
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    return [self handleResponse:response error:error data:data];
+    
+    return [self handleResponse:response data:data error:error];
 }
 
 - (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value {
@@ -58,26 +61,38 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         [request addValue:token forHTTPHeaderField:@"Authorization"];
     }
     
-    NSString *etag = [self.etagStore getEtagForUrl:[url absoluteString]];
+    NSString *etag = [self.etagStore getEtagForUrl:url];
     
     if (etag) {
-        [request addValue:etag forHTTPHeaderField:@"Etag"];
+        NSString *header = [method isEqual:@"GET"] ? @"If-None-Match" : @"If-Match";
+        [request addValue:etag forHTTPHeaderField:header];
     }
     
     if (value) {
         request.HTTPBody = [value dataUsingEncoding:NSUTF8StringEncoding];
     }
     
+    NSLog(@"Request: %@ %@", method, etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag");
+    
     return request;
 }
 
-- (NSString *)handleResponse:(NSHTTPURLResponse *)response error:(NSError *__autoreleasing *)error data:(NSData *)data {
+- (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error {
     if (error && *error) {
+        NSLog(@"Response: error");
         return nil;
+        
     } else if (response && (response.statusCode < 200 || response.statusCode >= 300)) {
+        NSLog(@"Response: HTTP Error %ld", (long) response.statusCode);
         *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         return nil;
+        
     } else {
+        NSString *etag = [response.allHeaderFields valueForKey:@"Etag"];
+
+        [self.etagStore putEtagForUrl:response.URL etag:etag];
+        
+        NSLog(@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", data);
         return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
 }

@@ -16,3 +16,4 @@
 #import <PCFData/PCFRemoteClient.h>
 #import <PCFData/PCFRequestCache.h>
 #import <PCFData/PCFResponse.h>
+#import <PCFData/PCFConfig.h>

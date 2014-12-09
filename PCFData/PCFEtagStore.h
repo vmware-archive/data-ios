@@ -12,8 +12,8 @@
 
 - (instancetype)initWithDefaults:(NSUserDefaults *)defaults;
 
-- (NSString *)getEtagForUrl:(NSString *)url;
+- (NSString *)getEtagForUrl:(NSURL *)url;
 
-- (void)putEtagForUrl:(NSString *)url etag:(NSString *)etag;
+- (void)putEtagForUrl:(NSURL *)url etag:(NSString *)etag;
 
 @end

@@ -9,6 +9,7 @@
 #import "PCFRemoteStore.h"
 #import "PCFRemoteClient.h"
 #import "PCFResponse.h"
+#import "PCFConfig.h"
 
 @interface PCFRemoteStore ()
 
@@ -31,18 +32,14 @@
 }
 
 - (NSURL *)urlForKey:(NSString *)key {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@", kHostUrl, _collection, key]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@", [PCFConfig serviceUrl], self.collection, key]];
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
     NSError *error;
     NSString *result = [self.client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
 
-    if (error) {
-        return [[PCFResponse alloc] initWithKey:key error:error];
-    } else {
-        return [[PCFResponse alloc] initWithKey:key value:result];
-    }
+    return [self handleResult:result key:key error:error];
 }
 
 - (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
@@ -59,11 +56,7 @@
     NSError *error;
     NSString *result = [self.client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error];
     
-    if (error) {
-        return [[PCFResponse alloc] initWithKey:key error:error];
-    } else {
-        return [[PCFResponse alloc] initWithKey:key value:result];
-    }
+    return [self handleResult:result key:key error:error];
 }
 
 - (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
@@ -80,11 +73,7 @@
     NSError *error;
     NSString *result = [self.client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
     
-    if (error) {
-        return [[PCFResponse alloc] initWithKey:key error:error];
-    } else {
-        return [[PCFResponse alloc] initWithKey:key value:result];
-    }
+    return [self handleResult:result key:key error:error];
 }
 
 - (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
@@ -95,6 +84,14 @@
             completionBlock(response);
         });
     });
+}
+
+- (PCFResponse *)handleResult:(NSString *)result key:(NSString *)key error:(NSError *)error {
+    if (error) {
+        return [[PCFResponse alloc] initWithKey:key error:error];
+    } else {
+        return [[PCFResponse alloc] initWithKey:key value:result];
+    }
 }
 
 @end

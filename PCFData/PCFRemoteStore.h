@@ -11,8 +11,6 @@
 
 @class PCFRemoteClient;
 
-#define kHostUrl @"http://datasync-backend.kona.coffee.cfms-apps.com"
-
 @interface PCFRemoteStore : NSObject <PCFDataStore>
 
 - (instancetype)initWithCollection:(NSString *)collection;

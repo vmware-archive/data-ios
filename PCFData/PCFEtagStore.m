@@ -28,12 +28,18 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
     return self;
 }
 
-- (NSString *)getEtagForUrl:(NSString *)url {
-    return [self.defaults objectForKey:[PCFDataEtagPrefix stringByAppendingString:url]];
+- (NSString *)getEtagForUrl:(NSURL *)url {
+    if (url) {
+        return [self.defaults objectForKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
+    } else {
+        return nil;
+    }
 }
 
-- (void)putEtagForUrl:(NSString *)url etag:(NSString *)etag {
-    [self.defaults setObject:etag forKey:[PCFDataEtagPrefix stringByAppendingString:url]];
+- (void)putEtagForUrl:(NSURL *)url etag:(NSString *)etag {
+    if (url) {
+        [self.defaults setObject:etag forKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
+    }
 }
 
 @end
