@@ -53,6 +53,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 #import "PCFReachability.h"
+#import "PCFLogger.h"
 
 
 NSString *kReachabilityChangedNotification = @"kNetworkReachabilityChangedNotification";
@@ -66,7 +67,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 {
 #if kShouldPrintReachabilityFlags
 
-    NSLog(@"Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
+    [PCFLogger log:@"Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
           (flags & kSCNetworkReachabilityFlagsIsWWAN)				? 'W' : '-',
           (flags & kSCNetworkReachabilityFlagsReachable)            ? 'R' : '-',
 
@@ -78,7 +79,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
           (flags & kSCNetworkReachabilityFlagsIsLocalAddress)       ? 'l' : '-',
           (flags & kSCNetworkReachabilityFlagsIsDirect)             ? 'd' : '-',
           comment
-          );
+          ];
 #endif
 }
 

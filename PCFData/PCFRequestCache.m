@@ -10,6 +10,7 @@
 #import "PCFOfflineStore.h"
 #import "PCFLocalStore.h"
 #import "PCFResponse.h"
+#import "PCFLogger.h"
 
 @interface PCFRequestCache ()
 
@@ -53,19 +54,19 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 }
 
 - (void)queueGetWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key {
-    NSLog(@"PCFLocalStore queueGetWithToken: key: %@", key);
+    [PCFLogger log:@"PCFLocalStore queueGetWithToken: key: %@", key];
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithMethod:HTTP_GET accessToken:accessToken collection:collection key:key value:nil fallback:nil];
     [self queuePendingRequest:request];
 }
 
 - (void)queuePutWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key value:(NSString *)value fallback:(NSString *)fallback {
-    NSLog(@"PCFLocalStore queuePutWithToken: key: %@ value: %@", key, value);
+    [PCFLogger log:@"PCFLocalStore queuePutWithToken: key: %@ value: %@", key, value];
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithMethod:HTTP_PUT accessToken:accessToken collection:collection key:key value:value fallback:fallback];
     [self queuePendingRequest:request];
 }
 
 - (void)queueDeleteWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key fallback:(NSString *)fallback {
-    NSLog(@"PCFLocalStore queueDeleteWithToken: key: %@", key);
+    [PCFLogger log:@"PCFLocalStore queueDeleteWithToken: key: %@", key];
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithMethod:HTTP_DELETE accessToken:accessToken collection:collection key:key value:nil fallback:fallback];
     [self queuePendingRequest:request];
 }

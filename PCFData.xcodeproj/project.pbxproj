@@ -28,6 +28,9 @@
 		E11765AA1A3640B800EF6B01 /* PCFConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765A81A3640B800EF6B01 /* PCFConfig.m */; };
 		E11765AC1A3640CC00EF6B01 /* PCFConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */; };
 		E11765B11A374A9E00EF6B01 /* Pivotal.plist in Resources */ = {isa = PBXBuildFile; fileRef = E11765AF1A36430F00EF6B01 /* Pivotal.plist */; };
+		E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765FA1A38D88B00EF6B01 /* PCFLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E11765FD1A38D88B00EF6B01 /* PCFLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765FB1A38D88B00EF6B01 /* PCFLogger.m */; };
+		E11766131A38E13E00EF6B01 /* PCFLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11766121A38E13E00EF6B01 /* PCFLoggerTests.m */; };
 		E12CCF781A27D27B00EFC209 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
 		E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFA81A27D36000EFC209 /* PCFData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,6 +79,9 @@
 		E11765A81A3640B800EF6B01 /* PCFConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFConfig.m; sourceTree = "<group>"; };
 		E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFConfigTests.m; sourceTree = "<group>"; };
 		E11765AF1A36430F00EF6B01 /* Pivotal.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Pivotal.plist; path = PCFDataTests/Pivotal.plist; sourceTree = SOURCE_ROOT; };
+		E11765FA1A38D88B00EF6B01 /* PCFLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFLogger.h; sourceTree = "<group>"; };
+		E11765FB1A38D88B00EF6B01 /* PCFLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLogger.m; sourceTree = "<group>"; };
+		E11766121A38E13E00EF6B01 /* PCFLoggerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFLoggerTests.m; sourceTree = "<group>"; };
 		E12CCF6C1A27D27B00EFC209 /* PCFData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PCFData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12CCF701A27D27B00EFC209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E12CCF771A27D27B00EFC209 /* PCFDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +187,8 @@
 			children = (
 				E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */,
 				E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */,
+				E11765FA1A38D88B00EF6B01 /* PCFLogger.h */,
+				E11765FB1A38D88B00EF6B01 /* PCFLogger.m */,
 				E12CCF701A27D27B00EFC209 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -200,6 +208,7 @@
 				E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */,
 				E11765861A325BF800EF6B01 /* PCFEtagStoreTests.m */,
 				E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */,
+				E11766121A38E13E00EF6B01 /* PCFLoggerTests.m */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -231,6 +240,7 @@
 				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
 				E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */,
 				E12CCFC41A27D36000EFC209 /* PCFRemoteStore.h in Headers */,
+				E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */,
 				E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +367,7 @@
 				E12CCFBC1A27D36000EFC209 /* PCFDataObject.m in Sources */,
 				E11765AA1A3640B800EF6B01 /* PCFConfig.m in Sources */,
 				E117658B1A35F87C00EF6B01 /* PCFEtagStore.m in Sources */,
+				E11765FD1A38D88B00EF6B01 /* PCFLogger.m in Sources */,
 				E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */,
 				E12CCFC11A27D36000EFC209 /* PCFOfflineStore.m in Sources */,
 				E12CCFBF1A27D36000EFC209 /* PCFLocalStore.m in Sources */,
@@ -374,6 +385,7 @@
 				E11765871A325BF800EF6B01 /* PCFEtagStoreTests.m in Sources */,
 				E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */,
 				E12CCFDD1A27D37D00EFC209 /* PCFDataObjectTests.m in Sources */,
+				E11766131A38E13E00EF6B01 /* PCFLoggerTests.m in Sources */,
 				E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */,
 				E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */,
 				E11765AC1A3640CC00EF6B01 /* PCFConfigTests.m in Sources */,

@@ -10,6 +10,7 @@
 #import "PCFRemoteClient.h"
 #import "PCFResponse.h"
 #import "PCFConfig.h"
+#import "PCFLogger.h"
 
 @interface PCFRemoteStore ()
 
@@ -36,7 +37,7 @@
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    NSLog(@"PCFRemoteStore getWithKey: %@", key);
+    [PCFLogger log:@"PCFRemoteStore getWithKey: %@", key];
     NSError *error;
     NSString *result = [self.client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
 
@@ -54,7 +55,7 @@
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    NSLog(@"PCFRemoteStore putWithKey: %@ value: %@", key, value);
+    [PCFLogger log:@"PCFRemoteStore putWithKey: %@ value: %@", key, value];
     NSError *error;
     NSString *result = [self.client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error];
     
@@ -72,7 +73,7 @@
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    NSLog(@"PCFRemoteStore deleteWithKey: %@", key);
+    [PCFLogger log:@"PCFRemoteStore deleteWithKey: %@", key];
     NSError *error;
     NSString *result = [self.client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
     

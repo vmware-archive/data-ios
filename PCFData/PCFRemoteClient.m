@@ -8,6 +8,7 @@
 
 #import "PCFRemoteClient.h"
 #import "PCFEtagStore.h"
+#import "PCFLogger.h"
 
 @interface PCFRemoteClient ()
 
@@ -72,18 +73,18 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         request.HTTPBody = [value dataUsingEncoding:NSUTF8StringEncoding];
     }
     
-    NSLog(@"Request: %@ %@", method, etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag");
+    [PCFLogger log:@"Request: %@ %@", method, etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag"];
     
     return request;
 }
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error {
     if (error && *error) {
-        NSLog(@"Response: error");
+        [PCFLogger log:@"Response: error"];
         return nil;
         
     } else if (response && (response.statusCode < 200 || response.statusCode >= 300)) {
-        NSLog(@"Response: HTTP Error %ld", (long) response.statusCode);
+        [PCFLogger log:@"Response: HTTP Error %ld", (long) response.statusCode];
         *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         return nil;
         
@@ -94,7 +95,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         
         NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
-        NSLog(@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", result);
+        [PCFLogger log:@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", result];
         
         return result;
     }
