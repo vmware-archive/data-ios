@@ -53,23 +53,26 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 }
 
 - (void)queueGetWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key {
+    NSLog(@"PCFLocalStore queueGetWithToken: key: %@", key);
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithMethod:HTTP_GET accessToken:accessToken collection:collection key:key value:nil fallback:nil];
     [self queuePendingRequest:request];
 }
 
 - (void)queuePutWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key value:(NSString *)value fallback:(NSString *)fallback {
+    NSLog(@"PCFLocalStore queuePutWithToken: key: %@ value: %@", key, value);
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithMethod:HTTP_PUT accessToken:accessToken collection:collection key:key value:value fallback:fallback];
     [self queuePendingRequest:request];
 }
 
 - (void)queueDeleteWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key fallback:(NSString *)fallback {
+    NSLog(@"PCFLocalStore queueDeleteWithToken: key: %@", key);
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithMethod:HTTP_DELETE accessToken:accessToken collection:collection key:key value:nil fallback:fallback];
     [self queuePendingRequest:request];
 }
 
 - (void)queuePendingRequest:(PCFPendingRequest *)request {
     @synchronized(self) {
-        NSMutableArray *array = [self.defaults objectForKey:PCFDataRequestCache];
+        NSMutableArray *array = [[self.defaults objectForKey:PCFDataRequestCache] mutableCopy];
         
         if (!array) {
             array = [[NSMutableArray alloc] initWithObjects:request.values, nil];
@@ -81,8 +84,11 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     }
 }
 
+- (void)executePendingRequestsWithToken:(NSString *)accessToken {
+    [self executePendingRequestsWithToken:accessToken completionHandler:nil];
+}
+
 - (void)executePendingRequestsWithToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    
     NSMutableArray *requests;
     
     @synchronized(self) {
@@ -92,9 +98,14 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     
     if (requests.count > 0) {
         [self executePendingRequestsWithToken:accessToken requests:requests];
-        completionHandler(UIBackgroundFetchResultNewData);
+        
+        if (completionHandler) {
+            completionHandler(UIBackgroundFetchResultNewData);
+        }
     } else {
-        completionHandler(UIBackgroundFetchResultNoData);
+        if (completionHandler) {
+            completionHandler(UIBackgroundFetchResultNoData);
+        }
     }
 }
 
@@ -139,7 +150,6 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 
 
 @implementation PCFPendingRequest
-
 
 static NSString* const PCFMethod = @"PCFData:method";
 static NSString* const PCFKey = @"PCFData:key";

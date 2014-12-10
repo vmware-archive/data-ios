@@ -11,6 +11,10 @@
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
 
+@interface PCFRequestCache ()
+- (void)executePendingRequestsWithToken:(NSString *)accessToken requests:(NSArray *)requests;
+@end
+
 @interface PCFRequestCacheTests : XCTestCase
 
 @property NSString *key;
@@ -103,6 +107,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] initWithDefaults:userDefaults]);
     
     OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(array);
+    OCMStub([array mutableCopy]).andReturn(array);
 
     [cache queuePendingRequest:request];
     

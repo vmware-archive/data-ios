@@ -43,6 +43,7 @@
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    NSLog(@"PCFOfflineStore getWithKey: %@", key);
 
     if ([self isConnected]) {
         PCFResponse *response = [self.remoteStore getWithKey:key accessToken:accessToken];
@@ -79,7 +80,8 @@
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-
+    NSLog(@"PCFOfflineStore putWithKey: %@ value: %@", key, value);
+    
     if ([self isConnected]) {
         PCFResponse *response = [self.remoteStore putWithKey:key value:value accessToken:accessToken];
         
@@ -113,6 +115,7 @@
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    NSLog(@"PCFOfflineStore deleteWithKey: %@", key);
     
     if ([self isConnected]) {
         PCFResponse *response = [self.remoteStore deleteWithKey:key accessToken:accessToken];
@@ -158,7 +161,7 @@
 }
 
 - (BOOL)isSyncSupported {
-    return true;//return [[UIApplication sharedApplication] backgroundRefreshStatus] == UIBackgroundRefreshStatusAvailable;
+    return true;
 }
 
 @end

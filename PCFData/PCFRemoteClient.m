@@ -53,7 +53,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
 }
 
 - (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value {
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
     request.HTTPMethod = method;
 
     if (accessToken) {
@@ -92,8 +92,11 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
 
         [self.etagStore putEtagForUrl:response.URL etag:etag];
         
-        NSLog(@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", data);
-        return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", result);
+        
+        return result;
     }
 }
 
