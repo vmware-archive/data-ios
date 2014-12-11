@@ -73,18 +73,18 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         request.HTTPBody = [value dataUsingEncoding:NSUTF8StringEncoding];
     }
     
-    [PCFLogger log:@"Request: %@ %@", method, etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag"];
+    LogInfo(@"Request: %@ %@", method, etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag");
     
     return request;
 }
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error {
     if (error && *error) {
-        [PCFLogger log:@"Response: error"];
+        LogInfo(@"Response: Error");
         return nil;
         
     } else if (response && (response.statusCode < 200 || response.statusCode >= 300)) {
-        [PCFLogger log:@"Response: HTTP Error %ld", (long) response.statusCode];
+        LogInfo(@"Response: HTTP Error %ld", (long) response.statusCode);
         *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         return nil;
         
@@ -95,7 +95,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         
         NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
-        [PCFLogger log:@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", result];
+        LogInfo(@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", result);
         
         return result;
     }

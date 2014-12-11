@@ -37,7 +37,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    [PCFLogger log:@"PCFLocalStore getWithKey: %@", key];
+    LogInfo(@"PCFLocalStore getWithKey: %@", key);
     NSString *value = [self.defaults objectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
@@ -53,7 +53,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    [PCFLogger log:@"PCFLocalStore putWithKey: %@ value: %@", key, value];
+    LogInfo(@"PCFLocalStore putWithKey: %@ value: %@", key, value);
     [self.defaults setObject:value forKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
@@ -69,7 +69,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    [PCFLogger log:@"PCFLocalStore deleteWithKey: %@", key];
+    LogInfo(@"PCFLocalStore deleteWithKey: %@", key);
     [self.defaults removeObjectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:nil];
 }

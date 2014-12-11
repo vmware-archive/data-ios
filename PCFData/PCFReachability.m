@@ -67,7 +67,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 {
 #if kShouldPrintReachabilityFlags
 
-    [PCFLogger log:@"Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
+    LogInfo(@"Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
           (flags & kSCNetworkReachabilityFlagsIsWWAN)				? 'W' : '-',
           (flags & kSCNetworkReachabilityFlagsReachable)            ? 'R' : '-',
 
@@ -79,7 +79,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
           (flags & kSCNetworkReachabilityFlagsIsLocalAddress)       ? 'l' : '-',
           (flags & kSCNetworkReachabilityFlagsIsDirect)             ? 'd' : '-',
           comment
-          ];
+          );
 #endif
 }
 

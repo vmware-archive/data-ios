@@ -16,10 +16,88 @@
 
 @implementation PCFLoggerTests
 
-- (void)testLog {
-    [PCFLogger setDebug:true];
+- (void)testLogLevelDebug {
+    [PCFLogger sharedInstance].level = PCFLogLevelDebug;
     
-    [PCFLogger log:@"Logger %@", @"test"];
+    NSLog(@"=========== PCFLogLevelDebug ================");
+    
+    LogDebug(@"Log level %@: SUCCESS", @"Debug");
+    LogInfo(@"Log level %@: SUCCESS", @"Info");
+    LogWarning(@"Log level %@: SUCCESS", @"Warning");
+    LogError(@"Log level %@: SUCCESS", @"Error");
+    LogCritical(@"Log level %@: SUCCESS", @"Critical");
+    
+    NSLog(@"=============================================");
+}
+
+- (void)testLogLevelInfo {
+    [PCFLogger sharedInstance].level = PCFLogLevelInfo;
+    
+    NSLog(@"=========== PCFLogLevelInfo =================");
+    
+    LogDebug(@"Log level %@: FAILURE", @"Debug");
+    LogInfo(@"Log level %@: SUCCESS", @"Info");
+    LogWarning(@"Log level %@: SUCCESS", @"Warning");
+    LogError(@"Log level %@: SUCCESS", @"Error");
+    LogCritical(@"Log level %@: SUCCESS", @"Critical");
+    
+    NSLog(@"=============================================");
+}
+
+- (void)testLogLevelWarning {
+    [PCFLogger sharedInstance].level = PCFLogLevelWarning;
+    
+    NSLog(@"=========== PCFLogLevelWarning ==============");
+    
+    LogDebug(@"Log level %@: FAILURE", @"Debug");
+    LogInfo(@"Log level %@: FAILURE", @"Info");
+    LogWarning(@"Log level %@: SUCCESS", @"Warning");
+    LogError(@"Log level %@: SUCCESS", @"Error");
+    LogCritical(@"Log level %@: SUCCESS", @"Critical");
+    
+    NSLog(@"=============================================");
+}
+
+- (void)testLogLevelError {
+    [PCFLogger sharedInstance].level = PCFLogLevelError;
+    
+    NSLog(@"=========== PCFLogLevelError ================");
+    
+    LogDebug(@"Log level %@: FAILURE", @"Debug");
+    LogInfo(@"Log level %@: FAILURE", @"Info");
+    LogWarning(@"Log level %@: FAILURE", @"Warning");
+    LogError(@"Log level %@: SUCCESS", @"Error");
+    LogCritical(@"Log level %@: SUCCESS", @"Critical");
+    
+    NSLog(@"=============================================");
+}
+
+- (void)testLogLevelCritical {
+    [PCFLogger sharedInstance].level = PCFLogLevelCritical;
+    
+    NSLog(@"=========== PCFLogLevelCritical =============");
+    
+    LogDebug(@"Log level %@: FAILURE", @"Debug");
+    LogInfo(@"Log level %@: FAILURE", @"Info");
+    LogWarning(@"Log level %@: FAILURE", @"Warning");
+    LogError(@"Log level %@: FAILURE", @"Error");
+    LogCritical(@"Log level %@: SUCCESS", @"Critical");
+    
+    NSLog(@"=============================================");
+}
+
+- (void)testLogLevelNone {
+    [PCFLogger sharedInstance].level = PCFLogLevelNone;
+    
+    NSLog(@"=========== PCFLogLevelNone =================");
+    
+    LogDebug(@"Log level %@: FAILURE", @"Debug");
+    LogInfo(@"Log level %@: FAILURE", @"Info");
+    LogWarning(@"Log level %@: FAILURE", @"Warning");
+    LogError(@"Log level %@: FAILURE", @"Error");
+    LogCritical(@"Log level %@: FAILURE", @"Critical");
+    
+    NSLog(@"=============================================");
 }
 
 @end

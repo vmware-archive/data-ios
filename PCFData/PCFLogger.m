@@ -8,29 +8,28 @@
 
 #import "PCFLogger.h"
 
-@interface PCFLogger ()
-
-@end
-
 @implementation PCFLogger
 
-static BOOL isDebugEnabled = false;
-
-+ (void)setDebug:(BOOL)enabled {
-    isDebugEnabled = enabled;
++ (instancetype)sharedInstance {
+    static PCFLogger *sharedInstance = nil;
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[PCFLogger alloc] init];
+        sharedInstance.level = PCFLogLevelWarning;
+    });
+    return sharedInstance;
 }
 
-+ (BOOL)isDebugEnabled {
-    return isDebugEnabled;
-}
+- (void)logWithLevel:(PCFLogLevel)level format:(NSString*)format, ... NS_FORMAT_FUNCTION(2,3) {
 
-+ (void)log:(NSString *)fmt, ... {
-    if (isDebugEnabled) {
-        va_list args;
-        va_start(args, fmt);
-        NSLogv(fmt, args);
-        va_end(args);
+    va_list args;
+    va_start(args, format);
+
+    if (level >= self.level) {
+        NSLogv(format, args);
     }
+    
+    va_end(args);
 }
 
 @end

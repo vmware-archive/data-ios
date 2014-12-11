@@ -44,7 +44,7 @@
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    [PCFLogger log:@"PCFOfflineStore getWithKey: %@", key];
+    LogInfo(@"PCFOfflineStore getWithKey: %@", key);
 
     if ([self isConnected]) {
         PCFResponse *response = [self.remoteStore getWithKey:key accessToken:accessToken];
@@ -81,7 +81,7 @@
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    [PCFLogger log:@"PCFOfflineStore putWithKey: %@ value: %@", key, value];
+    LogInfo(@"PCFOfflineStore putWithKey: %@ value: %@", key, value);
     
     if ([self isConnected]) {
         PCFResponse *response = [self.remoteStore putWithKey:key value:value accessToken:accessToken];
@@ -116,7 +116,7 @@
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    [PCFLogger log:@"PCFOfflineStore deleteWithKey: %@", key];
+    LogInfo(@"PCFOfflineStore deleteWithKey: %@", key);
     
     if ([self isConnected]) {
         PCFResponse *response = [self.remoteStore deleteWithKey:key accessToken:accessToken];

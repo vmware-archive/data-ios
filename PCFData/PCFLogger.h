@@ -8,12 +8,40 @@
 
 #import <Foundation/Foundation.h>
 
+
+#define DEFAULT_LOGGER [PCFLogger sharedInstance]
+
+#define LogDebug(FMT, ...) \
+    [DEFAULT_LOGGER logWithLevel:PCFLogLevelDebug format:FMT, ##__VA_ARGS__]
+
+#define LogInfo(FMT, ...) \
+    [DEFAULT_LOGGER logWithLevel:PCFLogLevelInfo format:FMT, ##__VA_ARGS__]
+
+#define LogWarning(FMT, ...) \
+    [DEFAULT_LOGGER logWithLevel:PCFLogLevelWarning format:FMT, ##__VA_ARGS__]
+
+#define LogError(FMT, ...) \
+    [DEFAULT_LOGGER logWithLevel:PCFLogLevelError format:FMT, ##__VA_ARGS__]
+
+#define LogCritical(FMT, ...) \
+    [DEFAULT_LOGGER logWithLevel:PCFLogLevelCritical format:FMT, ##__VA_ARGS__]
+
+
+typedef NS_ENUM(NSInteger, PCFLogLevel) {
+    PCFLogLevelDebug = 0,
+    PCFLogLevelInfo,
+    PCFLogLevelWarning,
+    PCFLogLevelError,
+    PCFLogLevelCritical,
+    PCFLogLevelNone
+};
+
 @interface PCFLogger : NSObject
 
-+ (void)setDebug:(BOOL)enabled;
+@property PCFLogLevel level;
 
-+ (BOOL)isDebugEnabled;
++ (instancetype)sharedInstance;
 
-+ (void)log:(NSString *)fmt, ...;
+- (void)logWithLevel:(PCFLogLevel)level format:(NSString*)format, ...;
 
 @end
