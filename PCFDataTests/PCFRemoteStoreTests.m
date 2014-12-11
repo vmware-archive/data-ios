@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
+#import "PCFRemoteClient.h"
 
 @interface PCFRemoteStoreTests : XCTestCase
 

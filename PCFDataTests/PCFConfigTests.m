@@ -10,24 +10,25 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
+#import "PCFConfig.h"
 
 @interface PCFConfigTests : XCTestCase
 
 @property NSString *url;
-@property BOOL etagsSupported;
+@property PCFCollisionStrategy strategy;
 
 @end
 
 @implementation PCFConfigTests
 
 static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
-static NSString* const PCFAreEtagsEnabled = @"pivotal.data.etagsEnabled";
+static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 
 - (void)setUp {
     [super setUp];
 
     self.url = [NSUUID UUID].UUIDString;
-    self.etagsSupported = arc4random_uniform(1);
+    self.strategy = arc4random_uniform(1);
 }
 
 - (void)testServiceUrl {
@@ -63,35 +64,35 @@ static NSString* const PCFAreEtagsEnabled = @"pivotal.data.etagsEnabled";
     [config stopMocking];
 }
 
-- (void)testEtagsSupported {
+- (void)testCollisionStrategy {
     id config = OCMPartialMock([[PCFConfig alloc] init]);
     
     OCMStub([config sharedInstance]).andReturn(config);
-    OCMStub([config areEtagsSupported]).andReturn(self.etagsSupported);
+    OCMStub([config collisionStrategy]).andReturn(self.strategy);
     
-    BOOL etags = [PCFConfig areEtagsSupported];
+    PCFCollisionStrategy strategy = [PCFConfig collisionStrategy];
     
-    XCTAssertEqual(etags, self.etagsSupported);
+    XCTAssertEqual(strategy, self.strategy);
     
     OCMVerify([config sharedInstance]);
-    OCMVerify([config areEtagsSupported]);
+    OCMVerify([config collisionStrategy]);
     
     [config stopMocking];
 }
 
-- (void)testEtagsSupportedInstance {
+- (void)testCollisionStrategyInstance {
     id config = OCMPartialMock([[PCFConfig alloc] init]);
     NSDictionary *dict = OCMClassMock([NSDictionary class]);
     
     OCMStub([config values]).andReturn(dict);
-    OCMStub([dict objectForKey:[OCMArg any]]).andReturn([NSNumber numberWithBool:self.etagsSupported]);
+    OCMStub([dict objectForKey:[OCMArg any]]).andReturn([NSNumber numberWithBool:self.strategy]);
     
-    BOOL etags = [config areEtagsSupported];
+    PCFCollisionStrategy strategy = [config collisionStrategy];
     
-    XCTAssertEqual(etags, self.etagsSupported);
+    XCTAssertEqual(strategy, self.strategy);
     
     OCMVerify([config values]);
-    OCMVerify([dict objectForKey:PCFAreEtagsEnabled]);
+    OCMVerify([dict objectForKey:PCFStrategy]);
     
     [config stopMocking];
 }

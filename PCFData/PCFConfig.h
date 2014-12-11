@@ -8,10 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+
+typedef NS_ENUM(NSInteger, PCFCollisionStrategy) {
+    PCFCollisionStrategyLastWriteWins = 0,
+    PCFCollisionStrategyOptimisticLocking
+};
+
 @interface PCFConfig : NSObject
 
 + (NSString *)serviceUrl;
 
-+ (BOOL)areEtagsSupported;
++ (PCFCollisionStrategy)collisionStrategy;
 
 @end

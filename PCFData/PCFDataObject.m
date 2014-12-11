@@ -7,6 +7,7 @@
 //
 
 #import "PCFDataObject.h"
+#import "PCFOfflineStore.h"
 
 @interface PCFDataObject ()
 
@@ -18,6 +19,11 @@
 @end
 
 @implementation PCFDataObject
+
+- (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key {
+    PCFOfflineStore *dataStore = [[PCFOfflineStore alloc] initWithCollection:collection];
+    return [self initWithDataStore:dataStore key:key];
+}
 
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key {
     _key = key;

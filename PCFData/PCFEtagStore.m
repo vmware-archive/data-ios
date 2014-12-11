@@ -28,7 +28,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
     return self;
 }
 
-- (NSString *)getEtagForUrl:(NSURL *)url {
+- (NSString *)etagForUrl:(NSURL *)url {
     if (url) {
         return [self.defaults objectForKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
     } else {

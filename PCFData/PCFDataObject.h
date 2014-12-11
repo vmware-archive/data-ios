@@ -11,6 +11,8 @@
 
 @interface PCFDataObject : NSObject
 
+- (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key;
+
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key;
 
 - (PCFResponse *)getWithAccessToken:(NSString *)accessToken;

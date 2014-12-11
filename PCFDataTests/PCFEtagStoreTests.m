@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
+#import "PCFEtagStore.h"
 
 @interface PCFEtagStoreTests : XCTestCase
 
@@ -45,7 +46,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
     
     OCMStub([defaults objectForKey:[OCMArg any]]).andReturn(self.etag);
     
-    NSString *etag = [etagStore getEtagForUrl:self.url];
+    NSString *etag = [etagStore etagForUrl:self.url];
     
     XCTAssertEqual(etag, self.etag);
     

@@ -4,7 +4,7 @@
 <dict>
 	<key>pivotal.data.serviceUrl</key>
 	<string>http://datasync-backend.kona.coffee.cfms-apps.com</string>
-	<key>pivotal.data.etagsEnabled</key>
-	<true/>
+	<key>pivotal.data.collisionStrategy</key>
+	<string>OptimisticLocking</string>
 </dict>
 </plist>

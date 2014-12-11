@@ -13,6 +13,7 @@
 }
 
 @property (readonly) NSDictionary *values;
+@property (readwrite) NSDictionary *collisionTypes;
 
 @end
 
@@ -20,7 +21,8 @@
 @implementation PCFConfig
 
 static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
-static NSString* const PCFAreEtagsEnabled = @"pivotal.data.etagsEnabled";
+static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
+
 
 + (PCFConfig *)sharedInstance {
     static PCFConfig *sharedInstance = nil;
@@ -35,16 +37,25 @@ static NSString* const PCFAreEtagsEnabled = @"pivotal.data.etagsEnabled";
     return [[PCFConfig sharedInstance] serviceUrl];
 }
 
-+ (BOOL)areEtagsSupported {
-    return [[PCFConfig sharedInstance] areEtagsSupported];
++ (PCFCollisionStrategy)collisionStrategy {
+    return [[PCFConfig sharedInstance] collisionStrategy];
+}
+
+- (instancetype)init {
+    self.collisionTypes = @{
+        @"OptimisticLocking" : [NSNumber numberWithInt:PCFCollisionStrategyOptimisticLocking],
+        @"LastWriteWins" : [NSNumber numberWithInt:PCFCollisionStrategyLastWriteWins]
+    };
+    return self;
 }
 
 - (NSString *)serviceUrl {
     return [self.values objectForKey:PCFServiceUrl];
 }
 
-- (BOOL)areEtagsSupported {
-    return [[self.values objectForKey:PCFAreEtagsEnabled] boolValue];
+- (PCFCollisionStrategy)collisionStrategy {
+    NSString *strategy = [self.values objectForKey:PCFStrategy];
+    return [[self.collisionTypes objectForKey:strategy] intValue];
 }
 
 - (NSDictionary *)values {

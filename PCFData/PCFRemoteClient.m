@@ -9,6 +9,7 @@
 #import "PCFRemoteClient.h"
 #import "PCFEtagStore.h"
 #import "PCFLogger.h"
+#import "PCFConfig.h"
 
 @interface PCFRemoteClient ()
 
@@ -61,41 +62,51 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         NSString *token = [PCFBearerPrefix stringByAppendingString:accessToken];
         [request addValue:token forHTTPHeaderField:@"Authorization"];
     }
+
+    LogInfo(@"Request: [%@] %@", method, request.URL);
     
-    NSString *etag = [self.etagStore getEtagForUrl:url];
-    
-    if (etag) {
-        NSString *header = [method isEqual:@"GET"] ? @"If-None-Match" : @"If-Match";
-        [request addValue:etag forHTTPHeaderField:header];
+    if ([PCFConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
+        NSString *etag = [self.etagStore etagForUrl:url];
+        
+        if (etag) {
+            NSString *header = [method isEqual:@"GET"] ? @"If-None-Match" : @"If-Match";
+            [request addValue:etag forHTTPHeaderField:header];
+        }
+        
+        LogInfo(@"Request Etag: %@", etag ? etag : @"None");
     }
     
     if (value) {
         request.HTTPBody = [value dataUsingEncoding:NSUTF8StringEncoding];
     }
     
-    LogInfo(@"Request: %@ %@", method, etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag");
+    
     
     return request;
 }
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error {
     if (error && *error) {
-        LogInfo(@"Response: Error");
+        LogInfo(@"Response Error");
         return nil;
         
     } else if (response && (response.statusCode < 200 || response.statusCode >= 300)) {
-        LogInfo(@"Response: HTTP Error %ld", (long) response.statusCode);
+        LogInfo(@"Response Error: HTTP Status Code %ld", (long) response.statusCode);
         *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         return nil;
         
     } else {
-        NSString *etag = [response.allHeaderFields valueForKey:@"Etag"];
+        if ([PCFConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
+            NSString *etag = [response.allHeaderFields valueForKey:@"Etag"];
 
-        [self.etagStore putEtagForUrl:response.URL etag:etag];
+            [self.etagStore putEtagForUrl:response.URL etag:etag];
+            
+            LogInfo(@"Response Etag: %@", etag ? etag : @"None");
+        }
         
         NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
-        LogInfo(@"Response: %@ %@", etag ? [@"Etag: " stringByAppendingString:etag] : @"No Etag", result);
+        LogInfo(@"Response Body: %@", result);
         
         return result;
     }

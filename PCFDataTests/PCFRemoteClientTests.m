@@ -10,6 +10,9 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
+#import "PCFRemoteClient.h"
+#import "PCFEtagStore.h"
+#import "PCFConfig.h"
 
 @interface PCFRemoteClientTests : XCTestCase
 
@@ -120,42 +123,57 @@
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForGet {
+    id config = OCMClassMock([PCFConfig class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
     
-    OCMStub([etagStore getEtagForUrl:[OCMArg any]]).andReturn(self.etag);
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
     NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:nil url:self.url value:nil];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
     
-    OCMVerify([etagStore getEtagForUrl:self.url]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    
+    [config stopMocking];
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForPut {
+    id config = OCMClassMock([PCFConfig class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
     
-    OCMStub([etagStore getEtagForUrl:[OCMArg any]]).andReturn(self.etag);
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
     NSURLRequest *request = [client requestWithMethod:@"PUT" accessToken:nil url:self.url value:nil];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
-    OCMVerify([etagStore getEtagForUrl:self.url]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    
+    [config stopMocking];
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForDelete {
+    id config = OCMClassMock([PCFConfig class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
-    
-    OCMStub([etagStore getEtagForUrl:[OCMArg any]]).andReturn(self.etag);
+
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
     NSURLRequest *request = [client requestWithMethod:@"DELETE" accessToken:nil url:self.url value:nil];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
-    OCMVerify([etagStore getEtagForUrl:self.url]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    
+    [config stopMocking];
 }
 
 - (void)testHandleResponseFailureWithError {
@@ -199,12 +217,15 @@
 }
 
 - (void)testHandleResponseSuccessWithEtag {
+    id config = OCMClassMock([PCFConfig class]);
     NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
     NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
     NSDictionary *dict = OCMClassMock([NSDictionary class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
-    
+
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([response statusCode]).andReturn(200);
     OCMStub([response allHeaderFields]).andReturn(dict);
     OCMStub([dict valueForKey:@"Etag"]).andReturn(self.etag);
@@ -214,6 +235,8 @@
     XCTAssertEqualObjects(result, self.result);
     
     OCMVerify([etagStore putEtagForUrl:response.URL etag:self.etag]);
+    
+    [config stopMocking];
 }
 
 @end
