@@ -22,6 +22,7 @@
 @property NSURL *url;
 @property int httpErrorCode;
 @property NSString *etag;
+@property BOOL force;
 
 @end
 
@@ -38,6 +39,7 @@
     
     self.httpErrorCode = 300 + (arc4random() % 200);
     self.etag = [NSUUID UUID].UUIDString;
+    self.force = arc4random_uniform(1);
 }
 
 - (void)testGet {
@@ -47,15 +49,15 @@
 
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] init]);
 
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any]]).andReturn(request);
+    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(request);
     OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
     OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
 
-    NSString *value = [client getWithAccessToken:self.token url:self.url error:nil];
+    NSString *value = [client getWithAccessToken:self.token url:self.url error:nil force:self.force];
 
     XCTAssertEqualObjects(value, self.result);
 
-    OCMVerify([client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil]);
+    OCMVerify([client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:self.force]);
     OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:nil]);
     OCMVerify([client handleResponse:[OCMArg any] data:data error:nil]);
     
@@ -69,15 +71,15 @@
 
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] init]);
 
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any]]).andReturn(request);
+    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(request);
     OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
     OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
     
-    NSString *value = [client putWithAccessToken:self.token url:self.url value:self.result error:nil];
+    NSString *value = [client putWithAccessToken:self.token url:self.url value:self.result error:nil force:self.force];
 
     XCTAssertEqualObjects(value, self.result);
 
-    OCMVerify([client requestWithMethod:@"PUT" accessToken:self.token url:self.url value:self.result]);
+    OCMVerify([client requestWithMethod:@"PUT" accessToken:self.token url:self.url value:self.result force:self.force]);
     OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:nil]);
     OCMVerify([client handleResponse:[OCMArg any] data:data error:nil]);
     
@@ -91,15 +93,15 @@
 
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] init]);
 
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any]]).andReturn(request);
+    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(request);
     OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
     OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
 
-    NSString *value = [client deleteWithAccessToken:self.token url:self.url error:nil];
+    NSString *value = [client deleteWithAccessToken:self.token url:self.url error:nil force:self.force];
 
     XCTAssertEqualObjects(value, self.result);
 
-    OCMVerify([client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil]);
+    OCMVerify([client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil force:self.force]);
     OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:nil]);
     OCMVerify([client handleResponse:[OCMArg any] data:data error:nil]);
     
@@ -110,7 +112,7 @@
     PCFRemoteClient *client = [[PCFRemoteClient alloc] init];
     
     NSString *method = [NSUUID UUID].UUIDString;
-    NSURLRequest *request = [client requestWithMethod:method accessToken:self.token url:self.url value:self.result];
+    NSURLRequest *request = [client requestWithMethod:method accessToken:self.token url:self.url value:self.result force:self.force];
     
     NSString *token = [@"Bearer " stringByAppendingString:self.token];
     NSString *authHeader = [request.allHTTPHeaderFields valueForKey:@"Authorization"];
@@ -131,7 +133,7 @@
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
-    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:nil url:self.url value:nil];
+    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:nil url:self.url value:nil force:false];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
     
@@ -149,7 +151,7 @@
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
-    NSURLRequest *request = [client requestWithMethod:@"PUT" accessToken:nil url:self.url value:nil];
+    NSURLRequest *request = [client requestWithMethod:@"PUT" accessToken:nil url:self.url value:nil force:false];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
@@ -167,11 +169,27 @@
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
-    NSURLRequest *request = [client requestWithMethod:@"DELETE" accessToken:nil url:self.url value:nil];
+    NSURLRequest *request = [client requestWithMethod:@"DELETE" accessToken:nil url:self.url value:nil force:false];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
     OCMVerify([etagStore etagForUrl:self.url]);
+    
+    [config stopMocking];
+}
+
+- (void)testRequestWithMethodDoesntSetEtagForForceRequest {
+    id config = OCMClassMock([PCFConfig class]);
+    PCFEtagStore *etagStore = OCMStrictClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
+    
+    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:nil url:self.url value:nil force:true];
+    
+    XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
+    XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
     [config stopMocking];
 }

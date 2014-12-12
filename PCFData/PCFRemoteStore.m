@@ -37,16 +37,24 @@
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    return [self getWithKey:key accessToken:accessToken force:false];
+}
+
+- (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force {
     LogInfo(@"PCFRemoteStore getWithKey: %@", key);
     NSError *error;
-    NSString *result = [self.client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
+    NSString *result = [self.client getWithAccessToken:accessToken url:[self urlForKey:key] error:&error force:force];
 
     return [self handleResult:result key:key error:error];
 }
 
 - (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
+    [self getWithKey:key accessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self getWithKey:key accessToken:accessToken];
+        PCFResponse *response = [self getWithKey:key accessToken:accessToken force:force];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -55,16 +63,24 @@
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
+    return [self putWithKey:key value:value accessToken:accessToken force:false];
+}
+
+- (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken force:(BOOL)force {
     LogInfo(@"PCFRemoteStore putWithKey: %@ value: %@", key, value);
     NSError *error;
-    NSString *result = [self.client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error];
+    NSString *result = [self.client putWithAccessToken:accessToken url:[self urlForKey:key] value:value error:&error force:force];
     
     return [self handleResult:result key:key error:error];
 }
 
 - (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
+    [self putWithKey:key value:value accessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken];
+        PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken force:force];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -73,16 +89,24 @@
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    return [self deleteWithKey:key accessToken:accessToken force:false];
+}
+
+- (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force {
     LogInfo(@"PCFRemoteStore deleteWithKey: %@", key);
     NSError *error;
-    NSString *result = [self.client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error];
+    NSString *result = [self.client deleteWithAccessToken:accessToken url:[self urlForKey:key] error:&error force:force];
     
     return [self handleResult:result key:key error:error];
 }
 
 - (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
+    [self deleteWithKey:key accessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self deleteWithKey:key accessToken:accessToken];
+        PCFResponse *response = [self deleteWithKey:key accessToken:accessToken force:force];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);

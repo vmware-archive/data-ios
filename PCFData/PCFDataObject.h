@@ -17,14 +17,26 @@
 
 - (PCFResponse *)getWithAccessToken:(NSString *)accessToken;
 
+- (PCFResponse *)getWithAccessToken:(NSString *)accessToken force:(BOOL)force;
+
 - (void)getWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
-- (PCFResponse *)putWithAccessToken:(NSString *)acccessToken value:(NSString *)value;
+- (void)getWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock;
+
+- (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value;
+
+- (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force;
 
 - (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock;
 
+- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock;
+
 - (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken;
 
+- (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force;
+
 - (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
+
+- (void)deleteWithAccessToken:(NSString *)accessToken  force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock;
 
 @end

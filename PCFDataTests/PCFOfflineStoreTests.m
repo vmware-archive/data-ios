@@ -18,6 +18,7 @@
 @property NSString *token;
 @property NSString *collection;
 @property NSError *error;
+@property BOOL force;
 
 @end
 
@@ -32,6 +33,7 @@
     self.collection = [NSUUID UUID].UUIDString;
     
     self.error = [[NSError alloc] init];
+    self.force = arc4random_uniform(1);
 }
 
 - (void)testGetInvokesRemoteAndLocalStoreWhenConnectionIsAvailable {
@@ -43,15 +45,15 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
-    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token]);
-    OCMVerify([localStore putWithKey:self.key value:remoteResponse.value accessToken:self.token]);
+    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([localStore putWithKey:self.key value:remoteResponse.value accessToken:self.token force:self.force]);
 }
 
 - (void)testGetInvokesRemoteStoreWhenConnectionIsAvailableAndErrorOccurs {
@@ -61,13 +63,13 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:nil remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, remoteResponse);
     
-    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token]);
+    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token force:self.force]);
 }
 
 - (void)testGetInvokesRemoteAndLocalStoreWhenConnectionIsAvailableAndNotModifiedErrorOccurs {
@@ -80,15 +82,15 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
-    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
+    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token]);
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token]);
+    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
 }
 
 - (void)testGetInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
@@ -101,13 +103,13 @@
     OCMStub([dataStore isConnected]).andReturn(false);
     OCMStub([dataStore isSyncSupported]).andReturn(true);
     OCMStub([dataStore requestCache]).andReturn(requestCache);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token]);
+    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
     OCMVerify([requestCache queueGetWithToken:self.token collection:self.collection key:self.key]);
 }
 
@@ -119,13 +121,13 @@
     
     OCMStub([dataStore isConnected]).andReturn(false);
     OCMStub([dataStore isSyncSupported]).andReturn(false);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
     
     PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token]);
+    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
 }
 
 - (void)testPutInvokesRemoteAndLocalStoreWhenConnectionIsAvailable {
@@ -137,15 +139,15 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
-    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([remoteStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
     
     PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore putWithKey:self.key value:self.value accessToken:self.token]);
-    OCMVerify([localStore putWithKey:self.key value:remoteResponse.value accessToken:self.token]);
+    OCMVerify([remoteStore putWithKey:self.key value:self.value accessToken:self.token force:self.force]);
+    OCMVerify([localStore putWithKey:self.key value:remoteResponse.value accessToken:self.token force:self.force]);
 }
 
 - (void)testPutInvokesRemoteStoreWhenConnectionIsAvailableAndErrorOccurs {
@@ -155,13 +157,13 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:nil remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([remoteStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
     
     PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
     
     XCTAssertEqual(response, remoteResponse);
     
-    OCMVerify([remoteStore putWithKey:self.key value:self.value accessToken:self.token]);
+    OCMVerify([remoteStore putWithKey:self.key value:self.value accessToken:self.token force:self.force]);
 }
 
 - (void)testPutInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
@@ -175,15 +177,15 @@
     OCMStub([dataStore isConnected]).andReturn(false);
     OCMStub([dataStore isSyncSupported]).andReturn(true);
     OCMStub([dataStore requestCache]).andReturn(requestCache);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localGetResponse);
-    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localPutResponse);
+    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localGetResponse);
+    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localPutResponse);
     
     PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
     
     XCTAssertEqual(response, localPutResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token]);
-    OCMVerify([localStore putWithKey:self.key value:self.value accessToken:self.token]);
+    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([localStore putWithKey:self.key value:self.value accessToken:self.token force:self.force]);
     OCMVerify([requestCache queuePutWithToken:self.token collection:self.collection key:self.key value:self.value fallback:localGetResponse.value]);
 }
 
@@ -213,15 +215,15 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
-    OCMStub([localStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([remoteStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([localStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
     
     PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore deleteWithKey:self.key accessToken:self.token]);
-    OCMVerify([localStore deleteWithKey:self.key accessToken:self.token]);
+    OCMVerify([remoteStore deleteWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([localStore deleteWithKey:self.key accessToken:self.token force:self.force]);
 }
 
 - (void)testDeleteInvokesRemoteStoreWhenConnectionIsAvailableAndErrorOccurs {
@@ -231,13 +233,13 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:nil remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([remoteStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
     
     PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, remoteResponse);
     
-    OCMVerify([remoteStore deleteWithKey:self.key accessToken:self.token]);
+    OCMVerify([remoteStore deleteWithKey:self.key accessToken:self.token force:self.force]);
 }
 
 - (void)testDeleteInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
@@ -251,15 +253,15 @@
     OCMStub([dataStore isConnected]).andReturn(false);
     OCMStub([dataStore isSyncSupported]).andReturn(true);
     OCMStub([dataStore requestCache]).andReturn(requestCache);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localGetResponse);
-    OCMStub([localStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(localDeleteResponse);
+    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localGetResponse);
+    OCMStub([localStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localDeleteResponse);
     
     PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
     
     XCTAssertEqual(response, localDeleteResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token]);
-    OCMVerify([localStore deleteWithKey:self.key accessToken:self.token]);
+    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([localStore deleteWithKey:self.key accessToken:self.token force:self.force]);
     OCMVerify([requestCache queueDeleteWithToken:self.token collection:self.collection key:self.key fallback:localGetResponse.value]);
 }
 

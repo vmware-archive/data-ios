@@ -32,27 +32,51 @@
 }
 
 - (PCFResponse *)getWithAccessToken:(NSString *)accessToken {
-    return [self.dataStore getWithKey:self.key accessToken:accessToken];
+    return [self getWithAccessToken:accessToken force:false];
+}
+
+- (PCFResponse *)getWithAccessToken:(NSString *)accessToken force:(BOOL)force {
+    return [self.dataStore getWithKey:self.key accessToken:accessToken force:force];
 }
 
 - (void)getWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    [self.dataStore getWithKey:self.key accessToken:accessToken completionBlock:completionBlock];
+    [self getWithAccessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)getWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
+    [self.dataStore getWithKey:self.key accessToken:accessToken force:force completionBlock:completionBlock];
 }
 
 - (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value {
-    return [self.dataStore putWithKey:self.key value:value accessToken:accessToken];
+    return [self putWithAccessToken:accessToken value:value force:false];
+}
+
+- (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force {
+    return [self.dataStore putWithKey:self.key value:value accessToken:accessToken force:force];
 }
 
 - (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock {
-    [self.dataStore putWithKey:self.key value:value accessToken:accessToken completionBlock:completionBlock];
+    [self putWithAccessToken:accessToken value:value force:false completionBlock:completionBlock];
+}
+
+- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
+    [self.dataStore putWithKey:self.key value:value accessToken:accessToken force:force completionBlock:completionBlock];
 }
 
 - (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken {
-    return [self.dataStore deleteWithKey:self.key accessToken:accessToken];
+    return [self deleteWithAccessToken:accessToken force:false];
+}
+
+- (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force {
+    return [self.dataStore deleteWithKey:self.key accessToken:accessToken force:force];
 }
 
 - (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    [self.dataStore deleteWithKey:self.key accessToken:accessToken completionBlock:completionBlock];
+    [self deleteWithAccessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
+    [self.dataStore deleteWithKey:self.key accessToken:accessToken force:force completionBlock:completionBlock];
 }
 
 @end

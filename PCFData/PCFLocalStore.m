@@ -37,14 +37,22 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    return [self getWithKey:key accessToken:accessToken force:false];
+}
+
+- (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force {
     LogInfo(@"PCFLocalStore getWithKey: %@", key);
     NSString *value = [self.defaults objectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
 
 - (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
+    [self getWithKey:key accessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self getWithKey:key accessToken:accessToken];
+        PCFResponse *response = [self getWithKey:key accessToken:accessToken force:force];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -53,14 +61,22 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
+    return [self putWithKey:key value:value accessToken:accessToken force:false];
+}
+
+- (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken force:(BOOL)force {
     LogInfo(@"PCFLocalStore putWithKey: %@ value: %@", key, value);
     [self.defaults setObject:value forKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:value];
 }
 
 - (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
+    [self putWithKey:key value:value accessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken];
+        PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken force:force];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -69,14 +85,22 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
+    return [self deleteWithKey:key accessToken:accessToken force:false];
+}
+
+- (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force {
     LogInfo(@"PCFLocalStore deleteWithKey: %@", key);
     [self.defaults removeObjectForKey:[PCFDataPrefix stringByAppendingString:key]];
     return [[PCFResponse alloc] initWithKey:key value:nil];
 }
 
 - (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
+    [self deleteWithKey:key accessToken:accessToken force:false completionBlock:completionBlock];
+}
+
+- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self deleteWithKey:key accessToken:accessToken];
+        PCFResponse *response = [self deleteWithKey:key accessToken:accessToken force:force];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
