@@ -11,6 +11,8 @@
 #import "PCFLocalStore.h"
 #import "PCFResponse.h"
 #import "PCFLogger.h"
+#import "PCFConfig.h"
+#import "PCFReachability.h"
 
 @interface PCFRequestCache ()
 

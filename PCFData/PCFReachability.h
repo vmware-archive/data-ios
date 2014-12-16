@@ -57,10 +57,15 @@ typedef enum : NSInteger {
 } PCFNetworkStatus;
 
 
-extern NSString *kReachabilityChangedNotification;
+extern NSString *kPCFReachabilityChangedNotification;
 
 
 @interface PCFReachability : NSObject
+
+/*!
+ * Use to check the reachability of the Pivotal.plist serviceUrl.
+ */
++ (instancetype)reachability;
 
 /*!
  * Use to check the reachability of a given host name.

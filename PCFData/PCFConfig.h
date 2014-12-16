@@ -16,6 +16,8 @@ typedef NS_ENUM(NSInteger, PCFCollisionStrategy) {
 
 @interface PCFConfig : NSObject
 
++ (PCFConfig *)sharedInstance;
+
 + (NSString *)serviceUrl;
 
 + (PCFCollisionStrategy)collisionStrategy;

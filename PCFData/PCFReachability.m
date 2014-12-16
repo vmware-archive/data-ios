@@ -54,9 +54,10 @@
 
 #import "PCFReachability.h"
 #import "PCFLogger.h"
+#import "PCFConfig.h"
 
 
-NSString *kReachabilityChangedNotification = @"kNetworkReachabilityChangedNotification";
+NSString *kPCFReachabilityChangedNotification = @"kPCFReachabilityChangedNotification";
 
 
 #pragma mark - Supporting functions
@@ -92,7 +93,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
     PCFReachability* noteObject = (__bridge PCFReachability *)info;
     // Post a notification to notify the client that the network reachability changed.
-    [[NSNotificationCenter defaultCenter] postNotificationName: kReachabilityChangedNotification object: noteObject];
+    [[NSNotificationCenter defaultCenter] postNotificationName: kPCFReachabilityChangedNotification object: noteObject];
 }
 
 
@@ -102,6 +103,13 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 {
 	BOOL _alwaysReturnLocalWiFiStatus; //default is NO
 	SCNetworkReachabilityRef _reachabilityRef;
+}
+
++ (instancetype)reachability
+{
+    NSURL* url = [NSURL URLWithString:[PCFConfig serviceUrl]];
+    PCFReachability *returnValue = [PCFReachability reachabilityWithHostName:[url host]];
+    return returnValue;
 }
 
 + (instancetype)reachabilityWithHostName:(NSString *)hostName

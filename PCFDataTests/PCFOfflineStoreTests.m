@@ -10,6 +10,19 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
+#import "PCFRequestCache.h"
+
+@interface PCFOfflineStore ()
+
+@property (readonly) PCFRequestCache *requestCache;
+
+- (PCFResponse *)errorNoConnectionWithKey:(NSString *)key;
+
+- (BOOL)isSyncSupported;
+
+- (BOOL)isConnected;
+
+@end
 
 @interface PCFOfflineStoreTests : XCTestCase
 

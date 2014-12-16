@@ -10,10 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
-
-@interface PCFRequestCache ()
-- (void)executePendingRequestsWithToken:(NSString *)accessToken requests:(NSArray *)requests;
-@end
+#import "PCFRequestCache.h"
 
 @interface PCFRequestCacheTests : XCTestCase
 
@@ -32,6 +29,7 @@ static int const HTTP_GET = 0;
 static int const HTTP_PUT = 1;
 static int const HTTP_DELETE = 2;
 
+static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 static NSString* const PCFMethod = @"PCFData:method";
 static NSString* const PCFAccessToken = @"PCFData:accessToken";
 static NSString* const PCFCollection = @"PCFData:collection";
@@ -39,7 +37,6 @@ static NSString* const PCFKey = @"PCFData:key";
 static NSString* const PCFValue = @"PCFData:value";
 static NSString* const PCFFallback = @"PCFData:fallback";
 
-static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 
 - (void)setUp {
     [super setUp];
@@ -138,7 +135,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(requestArray);
     OCMStub([cache executePendingRequestsWithToken:[OCMArg any] requests:[OCMArg any]]).andDo(nil);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [cache executePendingRequestsWithToken:self.token completionHandler:^(UIBackgroundFetchResult arg){
         XCTAssertEqual(arg, UIBackgroundFetchResultNewData);
@@ -159,7 +156,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(nil);
     OCMStub([cache executePendingRequestsWithToken:[OCMArg any] requests:[OCMArg any]]).andDo(nil);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [cache executePendingRequestsWithToken:self.token completionHandler:^(UIBackgroundFetchResult arg){
         XCTAssertEqual(arg, UIBackgroundFetchResultNoData);

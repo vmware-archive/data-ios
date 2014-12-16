@@ -21,6 +21,13 @@
 @property NSString *collection;
 @property PCFRemoteStore *remoteStore;
 @property PCFLocalStore *localStore;
+@property (readonly) PCFRequestCache *requestCache;
+
+- (PCFResponse *)errorNoConnectionWithKey:(NSString *)key;
+
+- (BOOL)isSyncSupported;
+
+- (BOOL)isConnected;
 
 @end
 
@@ -180,10 +187,8 @@
 }
 
 - (BOOL)isConnected {
-    NSURL* url = [NSURL URLWithString:[PCFConfig serviceUrl]];
-    PCFReachability *reachability = [PCFReachability reachabilityWithHostName:[url host]];
-    PCFNetworkStatus netStatus = [reachability currentReachabilityStatus];
-    return netStatus != NotReachable;
+    PCFNetworkStatus networkStatus = [[PCFReachability reachability] currentReachabilityStatus];
+    return networkStatus != NotReachable;
 }
 
 - (BOOL)isSyncSupported {

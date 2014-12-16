@@ -12,6 +12,14 @@
 #import <PCFData/PCFData.h>
 #import "PCFRemoteClient.h"
 
+@interface PCFRemoteStore ()
+
+- (instancetype)initWithCollection:(NSString *)collection client:(PCFRemoteClient *)client;
+
+- (NSURL *)urlForKey:(NSString *)key;
+
+@end
+
 @interface PCFRemoteStoreTests : XCTestCase
 
 @property NSString *key;
@@ -80,7 +88,7 @@
     OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
     OCMStub([client getWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef] force:false]).andReturn(self.value);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore getWithKey:self.key accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -105,7 +113,7 @@
         *errorPtrPtr = self.error;
     });
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore getWithKey:self.key accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -163,7 +171,7 @@
     OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
     OCMStub([client putWithAccessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] error:[OCMArg anyObjectRef] force:false]).andReturn(self.value);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore putWithKey:self.key value:self.value accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -188,7 +196,7 @@
         *errorPtrPtr = self.error;
     });
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore putWithKey:self.key value:self.value accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -246,7 +254,7 @@
     OCMStub([dataStore urlForKey:[OCMArg any]]).andReturn(self.url);
     OCMStub([client deleteWithAccessToken:[OCMArg any] url:[OCMArg any] error:[OCMArg anyObjectRef] force:false]).andReturn(self.value);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore deleteWithKey:self.key accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -271,7 +279,7 @@
         *errorPtrPtr = self.error;
     });
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore deleteWithKey:self.key accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);

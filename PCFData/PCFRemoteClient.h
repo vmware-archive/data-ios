@@ -12,8 +12,6 @@
 
 @interface PCFRemoteClient : NSObject
 
-- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
-
 - (NSString *)getWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error force:(BOOL)force;
 
 - (NSString *)putWithAccessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value error:(NSError *__autoreleasing *)error force:(BOOL)force;

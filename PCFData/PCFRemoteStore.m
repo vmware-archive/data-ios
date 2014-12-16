@@ -15,7 +15,11 @@
 @interface PCFRemoteStore ()
 
 @property NSString *collection;
-@property (strong, readonly) PCFRemoteClient *client;
+@property (readonly) PCFRemoteClient *client;
+
+- (instancetype)initWithCollection:(NSString *)collection client:(PCFRemoteClient *)client;
+
+- (NSURL *)urlForKey:(NSString *)key;
 
 @end
 

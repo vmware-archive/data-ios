@@ -53,7 +53,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     
     OCMStub([defaults objectForKey:[OCMArg any]]).andReturn(self.value);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore getWithKey:self.key accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -81,7 +81,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     NSUserDefaults *defaults = OCMClassMock([NSUserDefaults class]);
     PCFLocalStore *dataStore = [[PCFLocalStore alloc] initWithCollection:self.collection defaults:defaults];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore putWithKey:self.key value:self.value accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);
@@ -109,7 +109,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     NSUserDefaults *defaults = OCMClassMock([NSUserDefaults class]);
     PCFLocalStore *dataStore = [[PCFLocalStore alloc] initWithCollection:self.collection defaults:defaults];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
     [dataStore deleteWithKey:self.key accessToken:self.token completionBlock:^(PCFResponse *response) {
         XCTAssertEqual(response.key, self.key);

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import <PCFData/PCFLogger.h>
+#import <PCFData/PCFData.h>
+#import "PCFLogger.h"
 
 @interface PCFLoggerTests : XCTestCase
 

@@ -14,6 +14,12 @@
 #import "PCFEtagStore.h"
 #import "PCFConfig.h"
 
+@interface PCFRemoteClient ()
+
+- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
+
+@end
+
 @interface PCFRemoteClientTests : XCTestCase
 
 @property NSString *token;

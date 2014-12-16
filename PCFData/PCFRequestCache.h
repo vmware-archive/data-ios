@@ -31,6 +31,8 @@
 
 - (void)executePendingRequestsWithToken:(NSString *)accessToken;
 
+- (void)executePendingRequestsWithToken:(NSString *)accessToken requests:(NSArray *)requests;
+
 - (void)executePendingRequestsWithToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 @end

@@ -15,8 +15,4 @@
 
 - (instancetype)initWithCollection:(NSString *)collection;
 
-- (instancetype)initWithCollection:(NSString *)collection client:(PCFRemoteClient *)client;
-
-- (NSURL *)urlForKey:(NSString *)key;
-
 @end

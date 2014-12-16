@@ -26,13 +26,12 @@
 		E11765A91A3640B800EF6B01 /* PCFConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765A71A3640B800EF6B01 /* PCFConfig.h */; };
 		E11765AC1A3640CC00EF6B01 /* PCFConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */; };
 		E11765B11A374A9E00EF6B01 /* Pivotal.plist in Resources */ = {isa = PBXBuildFile; fileRef = E11765AF1A36430F00EF6B01 /* Pivotal.plist */; };
-		E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765FA1A38D88B00EF6B01 /* PCFLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765FA1A38D88B00EF6B01 /* PCFLogger.h */; };
 		E11765FD1A38D88B00EF6B01 /* PCFLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765FB1A38D88B00EF6B01 /* PCFLogger.m */; };
 		E11766131A38E13E00EF6B01 /* PCFLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11766121A38E13E00EF6B01 /* PCFLoggerTests.m */; };
 		E117661E1A3A085F00EF6B01 /* PCFEtagStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E117658A1A35F87C00EF6B01 /* PCFEtagStore.m */; };
 		E117661F1A3A086300EF6B01 /* PCFConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765A81A3640B800EF6B01 /* PCFConfig.m */; };
 		E12CCF781A27D27B00EFC209 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
-		E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFA81A27D36000EFC209 /* PCFData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCFBC1A27D36000EFC209 /* PCFDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */; };
 		E12CCFBD1A27D36000EFC209 /* PCFDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -44,7 +43,7 @@
 		E12CCFC31A27D36000EFC209 /* PCFRemoteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB21A27D36000EFC209 /* PCFRemoteClient.m */; };
 		E12CCFC41A27D36000EFC209 /* PCFRemoteStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB31A27D36000EFC209 /* PCFRemoteStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */; };
-		E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */; };
 		E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */; };
 		E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB81A27D36000EFC209 /* PCFResponse.m */; };
@@ -57,6 +56,8 @@
 		E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */; };
 		E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */; };
 		E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */; };
+		E157325C1A3F6580000F80AA /* PCFData.h in Headers */ = {isa = PBXBuildFile; fileRef = E157325A1A3F6580000F80AA /* PCFData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E157325D1A3F6580000F80AA /* PCFData.m in Sources */ = {isa = PBXBuildFile; fileRef = E157325B1A3F6580000F80AA /* PCFData.m */; };
 		E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */; };
 		E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */; };
 /* End PBXBuildFile section */
@@ -86,7 +87,6 @@
 		E12CCF701A27D27B00EFC209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E12CCF771A27D27B00EFC209 /* PCFDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PCFDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12CCF7D1A27D27B00EFC209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E12CCFA81A27D36000EFC209 /* PCFData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFData.h; sourceTree = "<group>"; };
 		E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataObject.h; sourceTree = "<group>"; };
 		E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataObject.m; sourceTree = "<group>"; };
 		E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataStore.h; sourceTree = "<group>"; };
@@ -111,6 +111,8 @@
 		E12CCFE41A27D3B500EFC209 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
 		E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClientTests.m; sourceTree = "<group>"; };
 		E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCacheTests.m; sourceTree = "<group>"; };
+		E157325A1A3F6580000F80AA /* PCFData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFData.h; sourceTree = "<group>"; };
+		E157325B1A3F6580000F80AA /* PCFData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFData.m; sourceTree = "<group>"; };
 		E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFReachability.h; sourceTree = "<group>"; };
 		E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFReachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,8 +160,9 @@
 			isa = PBXGroup;
 			children = (
 				E12CCF6F1A27D27B00EFC209 /* Supporting Files */,
-				E12CCFA81A27D36000EFC209 /* PCFData.h */,
 				E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */,
+				E157325A1A3F6580000F80AA /* PCFData.h */,
+				E157325B1A3F6580000F80AA /* PCFData.m */,
 				E12CCFAA1A27D36000EFC209 /* PCFDataObject.h */,
 				E12CCFAB1A27D36000EFC209 /* PCFDataObject.m */,
 				E11765891A35F5A600EF6B01 /* PCFEtagStore.h */,
@@ -229,16 +232,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E12CCFB91A27D36000EFC209 /* PCFData.h in Headers */,
+				E157325C1A3F6580000F80AA /* PCFData.h in Headers */,
+				E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */,
 				E12CCFC01A27D36000EFC209 /* PCFOfflineStore.h in Headers */,
 				E12CCFBD1A27D36000EFC209 /* PCFDataStore.h in Headers */,
 				E12CCFBE1A27D36000EFC209 /* PCFLocalStore.h in Headers */,
 				E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */,
-				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
-				E12CCFBB1A27D36000EFC209 /* PCFDataObject.h in Headers */,
 				E12CCFC41A27D36000EFC209 /* PCFRemoteStore.h in Headers */,
 				E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */,
 				E12CCFC21A27D36000EFC209 /* PCFRemoteClient.h in Headers */,
+				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
 				E11765A61A362E7800EF6B01 /* PCFEtagStore.h in Headers */,
 				E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */,
 				E11765A91A3640B800EF6B01 /* PCFConfig.h in Headers */,
@@ -370,6 +373,7 @@
 				E11765FD1A38D88B00EF6B01 /* PCFLogger.m in Sources */,
 				E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */,
 				E12CCFC11A27D36000EFC209 /* PCFOfflineStore.m in Sources */,
+				E157325D1A3F6580000F80AA /* PCFData.m in Sources */,
 				E12CCFBF1A27D36000EFC209 /* PCFLocalStore.m in Sources */,
 				E12CCFC31A27D36000EFC209 /* PCFRemoteClient.m in Sources */,
 				E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */,
@@ -498,6 +502,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PCFData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -515,6 +520,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PCFData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

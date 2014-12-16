@@ -15,6 +15,8 @@
 
 @property PCFEtagStore *etagStore;
 
+- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
+
 @end
 
 @implementation PCFRemoteClient

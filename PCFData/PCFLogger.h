@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "PCFData.h"
 
 #define DEFAULT_LOGGER [PCFLogger sharedInstance]
 
@@ -26,15 +27,6 @@
 #define LogCritical(FMT, ...) \
     [DEFAULT_LOGGER logWithLevel:PCFLogLevelCritical format:FMT, ##__VA_ARGS__]
 
-
-typedef NS_ENUM(NSInteger, PCFLogLevel) {
-    PCFLogLevelDebug = 0,
-    PCFLogLevelInfo,
-    PCFLogLevelWarning,
-    PCFLogLevelError,
-    PCFLogLevelCritical,
-    PCFLogLevelNone
-};
 
 @interface PCFLogger : NSObject
 
