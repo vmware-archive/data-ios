@@ -24,18 +24,19 @@
     };
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kPCFReachabilityChangedNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:block];
+    
     [[PCFReachability reachability] startNotifier];
 }
 
 + (void)syncWithAccessToken:(NSString *)accessToken {
-    [[PCFRequestCache sharedInstance] executePendingRequestsWithToken:accessToken];
+//    [[PCFRequestCache sharedInstance] executePendingRequestsWithToken:accessToken];
 }
 
 + (void)syncWithAccessToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    [[PCFRequestCache sharedInstance] executePendingRequestsWithToken:accessToken completionHandler:completionHandler];
+//    [[PCFRequestCache sharedInstance] executePendingRequestsWithToken:accessToken completionHandler:completionHandler];
 }
 
-+ (void)logLevel:(PCFLogLevel)level {
++ (void)logLevel:(PCFDataLogLevel)level {
     [PCFLogger sharedInstance].level = level;
 }
 

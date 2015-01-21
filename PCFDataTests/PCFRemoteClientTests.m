@@ -18,6 +18,12 @@
 
 - (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
 
+- (NSString *)execute:(NSURLRequest *)request error:(NSError *__autoreleasing *)error;
+
+- (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value force:(BOOL)force;
+
+- (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error;
+
 @end
 
 @interface PCFRemoteClientTests : XCTestCase
@@ -45,73 +51,65 @@
     
     self.httpErrorCode = 300 + (arc4random() % 200);
     self.etag = [NSUUID UUID].UUIDString;
-    self.force = arc4random_uniform(1);
+    self.force = arc4random_uniform(2);
 }
 
-- (void)testGet {
-    NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
-    NSURLRequest *request = OCMClassMock([NSURLRequest class]);
-    id connection = OCMClassMock([NSURLConnection class]);
+- (PCFRequest *)createRequest {
+    PCFKeyValue *keyValue = OCMClassMock([PCFKeyValue class]);
+    OCMStub([keyValue url]).andReturn(self.url);
+    OCMStub([keyValue value]).andReturn(self.result);
+    return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+}
 
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] init]);
+- (void)testGetWithKeyValue {
+    PCFRequest *request = [self createRequest];
+    NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
 
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(request);
-    OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
-    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
+    OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
 
-    NSString *value = [client getWithAccessToken:self.token url:self.url error:nil force:self.force];
+    PCFResponse *response = [client getWithRequest:request];
+    PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
 
-    XCTAssertEqualObjects(value, self.result);
+    XCTAssertEqualObjects(responseObject.value, self.result);
 
     OCMVerify([client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:self.force]);
-    OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:nil]);
-    OCMVerify([client handleResponse:[OCMArg any] data:data error:nil]);
-    
-    [connection stopMocking];
+    OCMVerify([client execute:urlRequest error:[OCMArg anyObjectRef]]);
 }
 
-- (void)testPut {
-    NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
-    NSURLRequest *request = OCMClassMock([NSURLRequest class]);
-    id connection = OCMClassMock([NSURLConnection class]);
+- (void)testPutWithKeyValue {
+    PCFRequest *request = [self createRequest];
+    NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
 
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] init]);
-
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(request);
-    OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
-    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
+    OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
     
-    NSString *value = [client putWithAccessToken:self.token url:self.url value:self.result error:nil force:self.force];
+    PCFResponse *response = [client putWithRequest:request];
+    PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
 
-    XCTAssertEqualObjects(value, self.result);
+    XCTAssertEqualObjects(responseObject.value, self.result);
 
     OCMVerify([client requestWithMethod:@"PUT" accessToken:self.token url:self.url value:self.result force:self.force]);
-    OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:nil]);
-    OCMVerify([client handleResponse:[OCMArg any] data:data error:nil]);
-    
-    [connection stopMocking];
+    OCMVerify([client execute:urlRequest error:[OCMArg anyObjectRef]]);
 }
 
-- (void)testDelete {
-    NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
-    NSURLRequest *request = OCMClassMock([NSURLRequest class]);
-    id connection = OCMClassMock([NSURLConnection class]);
-
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] init]);
-
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(request);
-    OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
-    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
-
-    NSString *value = [client deleteWithAccessToken:self.token url:self.url error:nil force:self.force];
-
-    XCTAssertEqualObjects(value, self.result);
-
-    OCMVerify([client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil force:self.force]);
-    OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:nil]);
-    OCMVerify([client handleResponse:[OCMArg any] data:data error:nil]);
+- (void)testDeleteWithKeyValue {
+    PCFRequest *request = [self createRequest];
+    NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
     
-    [connection stopMocking];
+    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
+    OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    
+    PCFResponse *response = [client deleteWithRequest:request];
+    PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
+    
+    XCTAssertEqualObjects(responseObject.value, self.result);
+    
+    OCMVerify([client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil force:self.force]);
+    OCMVerify([client execute:urlRequest error:[OCMArg anyObjectRef]]);
 }
 
 - (void)testRequestWithMethodWithAccessTokenAndValue {
@@ -198,6 +196,28 @@
     XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
     [config stopMocking];
+}
+
+- (void)testExecuteInvokesNSURLConnection {
+    NSError *error = OCMClassMock([NSError class]);
+    NSURLRequest *request = [[NSURLRequest alloc] init];
+    NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
+    
+    id connection = OCMClassMock([NSURLConnection class]);
+    
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+
+    OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
+    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    
+    NSString *value = [client execute:request error:&error];
+    
+    XCTAssertEqualObjects(value, self.result);
+    
+    OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]);
+    OCMVerify([client handleResponse:[OCMArg any] data:data error:[OCMArg anyObjectRef]]);
+    
+    [connection stopMocking];
 }
 
 - (void)testHandleResponseFailureWithError {

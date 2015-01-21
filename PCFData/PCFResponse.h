@@ -11,11 +11,10 @@
 @interface PCFResponse : NSObject
 
 @property NSError *error;
-@property NSString *value;
-@property NSString *key;
+@property id object;
 
-- (instancetype)initWithKey:(NSString *)key value:(NSString *)value;
+- (instancetype)initWithObject:(id)object;
 
-- (instancetype)initWithKey:(NSString *)key error:(NSError *)error;
+- (instancetype)initWithObject:(id)object error:(NSError *)error;
 
 @end

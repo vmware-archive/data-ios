@@ -1,15 +1,18 @@
 //
-//  PCFDataObject.m
+//  PCFKeyValueObject.m
 //  PCFData
 //
 //  Created by DX122-XL on 2014-10-28.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PCFDataObject.h"
+#import "PCFKeyValueObject.h"
 #import "PCFOfflineStore.h"
+#import "PCFResponse.h"
+#import "PCFRequest.h"
+#import "PCFKeyValue.h"
 
-@interface PCFDataObject ()
+@interface PCFKeyValueObject ()
 
 @property id<PCFDataStore> dataStore;
 
@@ -18,14 +21,15 @@
 
 @end
 
-@implementation PCFDataObject
+@implementation PCFKeyValueObject
 
 - (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key {
-    PCFOfflineStore *dataStore = [[PCFOfflineStore alloc] initWithCollection:collection];
-    return [self initWithDataStore:dataStore key:key];
+    PCFOfflineStore *dataStore = [[PCFOfflineStore alloc] init];
+    return [self initWithDataStore:dataStore collection:collection key:key];
 }
 
-- (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key {
+- (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore collection:(NSString *)collection key:(NSString *)key {
+    _collection = collection;
     _key = key;
     _dataStore = dataStore;
     return self;
@@ -36,7 +40,8 @@
 }
 
 - (PCFResponse *)getWithAccessToken:(NSString *)accessToken force:(BOOL)force {
-    return [self.dataStore getWithKey:self.key accessToken:accessToken force:force];
+    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+    return [self.dataStore getWithRequest:request];
 }
 
 - (void)getWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
@@ -44,7 +49,8 @@
 }
 
 - (void)getWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
-    [self.dataStore getWithKey:self.key accessToken:accessToken force:force completionBlock:completionBlock];
+    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+    [self.dataStore getWithRequest:request completionBlock:completionBlock];
 }
 
 - (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value {
@@ -52,7 +58,8 @@
 }
 
 - (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force {
-    return [self.dataStore putWithKey:self.key value:value accessToken:accessToken force:force];
+    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:value force:force];
+    return [self.dataStore putWithRequest:request];
 }
 
 - (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock {
@@ -60,7 +67,8 @@
 }
 
 - (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
-    [self.dataStore putWithKey:self.key value:value accessToken:accessToken force:force completionBlock:completionBlock];
+    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:value force:force];
+    [self.dataStore putWithRequest:request completionBlock:completionBlock];
 }
 
 - (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken {
@@ -68,7 +76,8 @@
 }
 
 - (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force {
-    return [self.dataStore deleteWithKey:self.key accessToken:accessToken force:force];
+    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+    return [self.dataStore deleteWithRequest:request];
 }
 
 - (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
@@ -76,7 +85,14 @@
 }
 
 - (void)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
-    [self.dataStore deleteWithKey:self.key accessToken:accessToken force:force completionBlock:completionBlock];
+    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+    [self.dataStore deleteWithRequest:request completionBlock:completionBlock];
+}
+
+- (PCFRequest *)createRequestWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force {
+    PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:value];
+    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:accessToken object:keyValue force:force];
+    return request;
 }
 
 @end

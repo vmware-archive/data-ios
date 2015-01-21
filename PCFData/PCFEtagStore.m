@@ -8,10 +8,11 @@
 
 #import "PCFEtagStore.h"
 #import "PCFResponse.h"
+#import "PCFDataPersistence.h"
 
 @interface PCFEtagStore ()
 
-@property (readonly) NSUserDefaults *defaults;
+@property (readonly) PCFDataPersistence *persistence;
 
 @end
 
@@ -20,17 +21,17 @@
 static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 
 - (instancetype)init {
-    return [self initWithDefaults:[NSUserDefaults standardUserDefaults]];
+    return [self initWithPersistence:[[PCFDataPersistence alloc] init]];
 }
 
-- (instancetype)initWithDefaults:(NSUserDefaults *)defaults {
-    _defaults = defaults;
+- (instancetype)initWithPersistence:(PCFDataPersistence *)persistence {
+    _persistence = persistence;
     return self;
 }
 
 - (NSString *)etagForUrl:(NSURL *)url {
     if (url) {
-        return [self.defaults objectForKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
+        return [self.persistence getValueForKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
     } else {
         return nil;
     }
@@ -38,7 +39,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 
 - (void)putEtagForUrl:(NSURL *)url etag:(NSString *)etag {
     if (url) {
-        [self.defaults setObject:etag forKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
+        [self.persistence putValue:etag forKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
     }
 }
 

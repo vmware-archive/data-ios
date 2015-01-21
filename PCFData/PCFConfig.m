@@ -20,6 +20,9 @@
 
 @implementation PCFConfig
 
+static NSString* const PCFConfiguration = @"PCFConfiguration";
+static NSString* const PCFPropertyMissing = @"Property missing from Pivotal.plist: ";
+
 static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
 static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 
@@ -50,7 +53,12 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 }
 
 - (NSString *)serviceUrl {
-    return [self.values objectForKey:PCFServiceUrl];
+    NSString *serviceUrl = [self.values objectForKey:PCFServiceUrl];
+    if (!serviceUrl) {
+        NSString *reason = [PCFPropertyMissing stringByAppendingString:PCFServiceUrl];
+        @throw [NSException exceptionWithName:PCFConfiguration reason:reason userInfo:nil];
+    }
+    return serviceUrl;
 }
 
 - (PCFCollisionStrategy)collisionStrategy {

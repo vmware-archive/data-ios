@@ -11,6 +11,9 @@
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
 #import "PCFRequestCache.h"
+#import "PCFRequestCacheExecutor.h"
+#import "PCFRequestCacheQueue.h"
+#import "PCFPendingRequest.h"
 
 @interface PCFRequestCacheTests : XCTestCase
 
@@ -20,23 +23,11 @@
 @property NSString *collection;
 @property NSString *fallback;
 @property int method;
+@property BOOL force;
 
 @end
 
 @implementation PCFRequestCacheTests
-
-static int const HTTP_GET = 0;
-static int const HTTP_PUT = 1;
-static int const HTTP_DELETE = 2;
-
-static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
-static NSString* const PCFMethod = @"PCFData:method";
-static NSString* const PCFAccessToken = @"PCFData:accessToken";
-static NSString* const PCFCollection = @"PCFData:collection";
-static NSString* const PCFKey = @"PCFData:key";
-static NSString* const PCFValue = @"PCFData:value";
-static NSString* const PCFFallback = @"PCFData:fallback";
-
 
 - (void)setUp {
     [super setUp];
@@ -46,94 +37,77 @@ static NSString* const PCFFallback = @"PCFData:fallback";
     self.token = [NSUUID UUID].UUIDString;
     self.collection = [NSUUID UUID].UUIDString;
     self.fallback = [NSUUID UUID].UUIDString;
-    self.method = arc4random() % 3;
+    self.method = arc4random_uniform(3) + 1;
+    self.force = arc4random_uniform(2);
 }
 
-- (void)testQueueGetWithToken {
-    id request = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
-    
-    OCMStub([cache queuePendingRequest:[OCMArg any]]).andDo(nil);
-    OCMStub([request alloc]).andReturn(request);
-    OCMStub([request initWithMethod:HTTP_GET accessToken:[OCMArg any] collection:[OCMArg any] key:[OCMArg any] value:[OCMArg any] fallback:[OCMArg any]]).andReturn(request);
-    
-    [cache queueGetWithToken:self.token collection:self.collection key:self.key];
-    
-    OCMVerify([cache queuePendingRequest:request]);
-    OCMVerify([request initWithMethod:HTTP_GET accessToken:self.token collection:self.collection key:self.key value:nil fallback:nil]);
-    
-    [request stopMocking];
+- (PCFRequest *)createRequest {
+    PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
+    return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
 }
 
-- (void)testQueuePutWithToken {
-    id request = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
+- (void)testQueueGet {
+    PCFRequest *request = [self createRequest];
+    id pending = OCMClassMock([PCFPendingRequest class]);
+    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     
-    OCMStub([cache queuePendingRequest:[OCMArg any]]).andDo(nil);
-    OCMStub([request alloc]).andReturn(request);
-    OCMStub([request initWithMethod:HTTP_PUT accessToken:[OCMArg any] collection:[OCMArg any] key:[OCMArg any] value:[OCMArg any] fallback:[OCMArg any]]).andReturn(request);
+    OCMStub([pending alloc]).andReturn(pending);
+    OCMStub([pending initWithRequest:[OCMArg any] method:PCF_HTTP_GET]).andReturn(pending);
     
-    [cache queuePutWithToken:self.token collection:self.collection key:self.key value:self.value fallback:self.fallback];
+    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
     
-    OCMVerify([cache queuePendingRequest:request]);
-    OCMVerify([request initWithMethod:HTTP_PUT accessToken:self.token collection:self.collection key:self.key value:self.value fallback:self.fallback]);
+    [cache queueGetWithRequest:request];
     
-    [request stopMocking];
+    OCMVerify([pending initWithRequest:request method:PCF_HTTP_GET]);
+    OCMVerify([queue addRequest:pending]);
+    
+    [pending stopMocking];
 }
 
-- (void)testQueueDeleteWithToken {
-    id request = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
+- (void)testQueuePut {
+    PCFRequest *request = [self createRequest];
+    id pending = OCMClassMock([PCFPendingRequest class]);
+    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     
-    OCMStub([cache queuePendingRequest:[OCMArg any]]).andDo(nil);
-    OCMStub([request alloc]).andReturn(request);
-    OCMStub([request initWithMethod:HTTP_DELETE accessToken:[OCMArg any] collection:[OCMArg any] key:[OCMArg any] value:[OCMArg any] fallback:[OCMArg any]]).andReturn(request);
+    OCMStub([pending alloc]).andReturn(pending);
+    OCMStub([pending initWithRequest:[OCMArg any] method:PCF_HTTP_PUT]).andReturn(pending);
     
-    [cache queueDeleteWithToken:self.token collection:self.collection key:self.key fallback:self.fallback];
+    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
     
-    OCMVerify([cache queuePendingRequest:request]);
-    OCMVerify([request initWithMethod:HTTP_DELETE accessToken:self.token collection:self.collection key:self.key value:nil fallback:self.fallback]);
+    [cache queuePutWithRequest:request];
     
-    [request stopMocking];
+    OCMVerify([pending initWithRequest:request method:PCF_HTTP_PUT]);
+    OCMVerify([queue addRequest:pending]);
+    
+    [pending stopMocking];
 }
 
-- (void)testQueuePendingWithExistingArray {
-    NSUserDefaults *userDefaults = OCMClassMock([NSUserDefaults class]);
-    NSMutableArray *array = OCMClassMock([NSMutableArray class]);
-    PCFPendingRequest *request = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] initWithDefaults:userDefaults]);
+- (void)testQueueDelete {
+    PCFRequest *request = [self createRequest];
+    id pending = OCMClassMock([PCFPendingRequest class]);
+    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     
-    OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(array);
-    OCMStub([array mutableCopy]).andReturn(array);
-
-    [cache queuePendingRequest:request];
+    OCMStub([pending alloc]).andReturn(pending);
+    OCMStub([pending initWithRequest:[OCMArg any] method:PCF_HTTP_DELETE]).andReturn(pending);
     
-    OCMVerify([array addObject:request.values]);
-    OCMVerify([userDefaults objectForKey:PCFDataRequestCache]);
-    OCMVerify([userDefaults setObject:array forKey:PCFDataRequestCache]);
-}
-
-- (void)testQueuePendingWithoutExistingArray {
-    NSUserDefaults *userDefaults = OCMClassMock([NSUserDefaults class]);
-    PCFPendingRequest *request = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] initWithDefaults:userDefaults]);
+    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
     
-    OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(nil);
+    [cache queueDeleteWithRequest:request];
     
-    [cache queuePendingRequest:request];
+    OCMVerify([pending initWithRequest:request method:PCF_HTTP_DELETE]);
+    OCMVerify([queue addRequest:pending]);
     
-    OCMVerify([userDefaults objectForKey:PCFDataRequestCache]);
-    OCMVerify([userDefaults setObject:[OCMArg isNotNil] forKey:PCFDataRequestCache]);
+    [pending stopMocking];
 }
 
 - (void)testExecutePendingRequestsWithTokenAndHandlerNewData {
-    NSUserDefaults *userDefaults = OCMClassMock([NSUserDefaults class]);
     NSArray *requestArray = OCMClassMock([NSArray class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] initWithDefaults:userDefaults]);
-    
     OCMStub([requestArray count]).andReturn(1);
-    OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(requestArray);
-    OCMStub([cache executePendingRequestsWithToken:[OCMArg any] requests:[OCMArg any]]).andDo(nil);
+    
+    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
+    OCMStub([queue empty]).andReturn(requestArray);
+    
+    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
@@ -143,18 +117,16 @@ static NSString* const PCFFallback = @"PCFData:fallback";
     }];
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
-    
-    OCMVerify([userDefaults objectForKey:PCFDataRequestCache]);
-    OCMVerify([userDefaults setObject:nil forKey:PCFDataRequestCache]);
-    OCMVerify([cache executePendingRequestsWithToken:self.token requests:requestArray]);
 }
 
 - (void)testExecutePendingRequestsWithTokenAndHandlerNoData {
-    NSUserDefaults *userDefaults = OCMClassMock([NSUserDefaults class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] initWithDefaults:userDefaults]);
-
-    OCMStub([userDefaults objectForKey:[OCMArg any]]).andReturn(nil);
-    OCMStub([cache executePendingRequestsWithToken:[OCMArg any] requests:[OCMArg any]]).andDo(nil);
+    NSArray *requestArray = OCMClassMock([NSArray class]);
+    OCMStub([requestArray count]).andReturn(0);
+    
+    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
+    OCMStub([queue empty]).andReturn(requestArray);
+    
+    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
@@ -164,112 +136,27 @@ static NSString* const PCFFallback = @"PCFData:fallback";
     }];
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
-    
-    OCMVerify([userDefaults objectForKey:PCFDataRequestCache]);
-    OCMVerify([userDefaults setObject:nil forKey:PCFDataRequestCache]);
 }
 
-- (void)testExecutePendingRequestsWithTokenAndRequests {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
+- (void)testExecutePendingRequests {
+    NSDictionary *dict = [[NSDictionary alloc] init];
+    NSArray *requestArray = [[NSArray alloc] initWithObjects:dict, nil];
+    OCMStub([requestArray count]).andReturn(1);
     
-    NSArray *requestArray = @[
-        @{PCFMethod : [NSNumber numberWithInt:HTTP_GET], PCFAccessToken : self.token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback },
-        @{PCFMethod : [NSNumber numberWithInt:HTTP_PUT], PCFAccessToken : self.token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback },
-        @{PCFMethod : [NSNumber numberWithInt:HTTP_DELETE], PCFAccessToken : self.token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback },
-        @{PCFMethod : [NSNumber numberWithInt:(3 + arc4random() % 97)], PCFAccessToken : self.token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback }
-    ];
+    PCFRequestCacheExecutor *executor = OCMClassMock([PCFRequestCacheExecutor class]);
+    id pending = OCMClassMock([PCFPendingRequest class]);
     
-    OCMStub([cache createOfflineStoreWithCollection:[OCMArg any]]).andReturn(offlineStore);
+    OCMStub([pending alloc]).andReturn(pending);
+    OCMStub([pending initWithDictionary:[OCMArg any]]).andReturn(pending);
     
-    [cache executePendingRequestsWithToken:self.token requests:requestArray];
+    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:nil executor:executor];
     
-    OCMVerify([offlineStore getWithKey:self.key accessToken:self.token]);
-    OCMVerify([offlineStore putWithKey:self.key value:self.value accessToken:self.token]);
-    OCMVerify([offlineStore deleteWithKey:self.key accessToken:self.token]);
-}
-
-- (void)testExecutePendingRequestsWithTokenAndRequestsUsingCachedToken {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
+    [cache executePendingRequests:requestArray];
     
-    NSString *token = [NSUUID UUID].UUIDString;
+    OCMVerify([pending initWithDictionary:dict]);
+    OCMVerify([executor executeRequest:pending]);
     
-    NSArray *requestArray = @[
-        @{PCFMethod : [NSNumber numberWithInt:HTTP_GET], PCFAccessToken : token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback }
-    ];
-    
-    OCMStub([cache createOfflineStoreWithCollection:[OCMArg any]]).andReturn(offlineStore);
-    
-    [cache executePendingRequestsWithToken:nil requests:requestArray];
-    
-    OCMVerify([offlineStore getWithKey:self.key accessToken:token]);
-}
-
-- (void)testExecutePendingRequestsWithTokenAndRequestsRevertingPutRequest {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
-    NSError *error = [[NSError alloc] init];
-    PCFResponse *response = OCMClassMock([PCFResponse class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
-    
-    NSArray *requestArray = @[
-        @{PCFMethod : [NSNumber numberWithInt:HTTP_PUT], PCFAccessToken : self.token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback }
-    ];
-    
-    OCMStub([cache createOfflineStoreWithCollection:[OCMArg any]]).andReturn(offlineStore);
-    OCMStub([cache createLocalStoreWithCollection:[OCMArg any]]).andReturn(localStore);
-    OCMStub([offlineStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any]]).andReturn(response);
-    OCMStub([response error]).andReturn(error);
-    
-    [cache executePendingRequestsWithToken:self.token requests:requestArray];
-    
-    OCMVerify([offlineStore putWithKey:self.key value:self.value accessToken:self.token]);
-    OCMVerify([localStore putWithKey:self.key value:self.fallback accessToken:self.token]);
-}
-
-- (void)testExecutePendingRequestsWithTokenAndRequestsRevertingDeleteRequest {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
-    NSError *error = [[NSError alloc] init];
-    PCFResponse *response = OCMClassMock([PCFResponse class]);
-    PCFRequestCache *cache = OCMPartialMock([[PCFRequestCache alloc] init]);
-    
-    NSArray *requestArray = @[
-        @{PCFMethod : [NSNumber numberWithInt:HTTP_DELETE], PCFAccessToken : self.token, PCFCollection : self.collection, PCFKey : self.key, PCFValue : self.value, PCFFallback : self.fallback }
-    ];
-    
-    OCMStub([cache createOfflineStoreWithCollection:[OCMArg any]]).andReturn(offlineStore);
-    OCMStub([cache createLocalStoreWithCollection:[OCMArg any]]).andReturn(localStore);
-    OCMStub([offlineStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any]]).andReturn(response);
-    OCMStub([response error]).andReturn(error);
-    
-    [cache executePendingRequestsWithToken:self.token requests:requestArray];
-    
-    OCMVerify([offlineStore deleteWithKey:self.key accessToken:self.token]);
-    OCMVerify([localStore putWithKey:self.key value:self.fallback accessToken:self.token]);
-}
-
-- (void)testCreateOfflineStoreWithCollection {
-    id offlineStore = OCMClassMock([PCFOfflineStore class]);
-    OCMStub([offlineStore alloc]).andReturn(offlineStore);
-    
-    PCFRequestCache *cache = [[PCFRequestCache alloc] init];
-    [cache createOfflineStoreWithCollection:self.collection];
-    
-    OCMVerify([offlineStore initWithCollection:self.collection]);
-}
-
-- (void)testSharedInstance {
-    id cache = OCMClassMock([PCFRequestCache class]);
-    
-    PCFRequestCache *cache1 = [PCFRequestCache sharedInstance];
-    PCFRequestCache *cache2 = [PCFRequestCache sharedInstance];
-    
-    XCTAssertNotNil(cache1);
-    XCTAssertEqual(cache1, cache2);
-    
-    [cache stopMocking];
+    [pending stopMocking];
 }
 
 @end

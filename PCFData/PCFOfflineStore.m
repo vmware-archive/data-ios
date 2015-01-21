@@ -8,9 +8,10 @@
 
 #import "PCFOfflineStore.h"
 #import "PCFRemoteStore.h"
-#import "PCFLocalStore.h"
+#import "PCFKeyValueStore.h"
 #import "PCFRequestCache.h"
 #import "PCFResponse.h"
+#import "PCFRequest.h"
 #import "PCFReachability.h"
 #import "PCFConfig.h"
 #import "PCFLogger.h"
@@ -18,14 +19,9 @@
 
 @interface PCFOfflineStore ()
 
-@property NSString *collection;
 @property PCFRemoteStore *remoteStore;
-@property PCFLocalStore *localStore;
+@property PCFKeyValueStore *localStore;
 @property (readonly) PCFRequestCache *requestCache;
-
-- (PCFResponse *)errorNoConnectionWithKey:(NSString *)key;
-
-- (BOOL)isSyncSupported;
 
 - (BOOL)isConnected;
 
@@ -33,61 +29,53 @@
 
 @implementation PCFOfflineStore
 
-- (instancetype)initWithCollection:(NSString *)collection {
-    PCFRemoteStore *remoteStore = [[PCFRemoteStore alloc] initWithCollection:collection];
-    PCFLocalStore *localStore = [[PCFLocalStore alloc] initWithCollection:collection];
-    return [self initWithCollection:collection localStore:localStore remoteStore:remoteStore];
+- (instancetype)init {
+    PCFRemoteStore *remoteStore = [[PCFRemoteStore alloc] init];
+    PCFKeyValueStore *localStore = [[PCFKeyValueStore alloc] init];
+    return [self initWithLocalStore:localStore remoteStore:remoteStore];
 }
 
-- (instancetype)initWithCollection:(NSString *)collection localStore:(PCFLocalStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore {
-    _collection = collection;
+- (instancetype)initWithLocalStore:(PCFKeyValueStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore {
     _remoteStore = remoteStore;
     _localStore = localStore;
     return self;
 }
 
 - (PCFRequestCache *)requestCache {
-    return [PCFRequestCache sharedInstance];
+    return [[PCFRequestCache alloc] initWithOfflineStore:self fallbackStore:self.localStore];
 }
 
-- (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    return [self getWithKey:key accessToken:accessToken force:false];
-}
-
-- (PCFResponse *)getWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force {
-    LogInfo(@"PCFOfflineStore getWithKey: %@", key);
+- (PCFResponse *)getWithRequest:(PCFRequest *)request {
+    LogInfo(@"PCFOfflineStore getWithRequest: %@", request);
 
     if ([self isConnected]) {
-        PCFResponse *response = [self.remoteStore getWithKey:key accessToken:accessToken force:force];
+        PCFResponse *response = [self.remoteStore getWithRequest:request];
         
         if (!response.error) {
-            return [self.localStore putWithKey:key value:response.value accessToken:accessToken force:force];
+            PCFRequest *localRequest = [[PCFRequest alloc] initWithRequest:request];
+            localRequest.object = response.object;
+            
+            return [self.localStore putWithRequest:localRequest];
             
         } else if (response.error.code == 304) {
-            return [self.localStore getWithKey:key accessToken:accessToken force:force];
+            return [self.localStore getWithRequest:request];
             
         } else {
             return response;
         }
         
     } else {
-        PCFResponse *response = [self.localStore getWithKey:key accessToken:accessToken force:force];
+        PCFResponse *response = [self.localStore getWithRequest:request];
         
-        if ([self isSyncSupported]) {
-            [self.requestCache queueGetWithToken:accessToken collection:self.collection key:key];
-        }
+        [self.requestCache queueGetWithRequest:request];
         
         return response;
     }
 }
 
-- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    [self getWithKey:key accessToken:accessToken force:false completionBlock:completionBlock];
-}
-
-- (void)getWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
+- (void)getWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self getWithKey:key accessToken:accessToken force:force];
+        PCFResponse *response = [self getWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -95,42 +83,33 @@
     });
 }
 
-- (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken {
-    return [self putWithKey:key value:value accessToken:accessToken force:false];
-}
-
-- (PCFResponse *)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken force:(BOOL)force {
-    LogInfo(@"PCFOfflineStore putWithKey: %@ value: %@", key, value);
+- (PCFResponse *)putWithRequest:(PCFRequest *)request {
+    LogInfo(@"PCFOfflineStore putWithRequest: %@", request);
     
     if ([self isConnected]) {
-        PCFResponse *response = [self.remoteStore putWithKey:key value:value accessToken:accessToken force:force];
+        PCFResponse *response = [self.remoteStore putWithRequest:request];
         
         if (!response.error) {
-            return [self.localStore putWithKey:key value:value accessToken:accessToken force:force];
+            return [self.localStore putWithRequest:request];
         } else {
             return response;
         }
         
-    } else if ([self isSyncSupported]) {
-        PCFResponse *fallback = [self.localStore getWithKey:key accessToken:accessToken force:force];
-        PCFResponse *response = [self.localStore putWithKey:key value:value accessToken:accessToken force:force];
+    } else {
+        PCFResponse *fallback = [self.localStore getWithRequest:request];
+        PCFResponse *response = [self.localStore putWithRequest:request];
         
-        [self.requestCache queuePutWithToken:accessToken collection:self.collection key:key value:value fallback:fallback.value];
+        request.fallback = [fallback object];
+        
+        [self.requestCache queuePutWithRequest:request];
         
         return response;
-        
-    } else {
-        return [self errorNoConnectionWithKey:key];
     }
 }
 
-- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    return [self putWithKey:key value:value accessToken:accessToken force:false completionBlock:completionBlock];
-}
-
-- (void)putWithKey:(NSString *)key value:(NSString *)value accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
+- (void)putWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self putWithKey:key value:value accessToken:accessToken force:force];
+        PCFResponse *response = [self putWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -138,61 +117,43 @@
     });
 }
 
-- (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken {
-    return [self deleteWithKey:key accessToken:accessToken force:false];
-}
-
-- (PCFResponse *)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force {
-    LogInfo(@"PCFOfflineStore deleteWithKey: %@", key);
+- (PCFResponse *)deleteWithRequest:(PCFRequest *)request {
+    LogInfo(@"PCFOfflineStore deleteWithKey: %@", request);
     
     if ([self isConnected]) {
-        PCFResponse *response = [self.remoteStore deleteWithKey:key accessToken:accessToken force:force];
+        PCFResponse *response = [self.remoteStore deleteWithRequest:request];
         
         if (!response.error) {
-            return [self.localStore deleteWithKey:key accessToken:accessToken force:force];
+            return [self.localStore deleteWithRequest:request];
         } else {
             return response;
         }
         
-    } else if ([self isSyncSupported]) {
-        PCFResponse *fallback = [self.localStore getWithKey:key accessToken:accessToken force:force];
-        PCFResponse *response = [self.localStore deleteWithKey:key accessToken:accessToken force:force];
+    } else {
+        PCFResponse *fallback = [self.localStore getWithRequest:(PCFRequest *)request];
+        PCFResponse *response = [self.localStore deleteWithRequest:(PCFRequest *)request];
         
-        [self.requestCache queueDeleteWithToken:accessToken collection:self.collection key:key fallback:fallback.value];
+        request.fallback = fallback.object;
+        
+        [self.requestCache queueDeleteWithRequest:request];
         
         return response;
-        
-    } else {
-        return [self errorNoConnectionWithKey:key];
     }
 }
 
-- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    [self deleteWithKey:key accessToken:accessToken force:false completionBlock:completionBlock];
-}
-
-- (void)deleteWithKey:(NSString *)key accessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
+- (void)deleteWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self deleteWithKey:key accessToken:accessToken force:force];
+        PCFResponse *response = [self deleteWithRequest:(PCFRequest *)request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
         });
     });
-}
-
-- (PCFResponse *)errorNoConnectionWithKey:(NSString *)key {
-    NSError *error = [[NSError alloc] initWithDomain:kNoConnectionErrorDomain code:kNoConnectionErrorCode userInfo:nil];
-    return [[PCFResponse alloc] initWithKey:key error:error];
 }
 
 - (BOOL)isConnected {
     PCFNetworkStatus networkStatus = [[PCFReachability reachability] currentReachabilityStatus];
     return networkStatus != NotReachable;
-}
-
-- (BOOL)isSyncSupported {
-    return true;
 }
 
 @end

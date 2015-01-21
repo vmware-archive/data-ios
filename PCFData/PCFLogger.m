@@ -15,12 +15,12 @@
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[PCFLogger alloc] init];
-        sharedInstance.level = PCFLogLevelWarning;
+        sharedInstance.level = PCFDataLogLevelWarning;
     });
     return sharedInstance;
 }
 
-- (void)logWithLevel:(PCFLogLevel)level format:(NSString*)format, ... NS_FORMAT_FUNCTION(2,3) {
+- (void)logWithLevel:(PCFDataLogLevel)level format:(NSString*)format, ... NS_FORMAT_FUNCTION(2,3) {
 
     va_list args;
     va_start(args, format);

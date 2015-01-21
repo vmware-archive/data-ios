@@ -8,18 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class PCFEtagStore;
+@class PCFRequest, PCFResponse;
 
 @interface PCFRemoteClient : NSObject
 
-- (NSString *)getWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error force:(BOOL)force;
+- (PCFResponse *)getWithRequest:(PCFRequest *)request;
 
-- (NSString *)putWithAccessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value error:(NSError *__autoreleasing *)error force:(BOOL)force;
+- (PCFResponse *)putWithRequest:(PCFRequest *)request;
 
-- (NSString *)deleteWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error force:(BOOL)force;
-
-- (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value force:(BOOL)force;
-
-- (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error;
+- (PCFResponse *)deleteWithRequest:(PCFRequest *)request;
 
 @end

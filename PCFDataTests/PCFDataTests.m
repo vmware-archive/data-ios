@@ -80,30 +80,30 @@
     [notificationCenter stopMocking];
 }
 
-- (void)testSyncWithAccessTokenInvokesRequestCache {
-    id requestCache = OCMClassMock([PCFRequestCache class]);
-    
-    OCMStub([requestCache sharedInstance]).andReturn(requestCache);
-    
-    [PCFData syncWithAccessToken:self.token];
-    
-    OCMVerify([requestCache executePendingRequestsWithToken:self.token]);
-    
-    [requestCache stopMocking];
-}
-
-- (void)testSyncWithAccessTokenAndCompletionBlockInvokesRequestCache {
-    id requestCache = OCMClassMock([PCFRequestCache class]);
-    void (^block)(UIBackgroundFetchResult) = ^(UIBackgroundFetchResult result) {};
-    
-    OCMStub([requestCache sharedInstance]).andReturn(requestCache);
-    
-    [PCFData syncWithAccessToken:self.token completionHandler:block];
-    
-    OCMVerify([requestCache executePendingRequestsWithToken:self.token completionHandler:block]);
-    
-    [requestCache stopMocking];
-}
+//- (void)testSyncWithAccessTokenInvokesRequestCache {
+//    id requestCache = OCMClassMock([PCFRequestCache class]);
+//    
+//    OCMStub([requestCache sharedInstance]).andReturn(requestCache);
+//    
+//    [PCFData syncWithAccessToken:self.token];
+//    
+//    OCMVerify([requestCache executePendingRequestsWithToken:self.token]);
+//    
+//    [requestCache stopMocking];
+//}
+//
+//- (void)testSyncWithAccessTokenAndCompletionBlockInvokesRequestCache {
+//    id requestCache = OCMClassMock([PCFRequestCache class]);
+//    void (^block)(UIBackgroundFetchResult) = ^(UIBackgroundFetchResult result) {};
+//    
+//    OCMStub([requestCache sharedInstance]).andReturn(requestCache);
+//    
+//    [PCFData syncWithAccessToken:self.token completionHandler:block];
+//    
+//    OCMVerify([requestCache executePendingRequestsWithToken:self.token completionHandler:block]);
+//    
+//    [requestCache stopMocking];
+//}
 
 - (void)testLogLevelInvokesPCFLogger {
     id logger = OCMClassMock([PCFLogger class]);

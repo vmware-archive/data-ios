@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
 #import "PCFEtagStore.h"
+#import "PCFDataPersistence.h"
 
 @interface PCFEtagStoreTests : XCTestCase
 
@@ -32,25 +33,25 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 }
 
 - (void)testPutEtagForUrl {
-    NSUserDefaults *defaults = OCMClassMock([NSUserDefaults class]);
-    PCFEtagStore *etagStore = [[PCFEtagStore alloc] initWithDefaults:defaults];
+    PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
+    PCFEtagStore *etagStore = [[PCFEtagStore alloc] initWithPersistence:persistence];
     
     [etagStore putEtagForUrl:self.url etag:self.etag];
     
-    OCMVerify([defaults setObject:self.etag forKey:self.prefixedUrl]);
+    OCMVerify([persistence putValue:self.etag forKey:self.prefixedUrl]);
 }
 
 - (void)testGetEtagForUrl {
-    NSUserDefaults *defaults = OCMClassMock([NSUserDefaults class]);
-    PCFEtagStore *etagStore = [[PCFEtagStore alloc] initWithDefaults:defaults];
+    PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
+    PCFEtagStore *etagStore = [[PCFEtagStore alloc] initWithPersistence:persistence];
     
-    OCMStub([defaults objectForKey:[OCMArg any]]).andReturn(self.etag);
+    OCMStub([persistence getValueForKey:[OCMArg any]]).andReturn(self.etag);
     
     NSString *etag = [etagStore etagForUrl:self.url];
     
     XCTAssertEqual(etag, self.etag);
     
-    OCMVerify([defaults objectForKey:self.prefixedUrl]);
+    OCMVerify([persistence getValueForKey:self.prefixedUrl]);
 }
 
 - (NSString *)prefixedUrl {

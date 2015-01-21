@@ -13,27 +13,27 @@
 #define DEFAULT_LOGGER [PCFLogger sharedInstance]
 
 #define LogDebug(FMT, ...) \
-    [DEFAULT_LOGGER logWithLevel:PCFLogLevelDebug format:FMT, ##__VA_ARGS__]
+    [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelDebug format:FMT, ##__VA_ARGS__]
 
 #define LogInfo(FMT, ...) \
-    [DEFAULT_LOGGER logWithLevel:PCFLogLevelInfo format:FMT, ##__VA_ARGS__]
+    [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelInfo format:FMT, ##__VA_ARGS__]
 
 #define LogWarning(FMT, ...) \
-    [DEFAULT_LOGGER logWithLevel:PCFLogLevelWarning format:FMT, ##__VA_ARGS__]
+    [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelWarning format:FMT, ##__VA_ARGS__]
 
 #define LogError(FMT, ...) \
-    [DEFAULT_LOGGER logWithLevel:PCFLogLevelError format:FMT, ##__VA_ARGS__]
+    [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelError format:FMT, ##__VA_ARGS__]
 
 #define LogCritical(FMT, ...) \
-    [DEFAULT_LOGGER logWithLevel:PCFLogLevelCritical format:FMT, ##__VA_ARGS__]
+    [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelCritical format:FMT, ##__VA_ARGS__]
 
 
 @interface PCFLogger : NSObject
 
-@property PCFLogLevel level;
+@property PCFDataLogLevel level;
 
 + (instancetype)sharedInstance;
 
-- (void)logWithLevel:(PCFLogLevel)level format:(NSString*)format, ...;
+- (void)logWithLevel:(PCFDataLogLevel)level format:(NSString*)format, ...;
 
 @end

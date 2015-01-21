@@ -10,6 +10,9 @@
 #import "PCFEtagStore.h"
 #import "PCFLogger.h"
 #import "PCFConfig.h"
+#import "PCFKeyValue.h"
+#import "PCFRequest.h"
+#import "PCFResponse.h"
 
 @interface PCFRemoteClient ()
 
@@ -32,28 +35,60 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     return self;
 }
 
-- (NSString *)getWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error force:(BOOL)force {
-    NSHTTPURLResponse *response;
-    NSURLRequest *request = [self requestWithMethod:@"GET" accessToken:accessToken url:url value:nil force:force];
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    
-    return [self handleResponse:response data:data error:error];
+- (PCFResponse *)getWithRequest:(PCFRequest *)request {
+    if ([request.object isKindOfClass:PCFKeyValue.class]) {
+
+        NSError *error;
+        PCFKeyValue *object = request.object;
+        NSURLRequest *urlRequest = [self requestWithMethod:@"GET" accessToken:request.accessToken url:object.url value:nil force:request.force];
+
+        PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
+        keyValue.value = [self execute:urlRequest error:&error];
+        
+        PCFResponse *response = [[PCFResponse alloc] initWithObject:keyValue];
+        response.error = error;
+        return response;
+    } else {
+        return nil;
+    }
 }
 
-- (NSString *)putWithAccessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value error:(NSError *__autoreleasing *)error force:(BOOL)force {
-    NSHTTPURLResponse *response;
-    NSURLRequest *request = [self requestWithMethod:@"PUT" accessToken:accessToken url:url value:value force:force];
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    
-    return [self handleResponse:response data:data error:error];
+- (PCFResponse *)putWithRequest:(PCFRequest *)request {
+    if ([request.object isKindOfClass:PCFKeyValue.class]) {
+        
+        NSError *error;
+        PCFKeyValue *object = request.object;
+        NSURLRequest *urlRequest = [self requestWithMethod:@"PUT" accessToken:request.accessToken url:object.url value:object.value force:request.force];
+
+        NSString *result = [self execute:urlRequest error:&error];
+        
+        PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
+        keyValue.value = result.length > 0 ? result : object.value;
+        
+        PCFResponse *response = [[PCFResponse alloc] initWithObject:keyValue];
+        response.error = error;
+        return response;
+    } else {
+        return nil;
+    }
 }
 
-- (NSString *)deleteWithAccessToken:(NSString *)accessToken url:(NSURL *)url error:(NSError *__autoreleasing *)error force:(BOOL)force {
-    NSHTTPURLResponse *response;
-    NSURLRequest *request = [self requestWithMethod:@"DELETE" accessToken:accessToken url:url value:nil force:force];
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    
-    return [self handleResponse:response data:data error:error];
+- (PCFResponse *)deleteWithRequest:(PCFRequest *)request {
+    if ([request.object isKindOfClass:PCFKeyValue.class]) {
+        
+        NSError *error;
+        PCFKeyValue *object = request.object;
+        NSURLRequest *urlRequest = [self requestWithMethod:@"DELETE" accessToken:request.accessToken url:object.url value:nil force:request.force];
+        
+        PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
+        keyValue.value = [self execute:urlRequest error:&error];
+        
+        PCFResponse *response = [[PCFResponse alloc] initWithObject:keyValue];
+        response.error = error;
+        return response;
+    } else {
+        return nil;
+    }
 }
 
 - (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value force:(BOOL)force {
@@ -83,6 +118,13 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     }
     
     return request;
+}
+
+- (NSString *)execute:(NSURLRequest *)request error:(NSError *__autoreleasing *)error {
+    NSHTTPURLResponse *response;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
+    
+    return [self handleResponse:response data:data error:error];
 }
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error {

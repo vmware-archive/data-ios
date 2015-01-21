@@ -1,5 +1,5 @@
 //
-//  PCFDataObject.h
+//  PCFKeyValueObject.h
 //  PCFData
 //
 //  Created by DX122-XL on 2014-10-28.
@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "PCFDataStore.h"
 
-@interface PCFDataObject : NSObject
+@interface PCFKeyValueObject : NSObject
 
 - (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key;
 
-- (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore key:(NSString *)key;
+- (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore collection:(NSString *)collection key:(NSString *)key;
 
 - (PCFResponse *)getWithAccessToken:(NSString *)accessToken;
 
@@ -37,6 +37,6 @@
 
 - (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock;
 
-- (void)deleteWithAccessToken:(NSString *)accessToken  force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock;
+- (void)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock;
 
 @end

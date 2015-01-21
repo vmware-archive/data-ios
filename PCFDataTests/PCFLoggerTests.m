@@ -18,9 +18,9 @@
 @implementation PCFLoggerTests
 
 - (void)testLogLevelDebug {
-    [PCFLogger sharedInstance].level = PCFLogLevelDebug;
+    [PCFLogger sharedInstance].level = PCFDataLogLevelDebug;
     
-    NSLog(@"=========== PCFLogLevelDebug ================");
+    NSLog(@"=========== PCFDataLogLevelDebug ================");
     
     LogDebug(@"Log level %@: SUCCESS", @"Debug");
     LogInfo(@"Log level %@: SUCCESS", @"Info");
@@ -32,9 +32,9 @@
 }
 
 - (void)testLogLevelInfo {
-    [PCFLogger sharedInstance].level = PCFLogLevelInfo;
+    [PCFLogger sharedInstance].level = PCFDataLogLevelInfo;
     
-    NSLog(@"=========== PCFLogLevelInfo =================");
+    NSLog(@"=========== PCFDataLogLevelInfo =================");
     
     LogDebug(@"Log level %@: FAILURE", @"Debug");
     LogInfo(@"Log level %@: SUCCESS", @"Info");
@@ -46,9 +46,9 @@
 }
 
 - (void)testLogLevelWarning {
-    [PCFLogger sharedInstance].level = PCFLogLevelWarning;
+    [PCFLogger sharedInstance].level = PCFDataLogLevelWarning;
     
-    NSLog(@"=========== PCFLogLevelWarning ==============");
+    NSLog(@"=========== PCFDataLogLevelWarning ==============");
     
     LogDebug(@"Log level %@: FAILURE", @"Debug");
     LogInfo(@"Log level %@: FAILURE", @"Info");
@@ -60,9 +60,9 @@
 }
 
 - (void)testLogLevelError {
-    [PCFLogger sharedInstance].level = PCFLogLevelError;
+    [PCFLogger sharedInstance].level = PCFDataLogLevelError;
     
-    NSLog(@"=========== PCFLogLevelError ================");
+    NSLog(@"=========== PCFDataLogLevelError ================");
     
     LogDebug(@"Log level %@: FAILURE", @"Debug");
     LogInfo(@"Log level %@: FAILURE", @"Info");
@@ -74,9 +74,9 @@
 }
 
 - (void)testLogLevelCritical {
-    [PCFLogger sharedInstance].level = PCFLogLevelCritical;
+    [PCFLogger sharedInstance].level = PCFDataLogLevelCritical;
     
-    NSLog(@"=========== PCFLogLevelCritical =============");
+    NSLog(@"=========== PCFDataLogLevelCritical =============");
     
     LogDebug(@"Log level %@: FAILURE", @"Debug");
     LogInfo(@"Log level %@: FAILURE", @"Info");
@@ -88,9 +88,9 @@
 }
 
 - (void)testLogLevelNone {
-    [PCFLogger sharedInstance].level = PCFLogLevelNone;
+    [PCFLogger sharedInstance].level = PCFDataLogLevelNone;
     
-    NSLog(@"=========== PCFLogLevelNone =================");
+    NSLog(@"=========== PCFDataLogLevelNone =================");
     
     LogDebug(@"Log level %@: FAILURE", @"Debug");
     LogInfo(@"Log level %@: FAILURE", @"Info");

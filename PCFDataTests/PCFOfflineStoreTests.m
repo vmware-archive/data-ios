@@ -46,253 +46,229 @@
     self.collection = [NSUUID UUID].UUIDString;
     
     self.error = [[NSError alloc] init];
-    self.force = arc4random_uniform(1);
+    self.force = arc4random_uniform(2);
+}
+
+- (PCFRequest *)createRequest {
+    PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
+    return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+}
+
+- (PCFResponse *)createResponseWithError:(NSError *)error {
+    PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
+    return [[PCFResponse alloc] initWithObject:keyValue error:error];
 }
 
 - (void)testGetInvokesRemoteAndLocalStoreWhenConnectionIsAvailable {
-    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+    PCFRequest *request = [self createRequest];
+    
+    PCFResponse *localResponse = [self createResponseWithError:nil];
+    PCFResponse *remoteResponse = [self createResponseWithError:nil];
 
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
-    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
+    OCMStub([remoteStore getWithRequest:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([localStore putWithRequest:[OCMArg any]]).andReturn(localResponse);
     
-    PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore getWithRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([localStore putWithKey:self.key value:remoteResponse.value accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore getWithRequest:request]);
+    OCMVerify([localStore putWithRequest:[OCMArg any]]);
 }
 
 - (void)testGetInvokesRemoteStoreWhenConnectionIsAvailableAndErrorOccurs {
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key error:self.error];
+    PCFRequest *request = [self createRequest];
     
+    PCFResponse *remoteResponse = [self createResponseWithError:self.error];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:nil remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([remoteStore getWithRequest:[OCMArg any]]).andReturn(remoteResponse);
     
-    PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore getWithRequest:request];
     
     XCTAssertEqual(response, remoteResponse);
     
-    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore getWithRequest:request]);
 }
 
 - (void)testGetInvokesRemoteAndLocalStoreWhenConnectionIsAvailableAndNotModifiedErrorOccurs {
+    PCFRequest *request = [self createRequest];
     NSError *error = [[NSError alloc] initWithDomain:@"Not Modified" code:304 userInfo:nil];
-    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key error:error];
     
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFResponse *remoteResponse = [self createResponseWithError:error];
+    PCFResponse *localResponse = [self createResponseWithError:nil];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
-    OCMStub([remoteStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([localStore getWithRequest:[OCMArg any]]).andReturn(localResponse);
+    OCMStub([remoteStore getWithRequest:[OCMArg any]]).andReturn(remoteResponse);
     
-    PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore getWithRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore getWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore getWithRequest:request]);
+    OCMVerify([localStore getWithRequest:request]);
 }
 
-- (void)testGetInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
-    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+- (void)testGetInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailable {
+    PCFRequest *request = [self createRequest];
+    PCFResponse *localResponse = [self createResponseWithError:nil];
     
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRequestCache *requestCache = OCMClassMock([PCFRequestCache class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:nil]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:nil]);
     
     OCMStub([dataStore isConnected]).andReturn(false);
-    OCMStub([dataStore isSyncSupported]).andReturn(true);
     OCMStub([dataStore requestCache]).andReturn(requestCache);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
+    OCMStub([localStore getWithRequest:[OCMArg any]]).andReturn(localResponse);
     
-    PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
-    
-    XCTAssertEqual(response, localResponse);
-    
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([requestCache queueGetWithToken:self.token collection:self.collection key:self.key]);
-}
-
-- (void)testGetInvokesLocalStoreWhenConnectionIsNotAvailableAndSyncIsNotSupported {
-    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:nil]);
-    
-    OCMStub([dataStore isConnected]).andReturn(false);
-    OCMStub([dataStore isSyncSupported]).andReturn(false);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
-    
-    PCFResponse *response = [dataStore getWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore getWithRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([localStore getWithRequest:request]);
+    OCMVerify([requestCache queueGetWithRequest:request]);
 }
 
 - (void)testPutInvokesRemoteAndLocalStoreWhenConnectionIsAvailable {
-    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+    PCFRequest *request = [self createRequest];
     
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFResponse *localResponse = [self createResponseWithError:nil];
+    PCFResponse *remoteResponse = [self createResponseWithError:nil];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
-    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
+    OCMStub([remoteStore putWithRequest:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([localStore putWithRequest:[OCMArg any]]).andReturn(localResponse);
     
-    PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
+    PCFResponse *response = [dataStore putWithRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore putWithKey:self.key value:self.value accessToken:self.token force:self.force]);
-    OCMVerify([localStore putWithKey:self.key value:remoteResponse.value accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore putWithRequest:request]);
+    OCMVerify([localStore putWithRequest:request]);
 }
 
 - (void)testPutInvokesRemoteStoreWhenConnectionIsAvailableAndErrorOccurs {
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key error:self.error];
+    PCFRequest *request = [self createRequest];
+    
+    PCFResponse *remoteResponse = [self createResponseWithError:self.error];
     
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:nil remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:nil remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([remoteStore putWithRequest:[OCMArg any]]).andReturn(remoteResponse);
     
-    PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
+    PCFResponse *response = [dataStore putWithRequest:request];
     
     XCTAssertEqual(response, remoteResponse);
     
-    OCMVerify([remoteStore putWithKey:self.key value:self.value accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore putWithRequest:request]);
 }
 
 - (void)testPutInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
-    PCFResponse *localGetResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    PCFResponse *localPutResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+    PCFRequest *request = [self createRequest];
     
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFResponse *localGetResponse = [self createResponseWithError:nil];
+    PCFResponse *localPutResponse = [self createResponseWithError:nil];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRequestCache *requestCache = OCMClassMock([PCFRequestCache class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:nil]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:nil]);
     
     OCMStub([dataStore isConnected]).andReturn(false);
-    OCMStub([dataStore isSyncSupported]).andReturn(true);
     OCMStub([dataStore requestCache]).andReturn(requestCache);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localGetResponse);
-    OCMStub([localStore putWithKey:[OCMArg any] value:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localPutResponse);
+    OCMStub([localStore getWithRequest:[OCMArg any]]).andReturn(localGetResponse);
+    OCMStub([localStore putWithRequest:[OCMArg any]]).andReturn(localPutResponse);
     
-    PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
+    PCFResponse *response = [dataStore putWithRequest:request];
     
     XCTAssertEqual(response, localPutResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([localStore putWithKey:self.key value:self.value accessToken:self.token force:self.force]);
-    OCMVerify([requestCache queuePutWithToken:self.token collection:self.collection key:self.key value:self.value fallback:localGetResponse.value]);
-}
-
-- (void)testPutFailsWhenConnectionIsNotAvailableAndSyncIsNotSupported {
-    PCFResponse *failureResponse = [[PCFResponse alloc] initWithKey:self.key error:self.error];
-    
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:nil]);
-    
-    OCMStub([dataStore isConnected]).andReturn(false);
-    OCMStub([dataStore isSyncSupported]).andReturn(false);
-    OCMStub([dataStore errorNoConnectionWithKey:[OCMArg any]]).andReturn(failureResponse);
-    
-    PCFResponse *response = [dataStore putWithKey:self.key value:self.value accessToken:self.token];
-    
-    XCTAssertEqual(response, failureResponse);
-    
-    OCMVerify([dataStore errorNoConnectionWithKey:self.key]);
+    OCMVerify([localStore getWithRequest:request]);
+    OCMVerify([localStore putWithRequest:request]);
+    OCMVerify([requestCache queuePutWithRequest:request]);
 }
 
 - (void)testDeleteInvokesRemoteAndLocalStoreWhenConnectionIsAvailable {
-    PCFResponse *localResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+    PCFRequest *request = [self createRequest];
     
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFResponse *localResponse = [self createResponseWithError:nil];
+    PCFResponse *remoteResponse = [self createResponseWithError:nil];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
-    OCMStub([localStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localResponse);
+    OCMStub([remoteStore deleteWithRequest:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([localStore deleteWithRequest:[OCMArg any]]).andReturn(localResponse);
     
-    PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore deleteWithRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
-    OCMVerify([remoteStore deleteWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([localStore deleteWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore deleteWithRequest:request]);
+    OCMVerify([localStore deleteWithRequest:request]);
 }
 
 - (void)testDeleteInvokesRemoteStoreWhenConnectionIsAvailableAndErrorOccurs {
-    PCFResponse *remoteResponse = [[PCFResponse alloc] initWithKey:self.key error:self.error];
+    PCFRequest *request = [self createRequest];
+    
+    PCFResponse *remoteResponse = [self createResponseWithError:self.error];
     
     PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:nil remoteStore:remoteStore]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:nil remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([remoteStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(remoteResponse);
+    OCMStub([remoteStore deleteWithRequest:[OCMArg any]]).andReturn(remoteResponse);
     
-    PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore deleteWithRequest:request];
     
     XCTAssertEqual(response, remoteResponse);
     
-    OCMVerify([remoteStore deleteWithKey:self.key accessToken:self.token force:self.force]);
+    OCMVerify([remoteStore deleteWithRequest:request]);
 }
 
-- (void)testDeleteInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailableAndSyncIsSupported {
-    PCFResponse *localGetResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
-    PCFResponse *localDeleteResponse = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+- (void)testDeleteInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailable {
+    PCFRequest *request = [self createRequest];
     
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
+    PCFResponse *localGetResponse = [self createResponseWithError:nil];
+    PCFResponse *localDeleteResponse = [self createResponseWithError:nil];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
     PCFRequestCache *requestCache = OCMClassMock([PCFRequestCache class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:nil]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:nil]);
     
     OCMStub([dataStore isConnected]).andReturn(false);
-    OCMStub([dataStore isSyncSupported]).andReturn(true);
     OCMStub([dataStore requestCache]).andReturn(requestCache);
-    OCMStub([localStore getWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localGetResponse);
-    OCMStub([localStore deleteWithKey:[OCMArg any] accessToken:[OCMArg any] force:self.force]).andReturn(localDeleteResponse);
+    OCMStub([localStore getWithRequest:[OCMArg any]]).andReturn(localGetResponse);
+    OCMStub([localStore deleteWithRequest:[OCMArg any]]).andReturn(localDeleteResponse);
     
-    PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
+    PCFResponse *response = [dataStore deleteWithRequest:request];
     
     XCTAssertEqual(response, localDeleteResponse);
     
-    OCMVerify([localStore getWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([localStore deleteWithKey:self.key accessToken:self.token force:self.force]);
-    OCMVerify([requestCache queueDeleteWithToken:self.token collection:self.collection key:self.key fallback:localGetResponse.value]);
-}
-
-- (void)testDeleteFailsWhenConnectionIsNotAvailableAndSyncIsNotSupported {
-    PCFResponse *failureResponse = [[PCFResponse alloc] initWithKey:self.key error:self.error];
-    
-    PCFLocalStore *localStore = OCMClassMock([PCFLocalStore class]);
-    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithCollection:self.collection localStore:localStore remoteStore:nil]);
-    
-    OCMStub([dataStore isConnected]).andReturn(false);
-    OCMStub([dataStore isSyncSupported]).andReturn(false);
-    OCMStub([dataStore errorNoConnectionWithKey:[OCMArg any]]).andReturn(failureResponse);
-    
-    PCFResponse *response = [dataStore deleteWithKey:self.key accessToken:self.token];
-    
-    XCTAssertEqual(response, failureResponse);
-    
-    OCMVerify([dataStore errorNoConnectionWithKey:self.key]);
+    OCMVerify([localStore getWithRequest:request]);
+    OCMVerify([localStore deleteWithRequest:request]);
+    OCMVerify([requestCache queueDeleteWithRequest:request]);
 }
 
 @end

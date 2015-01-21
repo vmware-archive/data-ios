@@ -12,8 +12,7 @@
 
 @interface PCFResponseTests : XCTestCase
 
-@property NSString *key;
-@property NSString *value;
+@property NSString *object;
 @property NSError *error;
 
 @end
@@ -23,28 +22,21 @@
 - (void)setUp {
     [super setUp];
     
-    self.key = [NSUUID UUID].UUIDString;
-    self.value = [NSUUID UUID].UUIDString;
-    
+    self.object = [NSUUID UUID].UUIDString;
     self.error = [[NSError alloc] init];
 }
 
-- (void)testSuccess {
-    PCFResponse *response = [[PCFResponse alloc] initWithKey:self.key value:self.value];
+- (void)testInitWithObject {
+    PCFResponse *response = [[PCFResponse alloc] initWithObject:self.object];
     
-    XCTAssertEqual(response.key, self.key);
-    XCTAssertEqual(response.value, self.value);
-    
-    XCTAssertNil(response.error);
+    XCTAssertEqual(self.object, response.object);
 }
 
-- (void)testFailure {
-    PCFResponse *response = [[PCFResponse alloc] initWithKey:self.key error:self.error];
+- (void)testInitWithObjectAndError {
+    PCFResponse *response = [[PCFResponse alloc] initWithObject:self.object error:self.error];
     
-    XCTAssertEqual(response.key, self.key);
-    XCTAssertEqual(response.error, self.error);
-
-    XCTAssertNil(response.value);
+    XCTAssertEqual(self.object, response.object);
+    XCTAssertEqual(self.error, response.error);
 }
 
 @end

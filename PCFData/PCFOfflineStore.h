@@ -9,15 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "PCFDataStore.h"
 
-@class PCFRemoteStore, PCFLocalStore;
-
-#define kNoConnectionErrorDomain    @"No Connection"
-#define kNoConnectionErrorCode      100
+@class PCFRemoteStore, PCFKeyValueStore;
 
 @interface PCFOfflineStore : NSObject <PCFDataStore>
 
-- (instancetype)initWithCollection:(NSString *)collection;
-
-- (instancetype)initWithCollection:(NSString *)collection localStore:(PCFLocalStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore;
+- (instancetype)initWithLocalStore:(PCFKeyValueStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore;
 
 @end

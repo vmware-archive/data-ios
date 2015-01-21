@@ -8,47 +8,31 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "PCFDataStore.h"
 
-@class PCFPendingRequest, PCFOfflineStore, PCFLocalStore, PCFResponse;
+@class PCFOfflineStore, PCFRequestCacheQueue, PCFRequestCacheExecutor;
+
+static int const PCF_HTTP_GET = 1;
+static int const PCF_HTTP_PUT = 2;
+static int const PCF_HTTP_DELETE = 3;
 
 @interface PCFRequestCache : NSObject
 
-- (instancetype)initWithDefaults:(NSUserDefaults *)defaults;
+- (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore;
 
-+ (PCFRequestCache *)sharedInstance;
+- (instancetype)initWithRequestQueue:(PCFRequestCacheQueue *)queue executor:(PCFRequestCacheExecutor *)executor;
 
-- (PCFOfflineStore *)createOfflineStoreWithCollection:(NSString *)collection;
+- (void)queueGetWithRequest:(PCFRequest *)request;
 
-- (PCFLocalStore *)createLocalStoreWithCollection:(NSString *)collection;
+- (void)queuePutWithRequest:(PCFRequest *)request;
 
-- (void)queueGetWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key;
-
-- (void)queuePutWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key value:(NSString *)value fallback:(NSString *)fallback;
-
-- (void)queueDeleteWithToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key fallback:(NSString *)fallback;
-
-- (void)queuePendingRequest:(PCFPendingRequest *)request;
+- (void)queueDeleteWithRequest:(PCFRequest *)request;
 
 - (void)executePendingRequestsWithToken:(NSString *)accessToken;
 
-- (void)executePendingRequestsWithToken:(NSString *)accessToken requests:(NSArray *)requests;
-
 - (void)executePendingRequestsWithToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
+
+- (void)executePendingRequests:(NSArray *)requests;
 
 @end
 
-@interface PCFPendingRequest : NSObject
-
-@property NSDictionary *values;
-@property (readonly) int method;
-@property (readonly) NSString *key;
-@property (readonly) NSString *value;
-@property (readonly) NSString *collection;
-@property (readonly) NSString *fallback;
-@property (readonly) NSString *accessToken;
-
-- (instancetype)initWithDictionary:(NSDictionary *)values;
-
-- (instancetype)initWithMethod:(int)method accessToken:(NSString *)accessToken collection:(NSString *)collection key:(NSString *)key value:(NSString *)value fallback:(NSString *)fallback;
-
-@end 

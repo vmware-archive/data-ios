@@ -10,14 +10,13 @@
 
 @implementation PCFResponse
 
-- (instancetype)initWithKey:(NSString *)key value:(NSString *)value {
-    _key = key;
-    _value = value;
+- (instancetype)initWithObject:(id)object {
+    _object = object;
     return self;
 }
 
-- (instancetype)initWithKey:(NSString *)key error:(NSError *)error {
-    _key = key;
+- (instancetype)initWithObject:(id)object error:(NSError *)error {
+    _object = object;
     _error = error;
     return self;
 }

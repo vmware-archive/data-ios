@@ -13,6 +13,8 @@
 
 @interface PCFRemoteStore : NSObject <PCFDataStore>
 
-- (instancetype)initWithCollection:(NSString *)collection;
+- (instancetype)init;
+
+- (instancetype)initWithClient:(PCFRemoteClient *)client;
 
 @end

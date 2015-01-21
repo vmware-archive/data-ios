@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class PCFDataPersistence;
+
 @interface PCFEtagStore : NSObject
 
-- (instancetype)initWithDefaults:(NSUserDefaults *)defaults;
+- (instancetype)initWithPersistence:(PCFDataPersistence *)persistence;
 
 - (NSString *)etagForUrl:(NSURL *)url;
 
