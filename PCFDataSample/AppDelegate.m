@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [PCFData startSyncingWithBlock:^() {
+    [PCFData syncWhenNetworkAvailableWithBlock:^() {
         [PCFData syncWithAccessToken:nil];
     }];
     

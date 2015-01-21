@@ -1,5 +1,5 @@
 //
-//  PCFLocalStore.m
+//  PCFKeyValueStore.m
 //  PCFData
 //
 //  Created by DX122-XL on 2014-10-28.
@@ -8,6 +8,7 @@
 
 #import "PCFKeyValueStore.h"
 #import "PCFResponse.h"
+#import "PCFRequest.h"
 #import "PCFLogger.h"
 #import "PCFKeyValue.h"
 #import "PCFDataPersistence.h"
@@ -27,6 +28,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence {
+    self = [super init];
     _persistence = persistence;
 //    [_defaults addObserver:self forKeyPath:PCFDataDefaultsKey options:NSKeyValueObservingOptionNew context:0];
     return self;
@@ -97,6 +99,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     
     PCFKeyValue *response = [[PCFKeyValue alloc] initWithKeyValue:requestObject];
     response.value = nil;
+    
     return [[PCFResponse alloc] initWithObject:response];
 }
 

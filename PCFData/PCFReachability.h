@@ -59,6 +59,8 @@ typedef enum : NSInteger {
 
 extern NSString *kPCFReachabilityChangedNotification;
 
+static BOOL PCFSimulateNetworkOffline = false;
+
 
 @interface PCFReachability : NSObject
 

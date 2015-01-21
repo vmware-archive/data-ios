@@ -98,6 +98,8 @@
 		E1BF42A31A41DA9300B4707D /* PCFRemoteStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB31A27D36000EFC209 /* PCFRemoteStore.h */; };
 		E1BF42A41A41DA9300B4707D /* PCFResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFResponse.h */; };
 		E1DA3D8B1A70079800057671 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DA3D8A1A70079800057671 /* libOCMock.a */; };
+		E1DA3DC41A70558200057671 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
+		E1DA3DC51A70558200057671 /* PCFData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */; };
 		E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */; };
 		E1F93CE11A64812B00EA6B28 /* PCFRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = E1F93CDF1A64812B00EA6B28 /* PCFRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -143,6 +145,17 @@
 				E1BF42A31A41DA9300B4707D /* PCFRemoteStore.h in CopyFiles */,
 				E1BF42A41A41DA9300B4707D /* PCFResponse.h in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1DA3DC61A70558200057671 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E1DA3DC51A70558200057671 /* PCFData.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -246,6 +259,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1DA3DC41A70558200057671 /* PCFData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +323,7 @@
 		E12CCF6F1A27D27B00EFC209 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E12CCF701A27D27B00EFC209 /* Info.plist */,
 				E17079AB1A684FB000BA42C7 /* PCFMappable.h */,
 				E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */,
 				E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */,
@@ -326,11 +341,10 @@
 				E151B0541A6EAEAD008C861A /* PCFPendingRequest.m */,
 				E1F93CEA1A65A39000EA6B28 /* PCFDataPersistence.h */,
 				E1F93CEB1A65A39000EA6B28 /* PCFDataPersistence.m */,
-				E11765A71A3640B800EF6B01 /* PCFConfig.h */,
-				E11765A81A3640B800EF6B01 /* PCFConfig.m */,
 				E11765FA1A38D88B00EF6B01 /* PCFLogger.h */,
 				E11765FB1A38D88B00EF6B01 /* PCFLogger.m */,
-				E12CCF701A27D27B00EFC209 /* Info.plist */,
+				E11765A71A3640B800EF6B01 /* PCFConfig.h */,
+				E11765A81A3640B800EF6B01 /* PCFConfig.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -414,9 +428,9 @@
 				E12CCFBB1A27D36000EFC209 /* PCFKeyValueObject.h in Headers */,
 				E12CCFBE1A27D36000EFC209 /* PCFKeyValueStore.h in Headers */,
 				E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */,
+				E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */,
 				E1F93CE11A64812B00EA6B28 /* PCFRequest.h in Headers */,
 				E17079B91A695DB900BA42C7 /* PCFMappable.h in Headers */,
-				E11765FC1A38D88B00EF6B01 /* PCFLogger.h in Headers */,
 				E12CCFC21A27D36000EFC209 /* PCFRemoteClient.h in Headers */,
 				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
 				E17079A91A6721CD00BA42C7 /* PCFRequestCacheExecutor.h in Headers */,
@@ -472,6 +486,7 @@
 				E17079C21A69602500BA42C7 /* Sources */,
 				E17079C31A69602500BA42C7 /* Frameworks */,
 				E17079C41A69602500BA42C7 /* Resources */,
+				E1DA3DC61A70558200057671 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -918,7 +933,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = PCFDataSample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -930,7 +945,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PCFDataSample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

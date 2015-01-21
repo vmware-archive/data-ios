@@ -25,6 +25,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 }
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence {
+    self = [super init];
     _persistence = persistence;
     return self;
 }

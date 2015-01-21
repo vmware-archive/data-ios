@@ -17,8 +17,9 @@ static NSString* const PCFForce = @"force";
 static NSString* const PCFType = @"type";
 
 - (instancetype)initWithRequest:(PCFRequest *)request {
+    self = [self initWithAccessToken:request.accessToken object:request.object force:request.force];
     _fallback = request.fallback;
-    return [self initWithAccessToken:request.accessToken object:request.object force:request.force];
+    return self;
 }
 
 - (instancetype)initWithAccessToken:(NSString *)accessToken object:(id<PCFMappable>)object {
@@ -26,6 +27,7 @@ static NSString* const PCFType = @"type";
 }
 
 - (instancetype)initWithAccessToken:(NSString *)accessToken object:(id<PCFMappable>)object force:(BOOL)force {
+    self = [super init];
     self.accessToken = accessToken;
     self.object = object;
     self.force = force;
@@ -33,6 +35,7 @@ static NSString* const PCFType = @"type";
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
+    self = [super init];
     id klass = NSClassFromString([dict objectForKey:PCFType]);
     _object = [[klass alloc] initWithDictionary:[dict objectForKey:PCFObject]];
     _fallback = [[klass alloc] initWithDictionary:[dict objectForKey:PCFFallback]];
@@ -42,13 +45,17 @@ static NSString* const PCFType = @"type";
 }
 
 - (NSDictionary*)toDictionary {
-    return @{
-        PCFAccessToken: self.accessToken,
-        PCFObject: [self.object toDictionary],
-        PCFFallback: [self.fallback toDictionary],
-        PCFForce: [NSString stringWithFormat:@"%d", self.force],
-        PCFType: NSStringFromClass([self.object class])
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    if (self.accessToken) [dict setValue:self.accessToken forKey:PCFAccessToken];
+    if (self.object) [dict setValue:[self.object toDictionary] forKey:PCFObject];
+    if (self.force) [dict setValue:[NSString stringWithFormat:@"%d", self.force] forKey:PCFForce];
+    if (self.object) [dict setValue:NSStringFromClass([self.object class]) forKey:PCFType];
+    if (self.fallback) [dict setValue:[self.fallback toDictionary] forKey:PCFFallback];
+    return dict;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat: @"PCFRequest: {Object=%@, Force=%d}", self.object, self.force];
 }
 
 @end

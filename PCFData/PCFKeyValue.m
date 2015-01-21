@@ -36,16 +36,20 @@ static NSString* const PCFValue = @"value";
 }
 
 - (NSDictionary *)toDictionary {
-    return @{
-         PCFCollection: self.collection,
-         PCFKey: self.key,
-         PCFValue: self.value,
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    if (self.collection) [dict setObject:self.collection forKey:PCFCollection];
+    if (self.key) [dict setObject:self.key forKey:PCFKey];
+    if (self.value) [dict setObject:self.value forKey:PCFValue];
+    return dict;
 }
 
 - (NSURL *)url {
     NSString *url = [[PCFConfig serviceUrl] stringByAppendingFormat:@"/%@/%@", self.collection, self.key];
     return [NSURL URLWithString:url];
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat: @"PCFKeyValue: {Collection=%@, Key=%@, Value=%@}", self.collection, self.key, self.value];
 }
 
 @end

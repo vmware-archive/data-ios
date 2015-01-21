@@ -13,9 +13,9 @@
 
 @interface PCFKeyValue : NSObject <PCFMappable>
 
+@property NSString *collection;
 @property NSString *key;
 @property NSString *value;
-@property NSString *collection;
 
 - (instancetype)initWithKeyValue:(PCFKeyValue *)keyValue;
 

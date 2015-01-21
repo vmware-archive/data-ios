@@ -15,6 +15,12 @@
 #import "PCFRequestCacheQueue.h"
 #import "PCFPendingRequest.h"
 
+@interface PCFRequestCache ()
+
+- (void)executePendingRequests:(NSArray *)requests withAccessToken:(NSString *)accessToken;
+
+@end
+
 @interface PCFRequestCacheTests : XCTestCase
 
 @property NSString *key;
@@ -139,24 +145,16 @@
 }
 
 - (void)testExecutePendingRequests {
-    NSDictionary *dict = [[NSDictionary alloc] init];
-    NSArray *requestArray = [[NSArray alloc] initWithObjects:dict, nil];
-    OCMStub([requestArray count]).andReturn(1);
+    PCFPendingRequest *pending = OCMClassMock([PCFPendingRequest class]);
+    NSArray *requestArray = [[NSArray alloc] initWithObjects:pending, nil];
     
     PCFRequestCacheExecutor *executor = OCMClassMock([PCFRequestCacheExecutor class]);
-    id pending = OCMClassMock([PCFPendingRequest class]);
-    
-    OCMStub([pending alloc]).andReturn(pending);
-    OCMStub([pending initWithDictionary:[OCMArg any]]).andReturn(pending);
     
     PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:nil executor:executor];
     
-    [cache executePendingRequests:requestArray];
+    [cache executePendingRequests:requestArray withAccessToken:nil];
     
-    OCMVerify([pending initWithDictionary:dict]);
     OCMVerify([executor executeRequest:pending]);
-    
-    [pending stopMocking];
 }
 
 @end

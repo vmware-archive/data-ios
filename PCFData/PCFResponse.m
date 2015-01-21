@@ -21,4 +21,8 @@
     return self;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat: @"PCFResponse: {Object=%@, Error=%@}", self.object, self.error];
+}
+
 @end

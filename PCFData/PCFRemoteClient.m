@@ -31,6 +31,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
 }
 
 - (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore {
+    self = [super init];
     _etagStore = etagStore;
     return self;
 }
@@ -134,9 +135,12 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         
     } else if (response && (response.statusCode < 200 || response.statusCode >= 300)) {
         LogInfo(@"Response Error: HTTP Status Code %ld", (long) response.statusCode);
-        *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
-        return nil;
         
+        if (error) {
+            *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
+        }
+        
+        return nil;
     } else {
         if ([PCFConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
             NSString *etag = [response.allHeaderFields valueForKey:@"Etag"];

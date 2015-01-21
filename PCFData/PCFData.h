@@ -7,16 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <PCFData/PCFDataStore.h>
-#import <PCFData/PCFKeyValue.h>
-#import <PCFData/PCFKeyValueObject.h>
-#import <PCFData/PCFKeyValueStore.h>
-#import <PCFData/PCFRemoteStore.h>
-#import <PCFData/PCFOfflineStore.h>
-#import <PCFData/PCFResponse.h>
-#import <PCFData/PCFRequest.h>
-
-typedef void (^SyncBlock) (void);
+#import "PCFDataStore.h"
+#import "PCFKeyValue.h"
+#import "PCFKeyValueObject.h"
+#import "PCFKeyValueStore.h"
+#import "PCFRemoteStore.h"
+#import "PCFOfflineStore.h"
+#import "PCFResponse.h"
+#import "PCFRequest.h"
 
 typedef NS_ENUM(NSInteger, PCFDataLogLevel) {
     PCFDataLogLevelDebug = 0,
@@ -27,9 +25,11 @@ typedef NS_ENUM(NSInteger, PCFDataLogLevel) {
     PCFDataLogLevelNone
 };
 
+typedef void (^SyncBlock) (void);
+
 @interface PCFData : NSObject
 
-+ (void)startSyncingWithBlock:(SyncBlock)syncBlock;
++ (void)syncWhenNetworkAvailableWithBlock:(SyncBlock)syncBlock;
 
 + (void)syncWithAccessToken:(NSString *)accessToken;
 

@@ -38,7 +38,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
-    [PCFData startSyncingWithBlock:^{
+    [PCFData syncWhenNetworkAvailableWithBlock:^{
         [expectation fulfill];
     }];
     
@@ -55,7 +55,7 @@
     OCMStub([reachability reachability]).andReturn(reachability);
     OCMStub([reachability currentReachabilityStatus]).andReturn(NotReachable);
     
-    [PCFData startSyncingWithBlock:^{
+    [PCFData syncWhenNetworkAvailableWithBlock:^{
         XCTFail(@"Should not call block");
     }];
     
@@ -71,7 +71,7 @@
     OCMStub([reachability reachability]).andReturn(reachability);
     OCMStub([notificationCenter defaultCenter]).andReturn(notificationCenter);
     
-    [PCFData startSyncingWithBlock:nil];
+    [PCFData syncWhenNetworkAvailableWithBlock:nil];
     
     OCMVerify([reachability startNotifier]);
     OCMVerify([notificationCenter addObserverForName:kPCFReachabilityChangedNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:[OCMArg any]]);

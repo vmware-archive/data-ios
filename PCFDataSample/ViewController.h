@@ -17,7 +17,7 @@
 @property IBOutlet UITextField *textField;
 @property IBOutlet UISwitch *etagSwitch;
 @property IBOutlet UITextView *errorLabel;
-@property IBOutlet UITextField *cachedContent;
+@property IBOutlet UITextView *cachedContent;
 
 @end
 

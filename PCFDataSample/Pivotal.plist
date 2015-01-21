@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>pivotal.data.serviceUrl</key>
-	<string>http://localhost:3000/data/sample</string>
+	<string>http://data-backend.sherry.wine.cf-app.com/data/sample</string>
 	<key>pivotal.data.collisionStrategy</key>
 	<string>OptimisticLocking</string>
 </dict>

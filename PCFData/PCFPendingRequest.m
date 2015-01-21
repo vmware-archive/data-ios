@@ -13,18 +13,20 @@
 static NSString* const PCFMethod = @"method";
 
 - (instancetype)initWithRequest:(PCFRequest *)request method:(long)method {
+    self = [super initWithRequest:request];
     _method = method;
-    return [super initWithRequest:request];
+    return self;
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
+    self = [super initWithDictionary:dict];
     _method = [[dict objectForKey:PCFMethod] intValue];
-    return [super initWithDictionary:dict];
+    return self;
 }
 
 - (NSDictionary*)toDictionary {
     NSMutableDictionary *dict = [[super toDictionary] mutableCopy];
-    [dict setObject:[NSString stringWithFormat:@"%ld", self.method] forKey:PCFMethod];
+    if (self.method) [dict setObject:[NSString stringWithFormat:@"%ld", self.method] forKey:PCFMethod];
     return dict;
 }
 

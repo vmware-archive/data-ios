@@ -26,6 +26,7 @@
 @implementation PCFRequestCache
 
 - (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
+    self = [super init];
     _queue = [[PCFRequestCacheQueue alloc] initWithPersistence:[[PCFDataPersistence alloc] init]];
     _executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
     return self;
@@ -38,19 +39,19 @@
 }
 
 - (void)queueGetWithRequest:(PCFRequest *)request {
-    LogInfo(@"PCFLocalStore queueGetWithRequest: %@", request);
+    LogInfo(@"PCFRequestCache queueGetWithRequest: %@", request);
     PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_GET];
     [self.queue addRequest:pending];
 }
 
 - (void)queuePutWithRequest:(PCFRequest *)request {
-    LogInfo(@"PCFLocalStore queuePutWithRequest: %@", request);
+    LogInfo(@"PCFRequestCache queuePutWithRequest: %@", request);
     PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_PUT];
     [self.queue addRequest:pending];
 }
 
 - (void)queueDeleteWithRequest:(PCFRequest *)request {
-    LogInfo(@"PCFLocalStore queueDeleteWithRequest: %@", request);
+    LogInfo(@"PCFRequestCache queueDeleteWithRequest: %@", request);
     PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_DELETE];
     [self.queue addRequest:pending];
 }
@@ -64,7 +65,7 @@
     NSArray *requests = [self.queue empty];
     
     if (requests.count > 0) {
-        [self executePendingRequests:requests];
+        [self executePendingRequests:requests withAccessToken:accessToken];
         
         if (completionHandler) {
             completionHandler(UIBackgroundFetchResultNewData);
@@ -76,10 +77,9 @@
     }
 }
 
-- (void)executePendingRequests:(NSArray *)requests {
-    for (NSDictionary *dictionary in requests) {
-        PCFPendingRequest *request  = [[PCFPendingRequest alloc] initWithDictionary:dictionary];
-        
+- (void)executePendingRequests:(NSArray *)requests withAccessToken:(NSString *)accessToken {
+    for (PCFPendingRequest *request in requests) {
+        if (accessToken) request.accessToken = accessToken;
         [self.executor executeRequest:request];
     }
 }

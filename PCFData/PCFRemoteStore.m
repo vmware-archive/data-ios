@@ -27,6 +27,7 @@
 }
 
 - (instancetype)initWithClient:(PCFRemoteClient *)client {
+    self = [super init];
     _client = client;
     return self;
 }

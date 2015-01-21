@@ -29,6 +29,7 @@
 }
 
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore collection:(NSString *)collection key:(NSString *)key {
+    self = [super init];
     _collection = collection;
     _key = key;
     _dataStore = dataStore;

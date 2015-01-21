@@ -15,25 +15,33 @@
 
 @implementation PCFData
 
-+ (void)startSyncingWithBlock:(SyncBlock)syncBlock {
-    void (^block)(NSNotification*) = ^(NSNotification *notification) {
-        PCFNetworkStatus status = [[PCFReachability reachability] currentReachabilityStatus];
+static PCFReachability *reachability;
+
++ (void)syncWhenNetworkAvailableWithBlock:(SyncBlock)syncBlock {
+    reachability = [PCFReachability reachability];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kPCFReachabilityChangedNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        PCFNetworkStatus status = [reachability currentReachabilityStatus];
         if (status != NotReachable) {
             syncBlock();
         }
-    };
+    }];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:kPCFReachabilityChangedNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:block];
-    
-    [[PCFReachability reachability] startNotifier];
+    [reachability startNotifier];
 }
 
 + (void)syncWithAccessToken:(NSString *)accessToken {
-//    [[PCFRequestCache sharedInstance] executePendingRequestsWithToken:accessToken];
+    [[PCFData requestCache] executePendingRequestsWithToken:accessToken];
 }
 
 + (void)syncWithAccessToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-//    [[PCFRequestCache sharedInstance] executePendingRequestsWithToken:accessToken completionHandler:completionHandler];
+    [[PCFData requestCache] executePendingRequestsWithToken:accessToken completionHandler:completionHandler];
+}
+
++ (PCFRequestCache *)requestCache {
+    PCFOfflineStore *offlineStore = [[PCFOfflineStore alloc] init];
+    PCFKeyValueStore *fallbackStore = [[PCFKeyValueStore alloc] init];
+    return [[PCFRequestCache alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
 }
 
 + (void)logLevel:(PCFDataLogLevel)level {

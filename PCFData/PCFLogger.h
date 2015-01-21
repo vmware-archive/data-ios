@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "PCFData.h"
 
 #define DEFAULT_LOGGER [PCFLogger sharedInstance]
@@ -26,7 +25,6 @@
 
 #define LogCritical(FMT, ...) \
     [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelCritical format:FMT, ##__VA_ARGS__]
-
 
 @interface PCFLogger : NSObject
 

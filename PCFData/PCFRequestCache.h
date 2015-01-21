@@ -32,7 +32,5 @@ static int const PCF_HTTP_DELETE = 3;
 
 - (void)executePendingRequestsWithToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
-- (void)executePendingRequests:(NSArray *)requests;
-
 @end
 

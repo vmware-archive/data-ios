@@ -36,6 +36,7 @@
 }
 
 - (instancetype)initWithLocalStore:(PCFKeyValueStore *)localStore remoteStore:(PCFRemoteStore *)remoteStore {
+    self = [super init];
     _remoteStore = remoteStore;
     _localStore = localStore;
     return self;
