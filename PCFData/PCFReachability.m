@@ -53,8 +53,8 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 #import "PCFReachability.h"
-#import "PCFLogger.h"
-#import "PCFConfig.h"
+#import "PCFDataLogger.h"
+#import "PCFDataConfig.h"
 
 
 NSString *kPCFReachabilityChangedNotification = @"kPCFReachabilityChangedNotification";
@@ -107,7 +107,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 + (instancetype)reachability
 {
-    NSURL* url = [NSURL URLWithString:[PCFConfig serviceUrl]];
+    NSURL* url = [NSURL URLWithString:[PCFDataConfig serviceUrl]];
     PCFReachability *returnValue = [PCFReachability reachabilityWithHostName:[url host]];
     return returnValue;
 }

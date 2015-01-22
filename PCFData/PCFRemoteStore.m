@@ -9,8 +9,8 @@
 #import "PCFRemoteStore.h"
 #import "PCFRemoteClient.h"
 #import "PCFResponse.h"
-#import "PCFConfig.h"
-#import "PCFLogger.h"
+#import "PCFDataConfig.h"
+#import "PCFDataLogger.h"
 
 @interface PCFRemoteStore ()
 

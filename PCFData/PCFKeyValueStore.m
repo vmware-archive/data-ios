@@ -9,7 +9,7 @@
 #import "PCFKeyValueStore.h"
 #import "PCFResponse.h"
 #import "PCFRequest.h"
-#import "PCFLogger.h"
+#import "PCFDataLogger.h"
 #import "PCFKeyValue.h"
 #import "PCFDataPersistence.h"
 

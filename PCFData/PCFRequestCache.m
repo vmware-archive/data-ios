@@ -14,7 +14,7 @@
 #import "PCFRequest.h"
 #import "PCFPendingRequest.h"
 #import "PCFResponse.h"
-#import "PCFLogger.h"
+#import "PCFDataLogger.h"
 
 @interface PCFRequestCache ()
 

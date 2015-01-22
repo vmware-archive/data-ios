@@ -1,5 +1,5 @@
 //
-//  PCFLogger.h
+//  PCFDataLogger.h
 //  PCFData
 //
 //  Created by DX122-XL on 2014-12-10.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "PCFData.h"
 
-#define DEFAULT_LOGGER [PCFLogger sharedInstance]
+#define DEFAULT_LOGGER [PCFDataLogger sharedInstance]
 
 #define LogDebug(FMT, ...) \
     [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelDebug format:FMT, ##__VA_ARGS__]
@@ -26,7 +26,7 @@
 #define LogCritical(FMT, ...) \
     [DEFAULT_LOGGER logWithLevel:PCFDataLogLevelCritical format:FMT, ##__VA_ARGS__]
 
-@interface PCFLogger : NSObject
+@interface PCFDataLogger : NSObject
 
 @property PCFDataLogLevel level;
 

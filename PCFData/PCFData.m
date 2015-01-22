@@ -11,7 +11,7 @@
 #import "PCFData.h"
 #import "PCFRequestCache.h"
 #import "PCFReachability.h"
-#import "PCFLogger.h"
+#import "PCFDataLogger.h"
 
 @implementation PCFData
 
@@ -45,7 +45,7 @@ static PCFReachability *reachability;
 }
 
 + (void)logLevel:(PCFDataLogLevel)level {
-    [PCFLogger sharedInstance].level = level;
+    [PCFDataLogger sharedInstance].level = level;
 }
 
 @end

@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
-#import "PCFConfig.h"
+#import "PCFDataConfig.h"
 
 @interface PCFConfigTests : XCTestCase
 
@@ -32,12 +32,12 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 }
 
 - (void)testServiceUrl {
-    id config = OCMPartialMock([[PCFConfig alloc] init]);
+    id config = OCMPartialMock([[PCFDataConfig alloc] init]);
     
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config serviceUrl]).andReturn(self.url);
     
-    NSString *serviceUrl = [PCFConfig serviceUrl];
+    NSString *serviceUrl = [PCFDataConfig serviceUrl];
     
     XCTAssertEqual(serviceUrl, self.url);
     
@@ -48,7 +48,7 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 }
 
 - (void)testServiceUrlInstance {
-    id config = OCMPartialMock([[PCFConfig alloc] init]);
+    id config = OCMPartialMock([[PCFDataConfig alloc] init]);
     NSDictionary *dict = OCMClassMock([NSDictionary class]);
     
     OCMStub([config values]).andReturn(dict);
@@ -65,12 +65,12 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 }
 
 - (void)testCollisionStrategy {
-    id config = OCMPartialMock([[PCFConfig alloc] init]);
+    id config = OCMPartialMock([[PCFDataConfig alloc] init]);
     
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config collisionStrategy]).andReturn(self.strategy);
     
-    PCFCollisionStrategy strategy = [PCFConfig collisionStrategy];
+    PCFCollisionStrategy strategy = [PCFDataConfig collisionStrategy];
     
     XCTAssertEqual(strategy, self.strategy);
     
@@ -81,7 +81,7 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 }
 
 - (void)testCollisionStrategyInstance {
-    id config = OCMPartialMock([[PCFConfig alloc] init]);
+    id config = OCMPartialMock([[PCFDataConfig alloc] init]);
     NSDictionary *dict = OCMClassMock([NSDictionary class]);
     
     OCMStub([config values]).andReturn(dict);
@@ -98,7 +98,7 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 }
 
 - (void)testValues {
-    id config = [[PCFConfig alloc] init];
+    id config = [[PCFDataConfig alloc] init];
     id bundle = OCMClassMock([NSBundle class]);
     id dict = OCMClassMock([NSDictionary class]);
     NSString *path = [NSUUID UUID].UUIDString;

@@ -33,7 +33,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
         NSMutableArray *array;
         
         if (!serialized) {
-            array = [[NSMutableArray alloc] initWithObjects:[request toDictionary], nil];
+            array = [NSMutableArray arrayWithObject:[request toDictionary]];
         } else {
             NSData *data = [serialized dataUsingEncoding:NSUTF8StringEncoding];
             array = [[NSJSONSerialization JSONObjectWithData:data options:0 error:nil] mutableCopy];

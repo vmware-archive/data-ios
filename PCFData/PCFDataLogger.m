@@ -1,20 +1,20 @@
 //
-//  PCFLogger.m
+//  PCFDataLogger.m
 //  PCFData
 //
 //  Created by DX122-XL on 2014-12-10.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PCFLogger.h"
+#import "PCFDataLogger.h"
 
-@implementation PCFLogger
+@implementation PCFDataLogger
 
 + (instancetype)sharedInstance {
-    static PCFLogger *sharedInstance = nil;
+    static PCFDataLogger *sharedInstance = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[PCFLogger alloc] init];
+        sharedInstance = [[PCFDataLogger alloc] init];
         sharedInstance.level = PCFDataLogLevelWarning;
     });
     return sharedInstance;

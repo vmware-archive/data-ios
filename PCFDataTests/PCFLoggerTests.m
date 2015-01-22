@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <PCFData/PCFData.h>
-#import "PCFLogger.h"
+#import "PCFDataLogger.h"
 
 @interface PCFLoggerTests : XCTestCase
 
@@ -18,7 +18,7 @@
 @implementation PCFLoggerTests
 
 - (void)testLogLevelDebug {
-    [PCFLogger sharedInstance].level = PCFDataLogLevelDebug;
+    [PCFDataLogger sharedInstance].level = PCFDataLogLevelDebug;
     
     NSLog(@"=========== PCFDataLogLevelDebug ================");
     
@@ -32,7 +32,7 @@
 }
 
 - (void)testLogLevelInfo {
-    [PCFLogger sharedInstance].level = PCFDataLogLevelInfo;
+    [PCFDataLogger sharedInstance].level = PCFDataLogLevelInfo;
     
     NSLog(@"=========== PCFDataLogLevelInfo =================");
     
@@ -46,7 +46,7 @@
 }
 
 - (void)testLogLevelWarning {
-    [PCFLogger sharedInstance].level = PCFDataLogLevelWarning;
+    [PCFDataLogger sharedInstance].level = PCFDataLogLevelWarning;
     
     NSLog(@"=========== PCFDataLogLevelWarning ==============");
     
@@ -60,7 +60,7 @@
 }
 
 - (void)testLogLevelError {
-    [PCFLogger sharedInstance].level = PCFDataLogLevelError;
+    [PCFDataLogger sharedInstance].level = PCFDataLogLevelError;
     
     NSLog(@"=========== PCFDataLogLevelError ================");
     
@@ -74,7 +74,7 @@
 }
 
 - (void)testLogLevelCritical {
-    [PCFLogger sharedInstance].level = PCFDataLogLevelCritical;
+    [PCFDataLogger sharedInstance].level = PCFDataLogLevelCritical;
     
     NSLog(@"=========== PCFDataLogLevelCritical =============");
     
@@ -88,7 +88,7 @@
 }
 
 - (void)testLogLevelNone {
-    [PCFLogger sharedInstance].level = PCFDataLogLevelNone;
+    [PCFDataLogger sharedInstance].level = PCFDataLogLevelNone;
     
     NSLog(@"=========== PCFDataLogLevelNone =================");
     

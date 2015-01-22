@@ -12,7 +12,7 @@
 #import <PCFData/PCFData.h>
 #import "PCFRemoteClient.h"
 #import "PCFEtagStore.h"
-#import "PCFConfig.h"
+#import "PCFDataConfig.h"
 
 @interface PCFRemoteClient ()
 
@@ -129,7 +129,7 @@
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForGet {
-    id config = OCMClassMock([PCFConfig class]);
+    id config = OCMClassMock([PCFDataConfig class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
     
@@ -147,7 +147,7 @@
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForPut {
-    id config = OCMClassMock([PCFConfig class]);
+    id config = OCMClassMock([PCFDataConfig class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
     
@@ -165,7 +165,7 @@
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForDelete {
-    id config = OCMClassMock([PCFConfig class]);
+    id config = OCMClassMock([PCFDataConfig class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
 
@@ -183,7 +183,7 @@
 }
 
 - (void)testRequestWithMethodDoesntSetEtagForForceRequest {
-    id config = OCMClassMock([PCFConfig class]);
+    id config = OCMClassMock([PCFDataConfig class]);
     PCFEtagStore *etagStore = OCMStrictClassMock([PCFEtagStore class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
     
@@ -248,6 +248,23 @@
     [error stopMocking];
 }
 
+- (void)testHandleResponseFailureWithHttpPreconditionFailedErrorCode {
+    id config = OCMClassMock([PCFDataConfig class]);
+    NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
+    OCMStub([response statusCode]).andReturn(412);
+    
+    XCTAssertNil([client handleResponse:response data:nil error:nil]);
+    
+    OCMVerify([etagStore putEtagForUrl:response.URL etag:@""]);
+    
+    [config stopMocking];
+}
+
 - (void)testHandleResponseSuccess {
     NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
     NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
@@ -261,7 +278,7 @@
 }
 
 - (void)testHandleResponseSuccessWithEtag {
-    id config = OCMClassMock([PCFConfig class]);
+    id config = OCMClassMock([PCFDataConfig class]);
     NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
     NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
     NSDictionary *dict = OCMClassMock([NSDictionary class]);

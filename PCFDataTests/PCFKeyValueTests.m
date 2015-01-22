@@ -11,7 +11,7 @@
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
 #import "PCFMappable.h"
-#import "PCFConfig.h"
+#import "PCFDataConfig.h"
 
 @interface PCFKeyValueTests : XCTestCase
 
@@ -80,7 +80,7 @@ static NSString* const PCFValue = @"value";
     NSString *url = [NSString stringWithFormat:@"http://%@.com", [NSUUID UUID].UUIDString];
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
     
-    id config = OCMClassMock([PCFConfig class]);
+    id config = OCMClassMock([PCFDataConfig class]);
     
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config serviceUrl]).andReturn(url);

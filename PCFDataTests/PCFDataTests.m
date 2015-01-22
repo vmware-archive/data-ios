@@ -12,7 +12,7 @@
 #import <PCFData/PCFData.h>
 #import "PCFRequestCache.h"
 #import "PCFReachability.h"
-#import "PCFLogger.h"
+#import "PCFDataLogger.h"
 
 @interface PCFDataTests : XCTestCase
 
@@ -106,7 +106,7 @@
 //}
 
 - (void)testLogLevelInvokesPCFLogger {
-    id logger = OCMClassMock([PCFLogger class]);
+    id logger = OCMClassMock([PCFDataLogger class]);
     
     OCMStub([logger sharedInstance]).andReturn(logger);
     

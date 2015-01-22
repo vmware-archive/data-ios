@@ -7,7 +7,7 @@
 //
 
 #import "PCFKeyValue.h"
-#import "PCFConfig.h"
+#import "PCFDataConfig.h"
 #import "PCFRequest.h"
 
 @implementation PCFKeyValue
@@ -44,7 +44,7 @@ static NSString* const PCFValue = @"value";
 }
 
 - (NSURL *)url {
-    NSString *url = [[PCFConfig serviceUrl] stringByAppendingFormat:@"/%@/%@", self.collection, self.key];
+    NSString *url = [[PCFDataConfig serviceUrl] stringByAppendingFormat:@"/%@/%@", self.collection, self.key];
     return [NSURL URLWithString:url];
 }
 

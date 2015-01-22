@@ -13,8 +13,8 @@
 #import "PCFResponse.h"
 #import "PCFRequest.h"
 #import "PCFReachability.h"
-#import "PCFConfig.h"
-#import "PCFLogger.h"
+#import "PCFDataConfig.h"
+#import "PCFDataLogger.h"
 
 
 @interface PCFOfflineStore ()
@@ -92,6 +92,7 @@
         
         if (!response.error) {
             return [self.localStore putWithRequest:request];
+            
         } else {
             return response;
         }
@@ -100,7 +101,7 @@
         PCFResponse *fallback = [self.localStore getWithRequest:request];
         PCFResponse *response = [self.localStore putWithRequest:request];
         
-        request.fallback = [fallback object];
+        request.fallback = fallback.object;
         
         [self.requestCache queuePutWithRequest:request];
         

@@ -14,9 +14,9 @@ typedef NS_ENUM(NSInteger, PCFCollisionStrategy) {
     PCFCollisionStrategyOptimisticLocking
 };
 
-@interface PCFConfig : NSObject
+@interface PCFDataConfig : NSObject
 
-+ (PCFConfig *)sharedInstance;
++ (PCFDataConfig *)sharedInstance;
 
 + (NSString *)serviceUrl;
 

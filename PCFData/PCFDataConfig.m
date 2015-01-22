@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PCFConfig.h"
+#import "PCFDataConfig.h"
 
-@interface PCFConfig () {
+@interface PCFDataConfig () {
     NSDictionary *_values;
 }
 
@@ -18,7 +18,7 @@
 @end
 
 
-@implementation PCFConfig
+@implementation PCFDataConfig
 
 static NSString* const PCFConfiguration = @"PCFConfiguration";
 static NSString* const PCFPropertyMissing = @"Property missing from Pivotal.plist: ";
@@ -27,21 +27,21 @@ static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
 static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 
 
-+ (PCFConfig *)sharedInstance {
-    static PCFConfig *sharedInstance = nil;
++ (PCFDataConfig *)sharedInstance {
+    static PCFDataConfig *sharedInstance = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[PCFConfig alloc] init];
+        sharedInstance = [[PCFDataConfig alloc] init];
     });
     return sharedInstance;
 }
 
 + (NSString *)serviceUrl {
-    return [[PCFConfig sharedInstance] serviceUrl];
+    return [[PCFDataConfig sharedInstance] serviceUrl];
 }
 
 + (PCFCollisionStrategy)collisionStrategy {
-    return [[PCFConfig sharedInstance] collisionStrategy];
+    return [[PCFDataConfig sharedInstance] collisionStrategy];
 }
 
 - (instancetype)init {
