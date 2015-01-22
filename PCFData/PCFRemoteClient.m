@@ -140,7 +140,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
             *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         }
         
-        if (response.statusCode == 412) {
+        if (response.statusCode == 412 || response.statusCode == 404) {
             if ([PCFDataConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
                 [self.etagStore putEtagForUrl:response.URL etag:@""];
                 

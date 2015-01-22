@@ -265,6 +265,23 @@
     [config stopMocking];
 }
 
+- (void)testHandleResponseFailureWithHttpNotFoundErrorCode {
+    id config = OCMClassMock([PCFDataConfig class]);
+    NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([config sharedInstance]).andReturn(config);
+    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
+    OCMStub([response statusCode]).andReturn(404);
+    
+    XCTAssertNil([client handleResponse:response data:nil error:nil]);
+    
+    OCMVerify([etagStore putEtagForUrl:response.URL etag:@""]);
+    
+    [config stopMocking];
+}
+
 - (void)testHandleResponseSuccess {
     NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
     NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
