@@ -40,6 +40,10 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
     return [[PCFDataConfig sharedInstance] serviceUrl];
 }
 
++ (BOOL)areEtagsEnabled {
+    return [PCFDataConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking;
+}
+
 + (PCFCollisionStrategy)collisionStrategy {
     return [[PCFDataConfig sharedInstance] collisionStrategy];
 }

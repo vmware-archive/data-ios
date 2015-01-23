@@ -112,8 +112,8 @@
     PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
     
     OCMStub([dataStore isConnected]).andReturn(true);
-    OCMStub([localStore getWithRequest:[OCMArg any]]).andReturn(localResponse);
     OCMStub([remoteStore getWithRequest:[OCMArg any]]).andReturn(remoteResponse);
+    OCMStub([localStore getWithRequest:[OCMArg any]]).andReturn(localResponse);
     
     PCFResponse *response = [dataStore getWithRequest:request];
     
@@ -121,6 +121,27 @@
     
     OCMVerify([remoteStore getWithRequest:request]);
     OCMVerify([localStore getWithRequest:request]);
+}
+
+- (void)testGetInvokesRemoteAndLocalStoreWhenConnectionIsAvailableAndNotFoundErrorOccurs {
+    PCFRequest *request = [self createRequest];
+    NSError *error = [[NSError alloc] initWithDomain:@"Not Found" code:404 userInfo:nil];
+    
+    PCFResponse *remoteResponse = [self createResponseWithError:error];
+    
+    PCFKeyValueStore *localStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFRemoteStore *remoteStore = OCMClassMock([PCFRemoteStore class]);
+    PCFOfflineStore *dataStore = OCMPartialMock([[PCFOfflineStore alloc] initWithLocalStore:localStore remoteStore:remoteStore]);
+    
+    OCMStub([dataStore isConnected]).andReturn(true);
+    OCMStub([remoteStore getWithRequest:[OCMArg any]]).andReturn(remoteResponse);
+    
+    PCFResponse *response = [dataStore getWithRequest:request];
+    
+    XCTAssertEqual(response, remoteResponse);
+    
+    OCMVerify([remoteStore getWithRequest:request]);
+    OCMVerify([localStore deleteWithRequest:request]);
 }
 
 - (void)testGetInvokesLocalStoreAndQueuesRequestWhenConnectionIsNotAvailable {

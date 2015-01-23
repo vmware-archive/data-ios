@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, PCFCollisionStrategy) {
 
 + (NSString *)serviceUrl;
 
++ (BOOL)areEtagsEnabled;
+
 + (PCFCollisionStrategy)collisionStrategy;
 
 @end

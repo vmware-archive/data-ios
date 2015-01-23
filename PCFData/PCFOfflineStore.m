@@ -58,6 +58,10 @@
             
             return [self.localStore putWithRequest:localRequest];
             
+        } else if (response.error.code == 404) {
+            [self.localStore deleteWithRequest:request];
+            return response;
+            
         } else if (response.error.code == 304) {
             return [self.localStore getWithRequest:request];
             

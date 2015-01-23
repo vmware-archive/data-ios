@@ -103,7 +103,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
 
     LogInfo(@"Request: [%@] %@", method, request.URL);
     
-    if (!force && [PCFDataConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
+    if (!force && [PCFDataConfig areEtagsEnabled]) {
         NSString *etag = [self.etagStore etagForUrl:url];
         
         if (etag) {
@@ -140,8 +140,8 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
             *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         }
         
-        if (response.statusCode == 412 || response.statusCode == 404) {
-            if ([PCFDataConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
+        if (response.statusCode == 404) {
+            if ([PCFDataConfig areEtagsEnabled]) {
                 [self.etagStore putEtagForUrl:response.URL etag:@""];
                 
                 LogInfo(@"Response 404 NotFound clearing ETag.");
@@ -151,7 +151,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         return nil;
     } else {
         
-        if ([PCFDataConfig collisionStrategy] == PCFCollisionStrategyOptimisticLocking) {
+        if ([PCFDataConfig areEtagsEnabled]) {
             NSString *etag = [response.allHeaderFields valueForKey:@"Etag"];
 
             [self.etagStore putEtagForUrl:response.URL etag:etag];
