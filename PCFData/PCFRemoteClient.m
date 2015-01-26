@@ -114,6 +114,13 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         LogInfo(@"Request Etag: %@", etag ? etag : @"None");
     }
     
+    NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.ios.PCFData"];
+    NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *build = [[NSProcessInfo processInfo] operatingSystemVersionString];
+    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@ [iOS %@]", version, build];
+    
+    [request addValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    
     if (value) {
         request.HTTPBody = [value dataUsingEncoding:NSUTF8StringEncoding];
     }
@@ -140,12 +147,10 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
             *error = [[NSError alloc] initWithDomain:response.description code:response.statusCode userInfo:response.allHeaderFields];
         }
         
-        if (response.statusCode == 404) {
-            if ([PCFDataConfig areEtagsEnabled]) {
-                [self.etagStore putEtagForUrl:response.URL etag:@""];
-                
-                LogInfo(@"Response 404 NotFound clearing ETag.");
-            }
+        if (response.statusCode == 404 && [PCFDataConfig areEtagsEnabled]) {
+            [self.etagStore putEtagForUrl:response.URL etag:@""];
+            
+            LogInfo(@"Response 404 NotFound clearing ETag.");
         }
         
         return nil;

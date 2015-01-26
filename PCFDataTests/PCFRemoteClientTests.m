@@ -121,11 +121,18 @@
     NSString *token = [@"Bearer " stringByAppendingString:self.token];
     NSString *authHeader = [request.allHTTPHeaderFields valueForKey:@"Authorization"];
     NSString *decodedBody = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+    NSString *userAgentHeader = [request.allHTTPHeaderFields valueForKey:@"User-Agent"];
+    
+    NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.ios.PCFData"];
+    NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *build = [[NSProcessInfo processInfo] operatingSystemVersionString];
+    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@ [iOS %@]", version, build];
     
     XCTAssertEqualObjects(method, request.HTTPMethod);
     XCTAssertEqualObjects(token, authHeader);
     XCTAssertEqualObjects(self.url, request.URL);
     XCTAssertEqualObjects(self.result, decodedBody);
+    XCTAssertEqualObjects(userAgent, userAgentHeader);
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForGet {
