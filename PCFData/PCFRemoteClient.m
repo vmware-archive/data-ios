@@ -117,7 +117,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.ios.PCFData"];
     NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *build = [[NSProcessInfo processInfo] operatingSystemVersionString];
-    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@ [iOS %@]", version, build];
+    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@; iOS %@", version, build];
     
     [request addValue:userAgent forHTTPHeaderField:@"User-Agent"];
     

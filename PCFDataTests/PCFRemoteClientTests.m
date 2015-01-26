@@ -126,7 +126,7 @@
     NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.ios.PCFData"];
     NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *build = [[NSProcessInfo processInfo] operatingSystemVersionString];
-    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@ [iOS %@]", version, build];
+    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@; iOS %@", version, build];
     
     XCTAssertEqualObjects(method, request.HTTPMethod);
     XCTAssertEqualObjects(token, authHeader);
