@@ -41,7 +41,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
 
         NSError *error;
         PCFKeyValue *object = request.object;
-        NSURLRequest *urlRequest = [self requestWithMethod:@"GET" accessToken:request.accessToken url:object.url value:nil force:request.force];
+        NSURLRequest *urlRequest = [self requestWithMethod:@"GET" accessToken:request.accessToken url:[self urlForKeyValue:object] value:nil force:request.force];
 
         PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
         keyValue.value = [self execute:urlRequest error:&error];
@@ -59,7 +59,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         
         NSError *error;
         PCFKeyValue *object = request.object;
-        NSURLRequest *urlRequest = [self requestWithMethod:@"PUT" accessToken:request.accessToken url:object.url value:object.value force:request.force];
+        NSURLRequest *urlRequest = [self requestWithMethod:@"PUT" accessToken:request.accessToken url:[self urlForKeyValue:object] value:object.value force:request.force];
 
         NSString *result = [self execute:urlRequest error:&error];
         
@@ -79,7 +79,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         
         NSError *error;
         PCFKeyValue *object = request.object;
-        NSURLRequest *urlRequest = [self requestWithMethod:@"DELETE" accessToken:request.accessToken url:object.url value:nil force:request.force];
+        NSURLRequest *urlRequest = [self requestWithMethod:@"DELETE" accessToken:request.accessToken url:[self urlForKeyValue:object] value:nil force:request.force];
         
         PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
         keyValue.value = [self execute:urlRequest error:&error];
@@ -90,6 +90,11 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     } else {
         return nil;
     }
+}
+
+- (NSURL *)urlForKeyValue:(PCFKeyValue *)keyValue {
+    NSString *url = [[PCFDataConfig serviceUrl] stringByAppendingFormat:@"/%@/%@", keyValue.collection, keyValue.key];
+    return [NSURL URLWithString:url];
 }
 
 - (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value force:(BOOL)force {

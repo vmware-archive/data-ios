@@ -24,6 +24,8 @@
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error;
 
+- (NSURL *)urlForKeyValue:(PCFKeyValue *)keyValue;
+
 @end
 
 @interface PCFRemoteClientTests : XCTestCase
@@ -56,7 +58,6 @@
 
 - (PCFRequest *)createRequest {
     PCFKeyValue *keyValue = OCMClassMock([PCFKeyValue class]);
-    OCMStub([keyValue url]).andReturn(self.url);
     OCMStub([keyValue value]).andReturn(self.result);
     return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
 }
@@ -68,6 +69,7 @@
 
     OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
     OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
 
     PCFResponse *response = [client getWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
@@ -85,6 +87,7 @@
 
     OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
     OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
     
     PCFResponse *response = [client putWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
@@ -102,6 +105,7 @@
     
     OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
     OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+    OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
     
     PCFResponse *response = [client deleteWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;

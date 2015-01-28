@@ -43,11 +43,6 @@ static NSString* const PCFValue = @"value";
     return dict;
 }
 
-- (NSURL *)url {
-    NSString *url = [[PCFDataConfig serviceUrl] stringByAppendingFormat:@"/%@/%@", self.collection, self.key];
-    return [NSURL URLWithString:url];
-}
-
 - (NSString *)description {
     return [NSString stringWithFormat: @"PCFKeyValue: {Collection=%@, Key=%@, Value=%@}", self.collection, self.key, self.value];
 }
