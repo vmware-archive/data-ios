@@ -25,15 +25,22 @@ typedef NS_ENUM(NSInteger, PCFDataLogLevel) {
     PCFDataLogLevelNone
 };
 
-typedef void (^SyncBlock) (void);
+typedef void (^PCFNetworkBlock) (void);
+typedef NSString* (^PCFTokenBlock) (void);
 
 @interface PCFData : NSObject
 
-+ (void)syncWhenNetworkAvailableWithBlock:(SyncBlock)syncBlock;
++ (void)registerTokenProviderBlock:(PCFTokenBlock)block;
 
-+ (void)syncWithAccessToken:(NSString *)accessToken;
++ (void)registerTokenProviderWithUserPromptBlock:(PCFTokenBlock)block;
 
-+ (void)syncWithAccessToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
++ (void)registerNetworkConnectedBlock:(PCFNetworkBlock)block;
+
++ (void)registerNetworkDisconnectedBlock:(PCFNetworkBlock)block;
+
++ (void)performSync;
+
++ (void)performSyncWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 + (void)logLevel:(PCFDataLogLevel)level;
 

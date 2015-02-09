@@ -159,6 +159,9 @@
 
 - (BOOL)isConnected {
     PCFNetworkStatus networkStatus = [[PCFReachability reachability] currentReachabilityStatus];
+    
+    LogInfo(@"PCFOfflineStore isConnected: %d", networkStatus != NotReachable);
+    
     return networkStatus != NotReachable;
 }
 

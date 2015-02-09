@@ -39,7 +39,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
 - (void)testGetInvokesDataPersistence {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
     PCFKeyValueStore *dataStore = [[PCFKeyValueStore alloc] initWithPersistence:persistence];
 
@@ -57,7 +57,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
 - (void)testAsyncGetInvokesDataPersistenceAndCompletionBlock {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
     PCFKeyValueStore *dataStore = [[PCFKeyValueStore alloc] initWithPersistence:persistence];
     
@@ -75,14 +75,14 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
         [expectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:100 handler:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
     
     OCMVerify([persistence getValueForKey:[OCMArg any]]);
 }
 
 - (void)testPutInvokesDataPersistence {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
     PCFKeyValueStore *dataStore = [[PCFKeyValueStore alloc] initWithPersistence:persistence];
     
@@ -98,7 +98,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
 - (void)testAsyncPutInvokesDataPersistenceAndCompletionBlock {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
     PCFKeyValueStore *dataStore = [[PCFKeyValueStore alloc] initWithPersistence:persistence];
     
@@ -114,14 +114,14 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
         [expectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:100 handler:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
     
     OCMVerify([persistence putValue:self.value forKey:[OCMArg any]]);
 }
 
 - (void)testDeleteInvokesDataPersistence {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
     PCFKeyValueStore *dataStore = [[PCFKeyValueStore alloc] initWithPersistence:persistence];
 
@@ -137,7 +137,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
 - (void)testAsyncDeleteInvokesDataPersistenceAndCompletionBlock {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     PCFDataPersistence *persistence = OCMClassMock([PCFDataPersistence class]);
     PCFKeyValueStore *dataStore = [[PCFKeyValueStore alloc] initWithPersistence:persistence];
 
@@ -153,7 +153,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
         [expectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:100 handler:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
     
     OCMVerify([persistence deleteValueForKey:[OCMArg any]]);
 }

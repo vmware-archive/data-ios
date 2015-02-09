@@ -11,15 +11,16 @@
 
 @interface PCFRequest : NSObject <PCFMappable>
 
-@property NSString *accessToken;
 @property id<PCFMappable> object;
 @property id<PCFMappable> fallback;
 @property BOOL force;
 
 - (instancetype)initWithRequest:(PCFRequest *)request;
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken object:(id<PCFMappable>)object;
+- (instancetype)initWithObject:(id<PCFMappable>)object;
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken object:(id<PCFMappable>)object force:(BOOL)force;
+- (instancetype)initWithObject:(id<PCFMappable>)object fallback:(id<PCFMappable>)fallback force:(BOOL)force;
+
+- (NSString *)accessToken;
 
 @end

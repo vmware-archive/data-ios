@@ -21,6 +21,4 @@
 
 - (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key value:(NSString *)value;
 
-- (NSURL *)url;
-
 @end

@@ -51,7 +51,7 @@
 
 - (PCFRequest *)createRequest {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
 - (void)testExecuteRequestWithGet {

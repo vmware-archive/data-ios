@@ -18,10 +18,15 @@
 
 @property NSString *key;
 @property NSString *collection;
+@property BOOL force;
 
 @end
 
 @implementation PCFKeyValueObject
+
++ (instancetype)objectWithCollection:(NSString *)collection key:(NSString *)key {
+    return [[PCFKeyValueObject alloc] initWithCollection:collection key:key];
+}
 
 - (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key {
     PCFOfflineStore *dataStore = [[PCFOfflineStore alloc] init];
@@ -30,69 +35,45 @@
 
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore collection:(NSString *)collection key:(NSString *)key {
     self = [super init];
+    _dataStore = dataStore;
     _collection = collection;
     _key = key;
-    _dataStore = dataStore;
     return self;
 }
 
-- (PCFResponse *)getWithAccessToken:(NSString *)accessToken {
-    return [self getWithAccessToken:accessToken force:false];
-}
-
-- (PCFResponse *)getWithAccessToken:(NSString *)accessToken force:(BOOL)force {
-    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+- (PCFResponse *)get {
+    PCFRequest *request = [self createRequestWithValue:nil];
     return [self.dataStore getWithRequest:request];
 }
 
-- (void)getWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    [self getWithAccessToken:accessToken force:false completionBlock:completionBlock];
-}
-
-- (void)getWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
-    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+- (void)getWithCompletionBlock:(PCFResponseBlock)completionBlock {
+    PCFRequest *request = [self createRequestWithValue:nil];
     [self.dataStore getWithRequest:request completionBlock:completionBlock];
 }
 
-- (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value {
-    return [self putWithAccessToken:accessToken value:value force:false];
-}
-
-- (PCFResponse *)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force {
-    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:value force:force];
+- (PCFResponse *)putWithValue:(NSString *)value {
+    PCFRequest *request = [self createRequestWithValue:value];
     return [self.dataStore putWithRequest:request];
 }
 
-- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock {
-    [self putWithAccessToken:accessToken value:value force:false completionBlock:completionBlock];
-}
-
-- (void)putWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
-    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:value force:force];
+- (void)putWithValue:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock {
+    PCFRequest *request = [self createRequestWithValue:value];
     [self.dataStore putWithRequest:request completionBlock:completionBlock];
 }
 
-- (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken {
-    return [self deleteWithAccessToken:accessToken force:false];
-}
-
-- (PCFResponse *)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force {
-    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+- (PCFResponse *)delete {
+    PCFRequest *request = [self createRequestWithValue:nil];
     return [self.dataStore deleteWithRequest:request];
 }
 
-- (void)deleteWithAccessToken:(NSString *)accessToken completionBlock:(PCFResponseBlock)completionBlock {
-    [self deleteWithAccessToken:accessToken force:false completionBlock:completionBlock];
-}
-
-- (void)deleteWithAccessToken:(NSString *)accessToken force:(BOOL)force completionBlock:(PCFResponseBlock)completionBlock {
-    PCFRequest *request = [self createRequestWithAccessToken:accessToken value:nil force:force];
+- (void)deleteWithCompletionBlock:(PCFResponseBlock)completionBlock {
+    PCFRequest *request = [self createRequestWithValue:nil];
     [self.dataStore deleteWithRequest:request completionBlock:completionBlock];
 }
 
-- (PCFRequest *)createRequestWithAccessToken:(NSString *)accessToken value:(NSString *)value force:(BOOL)force {
+- (PCFRequest *)createRequestWithValue:(NSString *)value {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:value];
-    PCFRequest *request = [[PCFRequest alloc] initWithAccessToken:accessToken object:keyValue force:force];
+    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     return request;
 }
 

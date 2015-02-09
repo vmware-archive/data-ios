@@ -17,7 +17,7 @@
 
 @interface PCFRequestCache ()
 
-- (void)executePendingRequests:(NSArray *)requests withAccessToken:(NSString *)accessToken;
+- (void)executePendingRequests:(NSArray *)requests;
 
 @end
 
@@ -49,7 +49,7 @@
 
 - (PCFRequest *)createRequest {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
 - (void)testQueueGet {
@@ -117,7 +117,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
-    [cache executePendingRequestsWithToken:self.token completionHandler:^(UIBackgroundFetchResult arg){
+    [cache executePendingRequestsWithCompletionHandler:^(UIBackgroundFetchResult arg){
         XCTAssertEqual(arg, UIBackgroundFetchResultNewData);
         [expectation fulfill];
     }];
@@ -136,7 +136,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
-    [cache executePendingRequestsWithToken:self.token completionHandler:^(UIBackgroundFetchResult arg){
+    [cache executePendingRequestsWithCompletionHandler:^(UIBackgroundFetchResult arg){
         XCTAssertEqual(arg, UIBackgroundFetchResultNoData);
         [expectation fulfill];
     }];
@@ -152,7 +152,7 @@
     
     PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:nil executor:executor];
     
-    [cache executePendingRequests:requestArray withAccessToken:nil];
+    [cache executePendingRequests:requestArray];
     
     OCMVerify([executor executeRequest:pending]);
 }

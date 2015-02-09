@@ -12,6 +12,7 @@
 #import "PCFDataConfig.h"
 #import "PCFKeyValue.h"
 #import "PCFRequest.h"
+#import "PCFPendingRequest.h"
 #import "PCFResponse.h"
 
 @interface PCFRemoteClient ()

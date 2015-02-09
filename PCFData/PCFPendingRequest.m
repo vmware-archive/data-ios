@@ -7,6 +7,13 @@
 //
 
 #import "PCFPendingRequest.h"
+#import "PCFData.h"
+
+@interface PCFData ()
+
++ (NSString*)provideToken;
+
+@end
 
 @implementation PCFPendingRequest
 
@@ -28,6 +35,10 @@ static NSString* const PCFMethod = @"method";
     NSMutableDictionary *dict = [[super toDictionary] mutableCopy];
     if (self.method) [dict setObject:[NSString stringWithFormat:@"%ld", self.method] forKey:PCFMethod];
     return dict;
+}
+
+- (NSString *)accessToken {
+    return [PCFData provideToken];
 }
 
 @end

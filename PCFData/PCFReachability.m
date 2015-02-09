@@ -114,10 +114,6 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 + (instancetype)reachabilityWithHostName:(NSString *)hostName
 {
-    if (PCFSimulateNetworkOffline) {
-        return NotReachable;
-    }
-    
 	PCFReachability* returnValue = NULL;
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, [hostName UTF8String]);
 	if (reachability != NULL)
@@ -135,10 +131,6 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 + (instancetype)reachabilityWithAddress:(const struct sockaddr_in *)hostAddress
 {
-    if (PCFSimulateNetworkOffline) {
-        return NotReachable;
-    }
-    
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)hostAddress);
 
 	PCFReachability* returnValue = NULL;
@@ -305,10 +297,6 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 - (PCFNetworkStatus)currentReachabilityStatus
 {
-    if (PCFSimulateNetworkOffline) {
-        return NotReachable;
-    }
-    
 	NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
 	PCFNetworkStatus returnValue = NotReachable;
 	SCNetworkReachabilityFlags flags;

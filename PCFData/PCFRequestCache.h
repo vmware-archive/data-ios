@@ -28,9 +28,9 @@ static int const PCF_HTTP_DELETE = 3;
 
 - (void)queueDeleteWithRequest:(PCFRequest *)request;
 
-- (void)executePendingRequestsWithToken:(NSString *)accessToken;
+- (void)executePendingRequests;
 
-- (void)executePendingRequestsWithToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
+- (void)executePendingRequestsWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 @end
 

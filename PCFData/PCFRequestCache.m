@@ -25,6 +25,12 @@
 
 @implementation PCFRequestCache
 
+- (instancetype)init {
+    PCFOfflineStore *offlineStore = [[PCFOfflineStore alloc] init];
+    PCFKeyValueStore *fallbackStore = [[PCFKeyValueStore alloc] init];
+    return [self initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
+}
+
 - (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
     self = [super init];
     _queue = [[PCFRequestCacheQueue alloc] initWithPersistence:[[PCFDataPersistence alloc] init]];
@@ -33,6 +39,7 @@
 }
 
 - (instancetype)initWithRequestQueue:(PCFRequestCacheQueue *)queue executor:(PCFRequestCacheExecutor *)executor {
+    self = [super init];
     _queue = queue;
     _executor = executor;
     return self;
@@ -56,16 +63,18 @@
     [self.queue addRequest:pending];
 }
 
-- (void)executePendingRequestsWithToken:(NSString *)accessToken {
-    [self executePendingRequestsWithToken:accessToken completionHandler:nil];
+- (void)executePendingRequests {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [self executePendingRequestsWithCompletionHandler:nil];
+    });
 }
 
-- (void)executePendingRequestsWithToken:(NSString *)accessToken completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+- (void)executePendingRequestsWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     NSArray *requests = [self.queue empty];
     
     if (requests.count > 0) {
-        [self executePendingRequests:requests withAccessToken:accessToken];
+        [self executePendingRequests:requests];
         
         if (completionHandler) {
             completionHandler(UIBackgroundFetchResultNewData);
@@ -77,9 +86,8 @@
     }
 }
 
-- (void)executePendingRequests:(NSArray *)requests withAccessToken:(NSString *)accessToken {
+- (void)executePendingRequests:(NSArray *)requests {
     for (PCFPendingRequest *request in requests) {
-        if (accessToken) request.accessToken = accessToken;
         [self.executor executeRequest:request];
     }
 }

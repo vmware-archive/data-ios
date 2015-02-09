@@ -28,8 +28,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
     [super setUp];
     
     self.etag = [NSUUID UUID].UUIDString;
-    
-    self.url = [NSURL URLWithString:@"http://example.com"];
+    self.url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@.com", [NSUUID UUID].UUIDString]];
 }
 
 - (void)testPutEtagForUrl {

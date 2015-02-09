@@ -28,6 +28,12 @@
 
 @end
 
+@interface PCFData ()
+
++ (NSString *)provideToken;
+
+@end
+
 @interface PCFRemoteClientTests : XCTestCase
 
 @property NSString *token;
@@ -59,17 +65,18 @@
 - (PCFRequest *)createRequest {
     PCFKeyValue *keyValue = OCMClassMock([PCFKeyValue class]);
     OCMStub([keyValue value]).andReturn(self.result);
-    return [[PCFRequest alloc] initWithAccessToken:self.token object:keyValue force:self.force];
+    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
 - (void)testGetWithKeyValue {
-    PCFRequest *request = [self createRequest];
+    PCFRequest *request = OCMPartialMock([self createRequest]);
     NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
 
     OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
     OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
     OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
+    OCMStub([request accessToken]).andReturn(self.token);
 
     PCFResponse *response = [client getWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
@@ -81,13 +88,14 @@
 }
 
 - (void)testPutWithKeyValue {
-    PCFRequest *request = [self createRequest];
+    PCFRequest *request = OCMPartialMock([self createRequest]);
     NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
 
     OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
     OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
     OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
+    OCMStub([request accessToken]).andReturn(self.token);
     
     PCFResponse *response = [client putWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
@@ -99,13 +107,14 @@
 }
 
 - (void)testDeleteWithKeyValue {
-    PCFRequest *request = [self createRequest];
+    PCFRequest *request = OCMPartialMock([self createRequest]);
     NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
     
     OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
     OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
     OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
+    OCMStub([request accessToken]).andReturn(self.token);
     
     PCFResponse *response = [client deleteWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
@@ -117,7 +126,10 @@
 }
 
 - (void)testRequestWithMethodWithAccessTokenAndValue {
+    id data = OCMClassMock([PCFData class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] init];
+    
+    OCMStub([data provideToken]).andReturn(self.token);
     
     NSString *method = [NSUUID UUID].UUIDString;
     NSURLRequest *request = [client requestWithMethod:method accessToken:self.token url:self.url value:self.result force:self.force];
@@ -137,6 +149,8 @@
     XCTAssertEqualObjects(self.url, request.URL);
     XCTAssertEqualObjects(self.result, decodedBody);
     XCTAssertEqualObjects(userAgent, userAgentHeader);
+    
+    [data stopMocking];
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForGet {
@@ -148,7 +162,7 @@
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
-    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:nil url:self.url value:nil force:false];
+    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:false];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
     
@@ -166,7 +180,7 @@
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
-    NSURLRequest *request = [client requestWithMethod:@"PUT" accessToken:nil url:self.url value:nil force:false];
+    NSURLRequest *request = [client requestWithMethod:@"PUT" accessToken:self.token url:self.url value:nil force:false];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
@@ -184,7 +198,7 @@
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
     
-    NSURLRequest *request = [client requestWithMethod:@"DELETE" accessToken:nil url:self.url value:nil force:false];
+    NSURLRequest *request = [client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil force:false];
     
     XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
     
@@ -201,7 +215,7 @@
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
     
-    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:nil url:self.url value:nil force:true];
+    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:true];
     
     XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
     XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-Match"]);

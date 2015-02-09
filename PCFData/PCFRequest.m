@@ -7,29 +7,33 @@
 //
 
 #import "PCFRequest.h"
+#import "PCFData.h"
+
+@interface PCFData ()
+
++ (NSString*)provideTokenWithUserPrompt;
+
+@end
 
 @implementation PCFRequest
 
-static NSString* const PCFAccessToken = @"accessToken";
 static NSString* const PCFObject = @"object";
 static NSString* const PCFFallback = @"fallback";
 static NSString* const PCFForce = @"force";
 static NSString* const PCFType = @"type";
 
 - (instancetype)initWithRequest:(PCFRequest *)request {
-    self = [self initWithAccessToken:request.accessToken object:request.object force:request.force];
-    _fallback = request.fallback;
-    return self;
+    return [self initWithObject:request.object fallback:request.fallback force:request.force];
 }
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken object:(id<PCFMappable>)object {
-    return [self initWithAccessToken:accessToken object:object force:false];
+- (instancetype)initWithObject:(id<PCFMappable>)object {
+    return [self initWithObject:object fallback:nil force:false];
 }
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken object:(id<PCFMappable>)object force:(BOOL)force {
+- (instancetype)initWithObject:(id<PCFMappable>)object fallback:(id<PCFMappable>)fallback force:(BOOL)force {
     self = [super init];
-    self.accessToken = accessToken;
     self.object = object;
+    self.fallback = fallback;
     self.force = force;
     return self;
 }
@@ -39,14 +43,12 @@ static NSString* const PCFType = @"type";
     id klass = NSClassFromString([dict objectForKey:PCFType]);
     _object = [[klass alloc] initWithDictionary:[dict objectForKey:PCFObject]];
     _fallback = [[klass alloc] initWithDictionary:[dict objectForKey:PCFFallback]];
-    _accessToken = [dict objectForKey:PCFAccessToken];
     _force = [[dict objectForKey:PCFForce] boolValue];
     return self;
 }
 
 - (NSDictionary*)toDictionary {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    if (self.accessToken) [dict setValue:self.accessToken forKey:PCFAccessToken];
     if (self.object) [dict setValue:[self.object toDictionary] forKey:PCFObject];
     if (self.force) [dict setValue:[NSString stringWithFormat:@"%d", self.force] forKey:PCFForce];
     if (self.object) [dict setValue:NSStringFromClass([self.object class]) forKey:PCFType];
@@ -56,6 +58,10 @@ static NSString* const PCFType = @"type";
 
 - (NSString *)description {
     return [NSString stringWithFormat: @"PCFRequest: {Object=%@, Force=%d}", self.object, self.force];
+}
+
+- (NSString *)accessToken {
+    return [PCFData provideTokenWithUserPrompt];
 }
 
 @end
