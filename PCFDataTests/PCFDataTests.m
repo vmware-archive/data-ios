@@ -9,37 +9,24 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <PCFData/PCFData.h>
+#import "PCFData.h"
 #import "PCFRequestCache.h"
-#import "PCFReachability.h"
 #import "PCFDataLogger.h"
-#import "PCFDataConfig.h"
+#import "PCFDataHandler.h"
 
 @interface PCFData ()
 
-+ (void)notifyNetworkStatusChanged:(BOOL)connected;
++ (PCFDataHandler *)handler;
 
-+ (void)registerForReachabilityNotifications;
-
-+ (void)unregisterForReachabilityNotifications;
-
-+ (void)registerDefaultConnectedBlock;
-
-+ (void)unregisterDefaultConnectedBlock;
-
-+ (void)startReachability;
-
-+ (void)stopReachability;
-
-+ (NSString*)provideTokenWithUserPrompt:(BOOL)prompt;
++ (NSString *)provideTokenWithUserPrompt:(BOOL)prompt;
 
 @end
 
 @interface PCFDataTests : XCTestCase
 
 @property NSString *token;
+@property BOOL prompt;
 @property int logLevel;
-@property int networkStatus;
 
 @end
 
@@ -49,117 +36,50 @@
     [super setUp];
 
     self.token = [NSUUID UUID].UUIDString;
+    self.prompt = arc4random_uniform(2);
     self.logLevel = arc4random_uniform(4);
-    self.networkStatus = arc4random_uniform(3);
-    
-    [PCFData stopReachability];
 }
 
-- (void)testStartReachability {
-    id pcfData = OCMPartialMock([[PCFData alloc] init]);
-    id reachability = OCMClassMock([PCFReachability class]);
-    
-    OCMStub([reachability reachability]).andReturn(reachability);
-    
-    [PCFData startReachability];
-    
-    OCMVerify([pcfData registerForReachabilityNotifications]);
-    OCMVerify([pcfData registerDefaultConnectedBlock]);
-    OCMVerify([reachability startNotifier]);
-    
-    [pcfData stopMocking];
-    [reachability stopMocking];
-}
-
-- (void)testStopReachability {
-    id pcfData = OCMPartialMock([[PCFData alloc] init]);
-    id reachability = OCMClassMock([PCFReachability class]);
-    
-    OCMStub([reachability reachability]).andReturn(reachability);
-    
-    [PCFData startReachability];
-    [PCFData stopReachability];
-    
-    OCMVerify([pcfData unregisterForReachabilityNotifications]);
-    OCMVerify([pcfData unregisterDefaultConnectedBlock]);
-    OCMVerify([reachability stopNotifier]);
-    
-    [pcfData stopMocking];
-    [reachability stopMocking];
-}
-
-- (void)testReachabilityNotification {
+- (void)testRegisterTokenProviderWithUserPrompt {
     id pcfData = OCMClassMock([PCFData class]);
-    id reachability = OCMClassMock([PCFReachability class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    PCFTokenBlock block = ^(BOOL promptUser) { return @""; };
     
-    OCMStub([reachability reachability]).andReturn(reachability);
-    OCMStub([reachability currentReachabilityStatus]).andReturn(NotReachable);
+    OCMStub([pcfData handler]).andReturn(handler);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@""];
-
-    OCMStub([pcfData notifyNetworkStatusChanged:false]).andDo(^(NSInvocation *invocation) {
-        [expectation fulfill];
-    });
+    [PCFData registerTokenProviderBlock:block];
     
-    [PCFData registerForReachabilityNotifications];
+    OCMVerify([handler registerTokenProviderBlock:block]);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kPCFReachabilityChangedNotification object:nil];
-    
-    [self waitForExpectationsWithTimeout:1 handler:nil];
-    
-    [reachability stopMocking];
     [pcfData stopMocking];
 }
 
-- (void)testRegisterTokenProviderBlock {
-    id pcfConfig = OCMClassMock([PCFDataConfig class]);
+- (void)testProvideTokenWithUserPrompt {
     id pcfData = OCMClassMock([PCFData class]);
-    id reachability = OCMClassMock([PCFReachability class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
     
-    OCMStub([reachability reachability]).andReturn(reachability);
-    OCMStub([pcfConfig sharedInstance]).andReturn(pcfConfig);
-    OCMStub([pcfConfig serviceUrl]).andReturn(@"");
+    OCMStub([pcfData handler]).andReturn(handler);
+    OCMStub([handler provideTokenWithUserPrompt:self.prompt]).andReturn(self.token);
     
-    NSString *token = [NSUUID UUID].UUIDString;
+    XCTAssertEqual(self.token, [PCFData provideTokenWithUserPrompt:self.prompt]);
     
-    [PCFData registerTokenProviderBlock:^(BOOL prompt) {
-        return token;
-    }];
-    
-    BOOL prompt = arc4random_uniform(2);
-    XCTAssertEqual(token, [PCFData provideTokenWithUserPrompt:prompt]);
-    
-    OCMVerify([pcfData startReachability]);
+    OCMVerify([handler provideTokenWithUserPrompt:self.prompt]);
     
     [pcfData stopMocking];
-    [pcfConfig stopMocking];
-    [reachability stopMocking];
 }
 
-- (void)testRegisterNetworkObserverBlock {
-    id pcfConfig = OCMClassMock([PCFDataConfig class]);
+- (void)testRegisterNetworkObserver {
     id pcfData = OCMClassMock([PCFData class]);
-    id reachability = OCMClassMock([PCFReachability class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    PCFNetworkBlock block = ^(BOOL connected) {};
     
-    OCMStub([reachability reachability]).andReturn(reachability);
-    OCMStub([pcfConfig sharedInstance]).andReturn(pcfConfig);
-    OCMStub([pcfConfig serviceUrl]).andReturn(@"");
+    OCMStub([pcfData handler]).andReturn(handler);
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@""];
+    [PCFData registerNetworkObserverBlock:block];
     
-    [PCFData registerNetworkObserverBlock:^(BOOL connected) {
-        [expectation fulfill];
-    }];
-    
-    [PCFData notifyNetworkStatusChanged:true];
-    
-    [self waitForExpectationsWithTimeout:1 handler:nil];
-    
-    OCMVerify([pcfData startReachability]);
+    OCMVerify([handler registerNetworkObserverBlock:block]);
     
     [pcfData stopMocking];
-    [pcfConfig stopMocking];
-    [reachability stopMocking];
 }
 
 - (void)testPerformSyncInvokesRequestCache {
