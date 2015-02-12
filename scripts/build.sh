@@ -69,9 +69,9 @@ lipo "${SIMULATOR_LIBRARY_PATH}/${FRAMEWORK_NAME}" "${DEVICE_LIBRARY_PATH}/${FRA
 ######################
 
 if [ "${CONFIGURATION}" == "Release" ]; then
-    rm -rf "build/release/"
-    mkdir -p "build/release/"
-    cp -r "${FRAMEWORK}" "build/release/"
+    rm -rf "build/release-universal/"
+    mkdir -p "build/release-universal/"
+    cp -r "${FRAMEWORK}" "build/release-universal/"
 fi
 
 
@@ -81,7 +81,7 @@ fi
 
 if [ ${REVEAL_ARCHIVE_IN_FINDER} = true ]; then
     if [ "${CONFIGURATION}" == "Release" ]; then
-        open "build/release/"
+        open "build/release-universal/"
     else
         open "${UNIVERSAL_LIBRARY_DIR}/"
     fi
