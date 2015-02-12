@@ -7,8 +7,8 @@
 //
 
 #import "PCFKeyValueStore.h"
-#import "PCFResponse.h"
-#import "PCFRequest.h"
+#import "PCFDataResponse.h"
+#import "PCFDataRequest.h"
 #import "PCFDataLogger.h"
 #import "PCFKeyValue.h"
 #import "PCFDataPersistence.h"
@@ -42,7 +42,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     return [PCFDataPrefix stringByAppendingFormat:@"%@:%@", keyValue.collection, keyValue.key];
 }
 
-- (PCFResponse *)getWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFKeyValueStore getWithRequest: %@", request);
     
     PCFKeyValue *requestObject = (PCFKeyValue *)request.object;
@@ -53,12 +53,12 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     PCFKeyValue *response = [[PCFKeyValue alloc] initWithKeyValue:requestObject];
     response.value = value;
     
-    return [[PCFResponse alloc] initWithObject:response];
+    return [[PCFDataResponse alloc] initWithObject:response];
 }
 
-- (void)getWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)getWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self getWithRequest:request];
+        PCFDataResponse *response = [self getWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -66,7 +66,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     });
 }
 
-- (PCFResponse *)putWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFKeyValueStore putWithRequest: %@", request);
     
     PCFKeyValue *requestObject = (PCFKeyValue *)request.object;
@@ -75,12 +75,12 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 
     [self.persistence putValue:requestObject.value forKey:identifier];
     
-    return [[PCFResponse alloc] initWithObject:requestObject];
+    return [[PCFDataResponse alloc] initWithObject:requestObject];
 }
 
-- (void)putWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)putWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self putWithRequest:request];
+        PCFDataResponse *response = [self putWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -88,7 +88,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     });
 }
 
-- (PCFResponse *)deleteWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFKeyValueStore deleteWithRequest: %@", request);
     
     PCFKeyValue *requestObject = (PCFKeyValue *)request.object;
@@ -100,12 +100,12 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
     PCFKeyValue *response = [[PCFKeyValue alloc] initWithKeyValue:requestObject];
     response.value = nil;
     
-    return [[PCFResponse alloc] initWithObject:response];
+    return [[PCFDataResponse alloc] initWithObject:response];
 }
 
-- (void)deleteWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)deleteWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self deleteWithRequest:request];
+        PCFDataResponse *response = [self deleteWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);

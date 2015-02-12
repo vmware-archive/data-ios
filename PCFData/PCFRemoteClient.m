@@ -11,9 +11,9 @@
 #import "PCFDataLogger.h"
 #import "PCFDataConfig.h"
 #import "PCFKeyValue.h"
-#import "PCFRequest.h"
+#import "PCFDataRequest.h"
 #import "PCFPendingRequest.h"
-#import "PCFResponse.h"
+#import "PCFDataResponse.h"
 
 @interface PCFRemoteClient ()
 
@@ -37,7 +37,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     return self;
 }
 
-- (PCFResponse *)getWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request {
     if ([request.object isKindOfClass:PCFKeyValue.class]) {
 
         NSError *error;
@@ -47,7 +47,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
         keyValue.value = [self execute:urlRequest error:&error];
         
-        PCFResponse *response = [[PCFResponse alloc] initWithObject:keyValue];
+        PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:keyValue];
         response.error = error;
         return response;
     } else {
@@ -55,7 +55,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     }
 }
 
-- (PCFResponse *)putWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request {
     if ([request.object isKindOfClass:PCFKeyValue.class]) {
         
         NSError *error;
@@ -67,7 +67,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
         keyValue.value = result.length > 0 ? result : object.value;
         
-        PCFResponse *response = [[PCFResponse alloc] initWithObject:keyValue];
+        PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:keyValue];
         response.error = error;
         return response;
     } else {
@@ -75,7 +75,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     }
 }
 
-- (PCFResponse *)deleteWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request {
     if ([request.object isKindOfClass:PCFKeyValue.class]) {
         
         NSError *error;
@@ -85,7 +85,7 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
         keyValue.value = [self execute:urlRequest error:&error];
         
-        PCFResponse *response = [[PCFResponse alloc] initWithObject:keyValue];
+        PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:keyValue];
         response.error = error;
         return response;
     } else {

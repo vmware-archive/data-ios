@@ -47,13 +47,13 @@
     self.force = arc4random_uniform(2);
 }
 
-- (PCFRequest *)createRequest {
+- (PCFDataRequest *)createRequest {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
 - (void)testQueueGet {
-    PCFRequest *request = [self createRequest];
+    PCFDataRequest *request = [self createRequest];
     id pending = OCMClassMock([PCFPendingRequest class]);
     PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     
@@ -71,7 +71,7 @@
 }
 
 - (void)testQueuePut {
-    PCFRequest *request = [self createRequest];
+    PCFDataRequest *request = [self createRequest];
     id pending = OCMClassMock([PCFPendingRequest class]);
     PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     
@@ -89,7 +89,7 @@
 }
 
 - (void)testQueueDelete {
-    PCFRequest *request = [self createRequest];
+    PCFDataRequest *request = [self createRequest];
     id pending = OCMClassMock([PCFPendingRequest class]);
     PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     

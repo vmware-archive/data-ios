@@ -22,11 +22,11 @@ static int const PCF_HTTP_DELETE = 3;
 
 - (instancetype)initWithRequestQueue:(PCFRequestCacheQueue *)queue executor:(PCFRequestCacheExecutor *)executor;
 
-- (void)queueGetWithRequest:(PCFRequest *)request;
+- (void)queueGetWithRequest:(PCFDataRequest *)request;
 
-- (void)queuePutWithRequest:(PCFRequest *)request;
+- (void)queuePutWithRequest:(PCFDataRequest *)request;
 
-- (void)queueDeleteWithRequest:(PCFRequest *)request;
+- (void)queueDeleteWithRequest:(PCFDataRequest *)request;
 
 - (void)executePendingRequests;
 

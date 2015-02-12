@@ -62,14 +62,14 @@
     self.force = arc4random_uniform(2);
 }
 
-- (PCFRequest *)createRequest {
+- (PCFDataRequest *)createRequest {
     PCFKeyValue *keyValue = OCMClassMock([PCFKeyValue class]);
     OCMStub([keyValue value]).andReturn(self.result);
-    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
 - (void)testGetWithKeyValue {
-    PCFRequest *request = OCMPartialMock([self createRequest]);
+    PCFDataRequest *request = OCMPartialMock([self createRequest]);
     NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
 
@@ -78,7 +78,7 @@
     OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
     OCMStub([request accessToken]).andReturn(self.token);
 
-    PCFResponse *response = [client getWithRequest:request];
+    PCFDataResponse *response = [client getWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
 
     XCTAssertEqualObjects(responseObject.value, self.result);
@@ -88,7 +88,7 @@
 }
 
 - (void)testPutWithKeyValue {
-    PCFRequest *request = OCMPartialMock([self createRequest]);
+    PCFDataRequest *request = OCMPartialMock([self createRequest]);
     NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
 
@@ -97,7 +97,7 @@
     OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
     OCMStub([request accessToken]).andReturn(self.token);
     
-    PCFResponse *response = [client putWithRequest:request];
+    PCFDataResponse *response = [client putWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
 
     XCTAssertEqualObjects(responseObject.value, self.result);
@@ -107,7 +107,7 @@
 }
 
 - (void)testDeleteWithKeyValue {
-    PCFRequest *request = OCMPartialMock([self createRequest]);
+    PCFDataRequest *request = OCMPartialMock([self createRequest]);
     NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
     
@@ -116,7 +116,7 @@
     OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
     OCMStub([request accessToken]).andReturn(self.token);
     
-    PCFResponse *response = [client deleteWithRequest:request];
+    PCFDataResponse *response = [client deleteWithRequest:request];
     PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
     
     XCTAssertEqualObjects(responseObject.value, self.result);
@@ -126,10 +126,7 @@
 }
 
 - (void)testRequestWithMethodWithAccessTokenAndValue {
-    id data = OCMClassMock([PCFData class]);
     PCFRemoteClient *client = [[PCFRemoteClient alloc] init];
-    
-    OCMStub([data provideToken]).andReturn(self.token);
     
     NSString *method = [NSUUID UUID].UUIDString;
     NSURLRequest *request = [client requestWithMethod:method accessToken:self.token url:self.url value:self.result force:self.force];
@@ -149,8 +146,6 @@
     XCTAssertEqualObjects(self.url, request.URL);
     XCTAssertEqualObjects(self.result, decodedBody);
     XCTAssertEqualObjects(userAgent, userAgentHeader);
-    
-    [data stopMocking];
 }
 
 - (void)testRequestWithMethodSetsEtagWhenExistsForGet {

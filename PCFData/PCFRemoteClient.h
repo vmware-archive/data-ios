@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class PCFRequest, PCFResponse;
+@class PCFDataRequest, PCFDataResponse;
 
 @interface PCFRemoteClient : NSObject
 
-- (PCFResponse *)getWithRequest:(PCFRequest *)request;
+- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request;
 
-- (PCFResponse *)putWithRequest:(PCFRequest *)request;
+- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request;
 
-- (PCFResponse *)deleteWithRequest:(PCFRequest *)request;
+- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request;
 
 @end

@@ -11,7 +11,7 @@
 
 @interface PCFData ()
 
-+ (NSString*)provideToken;
++ (NSString*)provideTokenWithUserPrompt:(BOOL)prompt;
 
 @end
 
@@ -19,7 +19,7 @@
 
 static NSString* const PCFMethod = @"method";
 
-- (instancetype)initWithRequest:(PCFRequest *)request method:(long)method {
+- (instancetype)initWithRequest:(PCFDataRequest *)request method:(long)method {
     self = [super initWithRequest:request];
     _method = method;
     return self;
@@ -38,7 +38,7 @@ static NSString* const PCFMethod = @"method";
 }
 
 - (NSString *)accessToken {
-    return [PCFData provideToken];
+    return [PCFData provideTokenWithUserPrompt:false];
 }
 
 @end

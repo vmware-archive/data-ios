@@ -1,5 +1,5 @@
 //
-//  PCFResponse.h
+//  PCFDataResponse.h
 //  PCFData
 //
 //  Created by DX122-XL on 2014-10-28.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PCFResponse : NSObject
+@interface PCFDataResponse : NSObject
 
 @property NSError *error;
 @property id object;

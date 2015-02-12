@@ -1,5 +1,5 @@
 //
-//  PCFResponseTests.m
+//  PCFDataResponseTests.m
 //  PCFData
 //
 //  Created by DX122-XL on 2014-11-19.
@@ -10,14 +10,14 @@
 #import <XCTest/XCTest.h>
 #import <PCFData/PCFData.h>
 
-@interface PCFResponseTests : XCTestCase
+@interface PCFDataResponseTests : XCTestCase
 
 @property NSString *object;
 @property NSError *error;
 
 @end
 
-@implementation PCFResponseTests
+@implementation PCFDataResponseTests
 
 - (void)setUp {
     [super setUp];
@@ -27,13 +27,13 @@
 }
 
 - (void)testInitWithObject {
-    PCFResponse *response = [[PCFResponse alloc] initWithObject:self.object];
+    PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:self.object];
     
     XCTAssertEqual(self.object, response.object);
 }
 
 - (void)testInitWithObjectAndError {
-    PCFResponse *response = [[PCFResponse alloc] initWithObject:self.object error:self.error];
+    PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:self.object error:self.error];
     
     XCTAssertEqual(self.object, response.object);
     XCTAssertEqual(self.error, response.error);

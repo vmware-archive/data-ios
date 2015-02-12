@@ -49,9 +49,9 @@
     self.force = arc4random_uniform(2);
 }
 
-- (PCFRequest *)createRequest {
+- (PCFDataRequest *)createRequest {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
 - (void)testExecuteRequestWithGet {
@@ -116,7 +116,7 @@
     PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
     
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
-    PCFResponse *response = [[PCFResponse alloc] initWithObject:request.object error:[[NSError alloc] init]];
+    PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:request.object error:[[NSError alloc] init]];
     id pendingRequest = OCMClassMock([PCFPendingRequest class]);
     
     OCMStub([offlineStore putWithRequest:[OCMArg any]]).andReturn(response);
@@ -149,7 +149,7 @@
     PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
     
     PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
-    PCFResponse *response = [[PCFResponse alloc] initWithObject:request.object error:[[NSError alloc] init]];
+    PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:request.object error:[[NSError alloc] init]];
     id pendingRequest = OCMClassMock([PCFPendingRequest class]);
     
     OCMStub([offlineStore deleteWithRequest:[OCMArg any]]).andReturn(response);

@@ -10,8 +10,8 @@
 #import "PCFRemoteStore.h"
 #import "PCFKeyValueStore.h"
 #import "PCFRequestCache.h"
-#import "PCFResponse.h"
-#import "PCFRequest.h"
+#import "PCFDataResponse.h"
+#import "PCFDataRequest.h"
 #import "PCFReachability.h"
 #import "PCFDataConfig.h"
 #import "PCFDataLogger.h"
@@ -46,14 +46,14 @@
     return [[PCFRequestCache alloc] initWithOfflineStore:self fallbackStore:self.localStore];
 }
 
-- (PCFResponse *)getWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFOfflineStore getWithRequest: %@", request);
 
     if ([self isConnected]) {
-        PCFResponse *response = [self.remoteStore getWithRequest:request];
+        PCFDataResponse *response = [self.remoteStore getWithRequest:request];
         
         if (!response.error) {
-            PCFRequest *localRequest = [[PCFRequest alloc] initWithRequest:request];
+            PCFDataRequest *localRequest = [[PCFDataRequest alloc] initWithRequest:request];
             localRequest.object = response.object;
             
             return [self.localStore putWithRequest:localRequest];
@@ -70,7 +70,7 @@
         }
         
     } else {
-        PCFResponse *response = [self.localStore getWithRequest:request];
+        PCFDataResponse *response = [self.localStore getWithRequest:request];
         
         [self.requestCache queueGetWithRequest:request];
         
@@ -78,9 +78,9 @@
     }
 }
 
-- (void)getWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)getWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self getWithRequest:request];
+        PCFDataResponse *response = [self getWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -88,11 +88,11 @@
     });
 }
 
-- (PCFResponse *)putWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFOfflineStore putWithRequest: %@", request);
     
     if ([self isConnected]) {
-        PCFResponse *response = [self.remoteStore putWithRequest:request];
+        PCFDataResponse *response = [self.remoteStore putWithRequest:request];
         
         if (!response.error) {
             return [self.localStore putWithRequest:request];
@@ -102,8 +102,8 @@
         }
         
     } else {
-        PCFResponse *fallback = [self.localStore getWithRequest:request];
-        PCFResponse *response = [self.localStore putWithRequest:request];
+        PCFDataResponse *fallback = [self.localStore getWithRequest:request];
+        PCFDataResponse *response = [self.localStore putWithRequest:request];
         
         request.fallback = fallback.object;
         
@@ -113,9 +113,9 @@
     }
 }
 
-- (void)putWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)putWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self putWithRequest:request];
+        PCFDataResponse *response = [self putWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -123,11 +123,11 @@
     });
 }
 
-- (PCFResponse *)deleteWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFOfflineStore deleteWithKey: %@", request);
     
     if ([self isConnected]) {
-        PCFResponse *response = [self.remoteStore deleteWithRequest:request];
+        PCFDataResponse *response = [self.remoteStore deleteWithRequest:request];
         
         if (!response.error) {
             return [self.localStore deleteWithRequest:request];
@@ -136,8 +136,8 @@
         }
         
     } else {
-        PCFResponse *fallback = [self.localStore getWithRequest:(PCFRequest *)request];
-        PCFResponse *response = [self.localStore deleteWithRequest:(PCFRequest *)request];
+        PCFDataResponse *fallback = [self.localStore getWithRequest:(PCFDataRequest *)request];
+        PCFDataResponse *response = [self.localStore deleteWithRequest:(PCFDataRequest *)request];
         
         request.fallback = fallback.object;
         
@@ -147,9 +147,9 @@
     }
 }
 
-- (void)deleteWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)deleteWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self deleteWithRequest:(PCFRequest *)request];
+        PCFDataResponse *response = [self deleteWithRequest:(PCFDataRequest *)request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);

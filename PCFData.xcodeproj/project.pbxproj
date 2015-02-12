@@ -25,7 +25,7 @@
 		E11765871A325BF800EF6B01 /* PCFEtagStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765861A325BF800EF6B01 /* PCFEtagStoreTests.m */; };
 		E11765A61A362E7800EF6B01 /* PCFEtagStore.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765891A35F5A600EF6B01 /* PCFEtagStore.h */; };
 		E11765A91A3640B800EF6B01 /* PCFDataConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765A71A3640B800EF6B01 /* PCFDataConfig.h */; };
-		E11765AC1A3640CC00EF6B01 /* PCFConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */; };
+		E11765AC1A3640CC00EF6B01 /* PCFDataConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765AB1A3640CC00EF6B01 /* PCFDataConfigTests.m */; };
 		E11765B11A374A9E00EF6B01 /* Pivotal.plist in Resources */ = {isa = PBXBuildFile; fileRef = E11765AF1A36430F00EF6B01 /* Pivotal.plist */; };
 		E11765FC1A38D88B00EF6B01 /* PCFDataLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = E11765FA1A38D88B00EF6B01 /* PCFDataLogger.h */; };
 		E11765FD1A38D88B00EF6B01 /* PCFDataLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765FB1A38D88B00EF6B01 /* PCFDataLogger.m */; };
@@ -46,13 +46,13 @@
 		E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */; };
 		E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */; };
 		E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */; };
-		E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB81A27D36000EFC209 /* PCFResponse.m */; };
+		E12CCFC81A27D36000EFC209 /* PCFDataResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFDataResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E12CCFC91A27D36000EFC209 /* PCFDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB81A27D36000EFC209 /* PCFDataResponse.m */; };
 		E12CCFDD1A27D37D00EFC209 /* PCFKeyValueObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCA1A27D37D00EFC209 /* PCFKeyValueObjectTests.m */; };
 		E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCB1A27D37D00EFC209 /* PCFDataTests.m */; };
 		E12CCFDF1A27D37D00EFC209 /* PCFKeyValueStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCC1A27D37D00EFC209 /* PCFKeyValueStoreTests.m */; };
 		E12CCFE11A27D37D00EFC209 /* PCFRemoteStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */; };
-		E12CCFE21A27D37D00EFC209 /* PCFResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */; };
+		E12CCFE21A27D37D00EFC209 /* PCFDataResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCF1A27D37D00EFC209 /* PCFDataResponseTests.m */; };
 		E12CCFE61A27D84300EFC209 /* PCFOfflineStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */; };
 		E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */; };
 		E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */; };
@@ -88,7 +88,7 @@
 		E1BF42991A41DA8200B4707D /* PCFRemoteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB21A27D36000EFC209 /* PCFRemoteClient.m */; };
 		E1BF429A1A41DA8200B4707D /* PCFRemoteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */; };
 		E1BF429B1A41DA8200B4707D /* PCFRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */; };
-		E1BF429C1A41DA8200B4707D /* PCFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB81A27D36000EFC209 /* PCFResponse.m */; };
+		E1BF429C1A41DA8200B4707D /* PCFDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E12CCFB81A27D36000EFC209 /* PCFDataResponse.m */; };
 		E1BF429D1A41DA8200B4707D /* PCFDataConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E11765A81A3640B800EF6B01 /* PCFDataConfig.m */; };
 		E1BF429E1A41DA9300B4707D /* PCFDataStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFAC1A27D36000EFC209 /* PCFDataStore.h */; };
 		E1BF429F1A41DA9300B4707D /* PCFData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E157325A1A3F6580000F80AA /* PCFData.h */; };
@@ -96,20 +96,20 @@
 		E1BF42A11A41DA9300B4707D /* PCFKeyValueStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFAD1A27D36000EFC209 /* PCFKeyValueStore.h */; };
 		E1BF42A21A41DA9300B4707D /* PCFOfflineStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFAF1A27D36000EFC209 /* PCFOfflineStore.h */; };
 		E1BF42A31A41DA9300B4707D /* PCFRemoteStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB31A27D36000EFC209 /* PCFRemoteStore.h */; };
-		E1BF42A41A41DA9300B4707D /* PCFResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFResponse.h */; };
+		E1BF42A41A41DA9300B4707D /* PCFDataResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFDataResponse.h */; };
 		E1DA3D8B1A70079800057671 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DA3D8A1A70079800057671 /* libOCMock.a */; };
 		E1DA3DC41A70558200057671 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
 		E1DA3DC51A70558200057671 /* PCFData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */; };
 		E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */; };
-		E1F93CE11A64812B00EA6B28 /* PCFRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = E1F93CDF1A64812B00EA6B28 /* PCFRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E1F93CE21A64812B00EA6B28 /* PCFRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CE01A64812B00EA6B28 /* PCFRequest.m */; };
+		E1F93CE11A64812B00EA6B28 /* PCFDataRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = E1F93CDF1A64812B00EA6B28 /* PCFDataRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E1F93CE21A64812B00EA6B28 /* PCFDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CE01A64812B00EA6B28 /* PCFDataRequest.m */; };
 		E1F93CE51A658C7C00EA6B28 /* PCFRequestCacheQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = E1F93CE31A658C7C00EA6B28 /* PCFRequestCacheQueue.h */; };
 		E1F93CE61A658C7C00EA6B28 /* PCFRequestCacheQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CE41A658C7C00EA6B28 /* PCFRequestCacheQueue.m */; };
 		E1F93CE91A65A25300EA6B28 /* PCFDataPersistenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CE81A65A25300EA6B28 /* PCFDataPersistenceTests.m */; };
 		E1F93CEC1A65A39000EA6B28 /* PCFDataPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = E1F93CEA1A65A39000EA6B28 /* PCFDataPersistence.h */; };
 		E1F93CED1A65A39000EA6B28 /* PCFDataPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CEB1A65A39000EA6B28 /* PCFDataPersistence.m */; };
-		E1F93CEF1A66C23C00EA6B28 /* PCFRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CEE1A66C23C00EA6B28 /* PCFRequestTests.m */; };
+		E1F93CEF1A66C23C00EA6B28 /* PCFDataRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F93CEE1A66C23C00EA6B28 /* PCFDataRequestTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,7 +143,7 @@
 				E1BF42A11A41DA9300B4707D /* PCFKeyValueStore.h in CopyFiles */,
 				E1BF42A21A41DA9300B4707D /* PCFOfflineStore.h in CopyFiles */,
 				E1BF42A31A41DA9300B4707D /* PCFRemoteStore.h in CopyFiles */,
-				E1BF42A41A41DA9300B4707D /* PCFResponse.h in CopyFiles */,
+				E1BF42A41A41DA9300B4707D /* PCFDataResponse.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,7 +167,7 @@
 		E117658A1A35F87C00EF6B01 /* PCFEtagStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFEtagStore.m; sourceTree = "<group>"; };
 		E11765A71A3640B800EF6B01 /* PCFDataConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataConfig.h; sourceTree = "<group>"; };
 		E11765A81A3640B800EF6B01 /* PCFDataConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataConfig.m; sourceTree = "<group>"; };
-		E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFConfigTests.m; sourceTree = "<group>"; };
+		E11765AB1A3640CC00EF6B01 /* PCFDataConfigTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataConfigTests.m; sourceTree = "<group>"; };
 		E11765AF1A36430F00EF6B01 /* Pivotal.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Pivotal.plist; path = PCFDataTests/Pivotal.plist; sourceTree = SOURCE_ROOT; };
 		E11765FA1A38D88B00EF6B01 /* PCFDataLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataLogger.h; sourceTree = "<group>"; };
 		E11765FB1A38D88B00EF6B01 /* PCFDataLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataLogger.m; sourceTree = "<group>"; };
@@ -189,14 +189,14 @@
 		E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStore.m; sourceTree = "<group>"; };
 		E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRequestCache.h; sourceTree = "<group>"; };
 		E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCache.m; sourceTree = "<group>"; };
-		E12CCFB71A27D36000EFC209 /* PCFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFResponse.h; sourceTree = "<group>"; };
-		E12CCFB81A27D36000EFC209 /* PCFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponse.m; sourceTree = "<group>"; };
+		E12CCFB71A27D36000EFC209 /* PCFDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataResponse.h; sourceTree = "<group>"; };
+		E12CCFB81A27D36000EFC209 /* PCFDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataResponse.m; sourceTree = "<group>"; };
 		E12CCFCA1A27D37D00EFC209 /* PCFKeyValueObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFKeyValueObjectTests.m; sourceTree = "<group>"; };
 		E12CCFCB1A27D37D00EFC209 /* PCFDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataTests.m; sourceTree = "<group>"; };
 		E12CCFCC1A27D37D00EFC209 /* PCFKeyValueStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFKeyValueStoreTests.m; sourceTree = "<group>"; };
 		E12CCFCD1A27D37D00EFC209 /* PCFOfflineStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFOfflineStoreTests.m; sourceTree = "<group>"; };
 		E12CCFCE1A27D37D00EFC209 /* PCFRemoteStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteStoreTests.m; sourceTree = "<group>"; };
-		E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFResponseTests.m; sourceTree = "<group>"; };
+		E12CCFCF1A27D37D00EFC209 /* PCFDataResponseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataResponseTests.m; sourceTree = "<group>"; };
 		E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRemoteClientTests.m; sourceTree = "<group>"; };
 		E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCacheTests.m; sourceTree = "<group>"; };
 		E151B0511A6D941F008C861A /* PCFRequestCacheQueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCacheQueueTests.m; sourceTree = "<group>"; };
@@ -228,14 +228,14 @@
 		E1DA3D8A1A70079800057671 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
 		E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFReachability.h; sourceTree = "<group>"; };
 		E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFReachability.m; sourceTree = "<group>"; };
-		E1F93CDF1A64812B00EA6B28 /* PCFRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRequest.h; sourceTree = "<group>"; };
-		E1F93CE01A64812B00EA6B28 /* PCFRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequest.m; sourceTree = "<group>"; };
+		E1F93CDF1A64812B00EA6B28 /* PCFDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataRequest.h; sourceTree = "<group>"; };
+		E1F93CE01A64812B00EA6B28 /* PCFDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataRequest.m; sourceTree = "<group>"; };
 		E1F93CE31A658C7C00EA6B28 /* PCFRequestCacheQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFRequestCacheQueue.h; sourceTree = "<group>"; };
 		E1F93CE41A658C7C00EA6B28 /* PCFRequestCacheQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestCacheQueue.m; sourceTree = "<group>"; };
 		E1F93CE81A65A25300EA6B28 /* PCFDataPersistenceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataPersistenceTests.m; sourceTree = "<group>"; };
 		E1F93CEA1A65A39000EA6B28 /* PCFDataPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataPersistence.h; sourceTree = "<group>"; };
 		E1F93CEB1A65A39000EA6B28 /* PCFDataPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataPersistence.m; sourceTree = "<group>"; };
-		E1F93CEE1A66C23C00EA6B28 /* PCFRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFRequestTests.m; sourceTree = "<group>"; };
+		E1F93CEE1A66C23C00EA6B28 /* PCFDataRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataRequestTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -312,10 +312,10 @@
 				E12CCFB41A27D36000EFC209 /* PCFRemoteStore.m */,
 				E12CCFAF1A27D36000EFC209 /* PCFOfflineStore.h */,
 				E12CCFB01A27D36000EFC209 /* PCFOfflineStore.m */,
-				E12CCFB71A27D36000EFC209 /* PCFResponse.h */,
-				E12CCFB81A27D36000EFC209 /* PCFResponse.m */,
-				E1F93CDF1A64812B00EA6B28 /* PCFRequest.h */,
-				E1F93CE01A64812B00EA6B28 /* PCFRequest.m */,
+				E12CCFB71A27D36000EFC209 /* PCFDataResponse.h */,
+				E12CCFB81A27D36000EFC209 /* PCFDataResponse.m */,
+				E1F93CDF1A64812B00EA6B28 /* PCFDataRequest.h */,
+				E1F93CE01A64812B00EA6B28 /* PCFDataRequest.m */,
 			);
 			path = PCFData;
 			sourceTree = "<group>";
@@ -353,7 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				E12CCF7C1A27D27B00EFC209 /* Supporting Files */,
-				E11765AB1A3640CC00EF6B01 /* PCFConfigTests.m */,
+				E11765AB1A3640CC00EF6B01 /* PCFDataConfigTests.m */,
 				E12CCFCB1A27D37D00EFC209 /* PCFDataTests.m */,
 				E1F93CE81A65A25300EA6B28 /* PCFDataPersistenceTests.m */,
 				E11765861A325BF800EF6B01 /* PCFEtagStoreTests.m */,
@@ -368,8 +368,8 @@
 				E114296E1A6D68E2006AD400 /* PCFRequestCacheExecutorTests.m */,
 				E151B0511A6D941F008C861A /* PCFRequestCacheQueueTests.m */,
 				E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */,
-				E1F93CEE1A66C23C00EA6B28 /* PCFRequestTests.m */,
-				E12CCFCF1A27D37D00EFC209 /* PCFResponseTests.m */,
+				E1F93CEE1A66C23C00EA6B28 /* PCFDataRequestTests.m */,
+				E12CCFCF1A27D37D00EFC209 /* PCFDataResponseTests.m */,
 			);
 			path = PCFDataTests;
 			sourceTree = "<group>";
@@ -427,9 +427,9 @@
 				E1F93CEC1A65A39000EA6B28 /* PCFDataPersistence.h in Headers */,
 				E12CCFBB1A27D36000EFC209 /* PCFKeyValueObject.h in Headers */,
 				E12CCFBE1A27D36000EFC209 /* PCFKeyValueStore.h in Headers */,
-				E12CCFC81A27D36000EFC209 /* PCFResponse.h in Headers */,
+				E12CCFC81A27D36000EFC209 /* PCFDataResponse.h in Headers */,
 				E11765FC1A38D88B00EF6B01 /* PCFDataLogger.h in Headers */,
-				E1F93CE11A64812B00EA6B28 /* PCFRequest.h in Headers */,
+				E1F93CE11A64812B00EA6B28 /* PCFDataRequest.h in Headers */,
 				E17079B91A695DB900BA42C7 /* PCFMappable.h in Headers */,
 				E12CCFC21A27D36000EFC209 /* PCFRemoteClient.h in Headers */,
 				E12CCFC61A27D36000EFC209 /* PCFRequestCache.h in Headers */,
@@ -622,7 +622,7 @@
 				E117661E1A3A085F00EF6B01 /* PCFEtagStore.m in Sources */,
 				E1F93CE61A658C7C00EA6B28 /* PCFRequestCacheQueue.m in Sources */,
 				E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */,
-				E12CCFC91A27D36000EFC209 /* PCFResponse.m in Sources */,
+				E12CCFC91A27D36000EFC209 /* PCFDataResponse.m in Sources */,
 				E12CCFBC1A27D36000EFC209 /* PCFKeyValueObject.m in Sources */,
 				E11765FD1A38D88B00EF6B01 /* PCFDataLogger.m in Sources */,
 				E12CCFC51A27D36000EFC209 /* PCFRemoteStore.m in Sources */,
@@ -630,7 +630,7 @@
 				E157325D1A3F6580000F80AA /* PCFData.m in Sources */,
 				E12CCFBF1A27D36000EFC209 /* PCFKeyValueStore.m in Sources */,
 				E12CCFC31A27D36000EFC209 /* PCFRemoteClient.m in Sources */,
-				E1F93CE21A64812B00EA6B28 /* PCFRequest.m in Sources */,
+				E1F93CE21A64812B00EA6B28 /* PCFDataRequest.m in Sources */,
 				E17079AA1A6721CD00BA42C7 /* PCFRequestCacheExecutor.m in Sources */,
 				E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */,
 				E1F93CED1A65A39000EA6B28 /* PCFDataPersistence.m in Sources */,
@@ -654,9 +654,9 @@
 				E12CCFDE1A27D37D00EFC209 /* PCFDataTests.m in Sources */,
 				E151B0521A6D941F008C861A /* PCFRequestCacheQueueTests.m in Sources */,
 				E12CD0201A28F29D00EFC209 /* PCFRemoteClientTests.m in Sources */,
-				E1F93CEF1A66C23C00EA6B28 /* PCFRequestTests.m in Sources */,
-				E11765AC1A3640CC00EF6B01 /* PCFConfigTests.m in Sources */,
-				E12CCFE21A27D37D00EFC209 /* PCFResponseTests.m in Sources */,
+				E1F93CEF1A66C23C00EA6B28 /* PCFDataRequestTests.m in Sources */,
+				E11765AC1A3640CC00EF6B01 /* PCFDataConfigTests.m in Sources */,
+				E12CCFE21A27D37D00EFC209 /* PCFDataResponseTests.m in Sources */,
 				E12CCFE11A27D37D00EFC209 /* PCFRemoteStoreTests.m in Sources */,
 				E151B0581A6EB025008C861A /* PCFPendingRequestTests.m in Sources */,
 				E1F93CE91A65A25300EA6B28 /* PCFDataPersistenceTests.m in Sources */,
@@ -689,7 +689,7 @@
 				E1BF42991A41DA8200B4707D /* PCFRemoteClient.m in Sources */,
 				E1BF429A1A41DA8200B4707D /* PCFRemoteStore.m in Sources */,
 				E1BF429B1A41DA8200B4707D /* PCFRequestCache.m in Sources */,
-				E1BF429C1A41DA8200B4707D /* PCFResponse.m in Sources */,
+				E1BF429C1A41DA8200B4707D /* PCFDataResponse.m in Sources */,
 				E1BF429D1A41DA8200B4707D /* PCFDataConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

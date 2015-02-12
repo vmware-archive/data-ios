@@ -1,14 +1,14 @@
 //
-//  PCFResponse.m
+//  PCFDataResponse.m
 //  PCFData
 //
 //  Created by DX122-XL on 2014-10-28.
 //  Copyright (c) 2014 Pivotal. All rights reserved.
 //
 
-#import "PCFResponse.h"
+#import "PCFDataResponse.h"
 
-@implementation PCFResponse
+@implementation PCFDataResponse
 
 - (instancetype)initWithObject:(id)object {
     _object = object;
@@ -22,7 +22,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat: @"PCFResponse: {Object=%@, Error=%@}", self.object, self.error];
+    return [NSString stringWithFormat: @"PCFDataResponse: {Object=%@, Error=%@}", self.object, self.error];
 }
 
 @end

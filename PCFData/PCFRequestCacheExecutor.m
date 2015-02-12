@@ -10,7 +10,7 @@
 #import "PCFOfflineStore.h"
 #import "PCFPendingRequest.h"
 #import "PCFRequestCache.h"
-#import "PCFResponse.h"
+#import "PCFDataResponse.h"
 
 @interface PCFRequestCacheExecutor ()
 
@@ -54,7 +54,7 @@ static NSString* const PCFUnsupportedOperation = @"Unsupported operation in Requ
 }
 
 - (void)executePut:(PCFPendingRequest *)request {
-    PCFResponse *response = [self.offlineStore putWithRequest:request];
+    PCFDataResponse *response = [self.offlineStore putWithRequest:request];
     if (response.error) {
         PCFPendingRequest *fallback = [[PCFPendingRequest alloc] initWithRequest:request];
         fallback.object = request.fallback;
@@ -63,7 +63,7 @@ static NSString* const PCFUnsupportedOperation = @"Unsupported operation in Requ
 }
 
 - (void)executeDelete:(PCFPendingRequest *)request {
-    PCFResponse *response = [self.offlineStore deleteWithRequest:request];
+    PCFDataResponse *response = [self.offlineStore deleteWithRequest:request];
     if (response.error) {
         PCFPendingRequest *fallback = [[PCFPendingRequest alloc] initWithRequest:request];
         fallback.object = request.fallback;

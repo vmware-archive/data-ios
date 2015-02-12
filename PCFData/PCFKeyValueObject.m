@@ -8,8 +8,8 @@
 
 #import "PCFKeyValueObject.h"
 #import "PCFOfflineStore.h"
-#import "PCFResponse.h"
-#import "PCFRequest.h"
+#import "PCFDataResponse.h"
+#import "PCFDataRequest.h"
 #import "PCFKeyValue.h"
 
 @interface PCFKeyValueObject ()
@@ -41,39 +41,39 @@
     return self;
 }
 
-- (PCFResponse *)get {
-    PCFRequest *request = [self createRequestWithValue:nil];
+- (PCFDataResponse *)get {
+    PCFDataRequest *request = [self createRequestWithValue:nil];
     return [self.dataStore getWithRequest:request];
 }
 
-- (void)getWithCompletionBlock:(PCFResponseBlock)completionBlock {
-    PCFRequest *request = [self createRequestWithValue:nil];
+- (void)getWithCompletionBlock:(PCFDataResponseBlock)completionBlock {
+    PCFDataRequest *request = [self createRequestWithValue:nil];
     [self.dataStore getWithRequest:request completionBlock:completionBlock];
 }
 
-- (PCFResponse *)putWithValue:(NSString *)value {
-    PCFRequest *request = [self createRequestWithValue:value];
+- (PCFDataResponse *)putWithValue:(NSString *)value {
+    PCFDataRequest *request = [self createRequestWithValue:value];
     return [self.dataStore putWithRequest:request];
 }
 
-- (void)putWithValue:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock {
-    PCFRequest *request = [self createRequestWithValue:value];
+- (void)putWithValue:(NSString *)value completionBlock:(PCFDataResponseBlock)completionBlock {
+    PCFDataRequest *request = [self createRequestWithValue:value];
     [self.dataStore putWithRequest:request completionBlock:completionBlock];
 }
 
-- (PCFResponse *)delete {
-    PCFRequest *request = [self createRequestWithValue:nil];
+- (PCFDataResponse *)delete {
+    PCFDataRequest *request = [self createRequestWithValue:nil];
     return [self.dataStore deleteWithRequest:request];
 }
 
-- (void)deleteWithCompletionBlock:(PCFResponseBlock)completionBlock {
-    PCFRequest *request = [self createRequestWithValue:nil];
+- (void)deleteWithCompletionBlock:(PCFDataResponseBlock)completionBlock {
+    PCFDataRequest *request = [self createRequestWithValue:nil];
     [self.dataStore deleteWithRequest:request completionBlock:completionBlock];
 }
 
-- (PCFRequest *)createRequestWithValue:(NSString *)value {
+- (PCFDataRequest *)createRequestWithValue:(NSString *)value {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:value];
-    PCFRequest *request = [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
     return request;
 }
 

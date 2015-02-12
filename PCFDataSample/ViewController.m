@@ -48,19 +48,19 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 }
 
 - (IBAction)fetchObject:(id)sender {
-    [self.object getWithCompletionBlock:^(PCFResponse *response) {
+    [self.object getWithCompletionBlock:^(PCFDataResponse *response) {
         [self handleResponse:response];
     }];
 }
 
 - (IBAction)saveObject:(id)sender {
-    [self.object putWithValue:self.textField.text completionBlock:^(PCFResponse *response) {
+    [self.object putWithValue:self.textField.text completionBlock:^(PCFDataResponse *response) {
         [self handleResponse:response];
     }];
 }
 
 - (IBAction)deleteObject:(id)sender {
-    [self.object deleteWithCompletionBlock:^(PCFResponse *response) {
+    [self.object deleteWithCompletionBlock:^(PCFDataResponse *response) {
         [self handleResponse:response];
     }];
 }
@@ -69,14 +69,14 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     return !self.etagSwitch.isOn;
 }
 
-- (void)handleResponse:(PCFResponse *)response {
+- (void)handleResponse:(PCFDataResponse *)response {
     
     PCFKeyValue *keyValue = (PCFKeyValue *)response.object;
 
     self.textField.text = keyValue.value;
     
     if (response.error) {
-        NSLog(@"PCFResponse error: %@", response.error);
+        NSLog(@"PCFDataResponse error: %@", response.error);
         
         NSString *errorCode = [NSString stringWithFormat: @"%d", (int) response.error.code];
         
@@ -92,7 +92,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
         
         [self.errorLabel setText:[NSString stringWithFormat:@"Error Code: %@\n\nDescription: %@", errorCode, errorDescription]];
     } else {
-        NSLog(@"PCFResponse value: %@", keyValue.value);
+        NSLog(@"PCFDataResponse value: %@", keyValue.value);
         
         [self.errorLabel setText:@""];
     }

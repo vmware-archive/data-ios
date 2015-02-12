@@ -18,10 +18,7 @@
 static PCFReachability *reachability;
 
 static PCFTokenBlock tokenBlock;
-static PCFTokenBlock tokenWithPromptBlock;
-
-static PCFNetworkBlock connectedBlock;
-static PCFNetworkBlock disconnectedBlock;
+static PCFNetworkBlock networkBlock;
 
 static id reachabilityObserver;
 
@@ -35,18 +32,8 @@ static id reachabilityObserver;
     [PCFData startReachability];
 }
 
-+ (void)registerTokenProviderWithUserPromptBlock:(PCFTokenBlock)block {
-    tokenWithPromptBlock = block;
-    [PCFData startReachability];
-}
-
-+ (void)registerNetworkConnectedBlock:(PCFNetworkBlock)block {
-    connectedBlock = block;
-    [PCFData startReachability];
-}
-
-+ (void)registerNetworkDisconnectedBlock:(PCFNetworkBlock)block {
-    disconnectedBlock = block;
++ (void)registerNetworkObserverBlock:(PCFNetworkBlock)block {
+    networkBlock = block;
     [PCFData startReachability];
 }
 
@@ -98,45 +85,30 @@ static id reachabilityObserver;
 }
 
 + (void)notifyNetworkStatusChanged:(BOOL)connected {
-    if (connected) {
-        if (connectedBlock) {
-            connectedBlock();
-        }
-    } else {
-        if (disconnectedBlock) {
-            disconnectedBlock();
-        }
+    if (networkBlock) {
+        networkBlock(connected);
     }
 }
 
 + (void)registerDefaultConnectedBlock {
-    if (!connectedBlock) {
-        connectedBlock = ^() {
-            [PCFData performSync];
+    if (!networkBlock) {
+        networkBlock = ^(BOOL connected) {
+            if (connected) {
+                [PCFData performSync];
+            }
         };
     }
 }
 
 + (void)unregisterDefaultConnectedBlock {
-    if (connectedBlock) {
-        connectedBlock = nil;
-    }
-    if (disconnectedBlock) {
-        disconnectedBlock = nil;
+    if (networkBlock) {
+        networkBlock = nil;
     }
 }
 
-+ (NSString*)provideToken {
++ (NSString*)provideTokenWithUserPrompt:(BOOL)prompt {
     if (tokenBlock) {
-        return tokenBlock();
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString*)provideTokenWithUserPrompt {
-    if (tokenWithPromptBlock) {
-        return tokenWithPromptBlock();
+        return tokenBlock(prompt);
     } else {
         return nil;
     }

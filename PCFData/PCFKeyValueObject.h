@@ -17,16 +17,16 @@
 
 - (instancetype)initWithDataStore:(id<PCFDataStore>)dataStore collection:(NSString *)collection key:(NSString *)key;
 
-- (PCFResponse *)get;
+- (PCFDataResponse *)get;
 
-- (void)getWithCompletionBlock:(PCFResponseBlock)completionBlock;
+- (void)getWithCompletionBlock:(PCFDataResponseBlock)completionBlock;
 
-- (PCFResponse *)putWithValue:(NSString *)value;
+- (PCFDataResponse *)putWithValue:(NSString *)value;
 
-- (void)putWithValue:(NSString *)value completionBlock:(PCFResponseBlock)completionBlock;
+- (void)putWithValue:(NSString *)value completionBlock:(PCFDataResponseBlock)completionBlock;
 
-- (PCFResponse *)delete;
+- (PCFDataResponse *)delete;
 
-- (void)deleteWithCompletionBlock:(PCFResponseBlock)completionBlock;
+- (void)deleteWithCompletionBlock:(PCFDataResponseBlock)completionBlock;
 
 @end

@@ -13,8 +13,8 @@
 #import "PCFKeyValueStore.h"
 #import "PCFRemoteStore.h"
 #import "PCFOfflineStore.h"
-#import "PCFResponse.h"
-#import "PCFRequest.h"
+#import "PCFDataResponse.h"
+#import "PCFDataRequest.h"
 
 typedef NS_ENUM(NSInteger, PCFDataLogLevel) {
     PCFDataLogLevelDebug = 0,
@@ -25,18 +25,14 @@ typedef NS_ENUM(NSInteger, PCFDataLogLevel) {
     PCFDataLogLevelNone
 };
 
-typedef void (^PCFNetworkBlock) (void);
-typedef NSString* (^PCFTokenBlock) (void);
+typedef void (^PCFNetworkBlock) (BOOL connected);
+typedef NSString* (^PCFTokenBlock) (BOOL promptUser);
 
 @interface PCFData : NSObject
 
 + (void)registerTokenProviderBlock:(PCFTokenBlock)block;
 
-+ (void)registerTokenProviderWithUserPromptBlock:(PCFTokenBlock)block;
-
-+ (void)registerNetworkConnectedBlock:(PCFNetworkBlock)block;
-
-+ (void)registerNetworkDisconnectedBlock:(PCFNetworkBlock)block;
++ (void)registerNetworkObserverBlock:(PCFNetworkBlock)block;
 
 + (void)performSync;
 

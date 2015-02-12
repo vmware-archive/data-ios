@@ -8,7 +8,7 @@
 
 #import "PCFRemoteStore.h"
 #import "PCFRemoteClient.h"
-#import "PCFResponse.h"
+#import "PCFDataResponse.h"
 #import "PCFDataConfig.h"
 #import "PCFDataLogger.h"
 
@@ -32,14 +32,14 @@
     return self;
 }
 
-- (PCFResponse *)getWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFRemoteStore getWithRequest: %@", request);
     return [self.client getWithRequest:request];
 }
 
-- (void)getWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)getWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self getWithRequest:request];
+        PCFDataResponse *response = [self getWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -47,14 +47,14 @@
     });
 }
 
-- (PCFResponse *)putWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFRemoteStore putWithRequest: %@", request);
     return [self.client putWithRequest:request];
 }
 
-- (void)putWithRequest:request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)putWithRequest:request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self putWithRequest:request];
+        PCFDataResponse *response = [self putWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);
@@ -62,14 +62,14 @@
     });
 }
 
-- (PCFResponse *)deleteWithRequest:(PCFRequest *)request {
+- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFRemoteStore deleteWithRequest: %@", request);
     return [self.client deleteWithRequest:request];
 }
 
-- (void)deleteWithRequest:(PCFRequest *)request completionBlock:(PCFResponseBlock)completionBlock {
+- (void)deleteWithRequest:(PCFDataRequest *)request completionBlock:(PCFDataResponseBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PCFResponse *response = [self deleteWithRequest:request];
+        PCFDataResponse *response = [self deleteWithRequest:request];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(response);

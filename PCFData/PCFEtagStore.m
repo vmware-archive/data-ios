@@ -7,7 +7,7 @@
 //
 
 #import "PCFEtagStore.h"
-#import "PCFResponse.h"
+#import "PCFDataResponse.h"
 #import "PCFDataPersistence.h"
 
 @interface PCFEtagStore ()

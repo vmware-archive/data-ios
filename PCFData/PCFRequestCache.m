@@ -11,9 +11,9 @@
 #import "PCFRequestCacheQueue.h"
 #import "PCFRequestCacheExecutor.h"
 #import "PCFOfflineStore.h"
-#import "PCFRequest.h"
+#import "PCFDataRequest.h"
 #import "PCFPendingRequest.h"
-#import "PCFResponse.h"
+#import "PCFDataResponse.h"
 #import "PCFDataLogger.h"
 
 @interface PCFRequestCache ()
@@ -45,19 +45,19 @@
     return self;
 }
 
-- (void)queueGetWithRequest:(PCFRequest *)request {
+- (void)queueGetWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFRequestCache queueGetWithRequest: %@", request);
     PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_GET];
     [self.queue addRequest:pending];
 }
 
-- (void)queuePutWithRequest:(PCFRequest *)request {
+- (void)queuePutWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFRequestCache queuePutWithRequest: %@", request);
     PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_PUT];
     [self.queue addRequest:pending];
 }
 
-- (void)queueDeleteWithRequest:(PCFRequest *)request {
+- (void)queueDeleteWithRequest:(PCFDataRequest *)request {
     LogInfo(@"PCFRequestCache queueDeleteWithRequest: %@", request);
     PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_DELETE];
     [self.queue addRequest:pending];

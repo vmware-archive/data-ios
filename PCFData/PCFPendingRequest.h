@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PCFRequest.h"
+#import "PCFDataRequest.h"
 
-@interface PCFPendingRequest : PCFRequest
+@interface PCFPendingRequest : PCFDataRequest
 
 @property long method;
 
-- (instancetype)initWithRequest:(PCFRequest *)request method:(long)method;
+- (instancetype)initWithRequest:(PCFDataRequest *)request method:(long)method;
 
 @end

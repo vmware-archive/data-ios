@@ -1,5 +1,5 @@
 //
-//  PCFConfigTests.m
+//  PCFDataConfigTests.m
 //  PCFData
 //
 //  Created by DX122-XL on 2014-12-08.
@@ -12,14 +12,14 @@
 #import <PCFData/PCFData.h>
 #import "PCFDataConfig.h"
 
-@interface PCFConfigTests : XCTestCase
+@interface PCFDataConfigTests : XCTestCase
 
 @property NSString *url;
 @property PCFCollisionStrategy strategy;
 
 @end
 
-@implementation PCFConfigTests
+@implementation PCFDataConfigTests
 
 static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
 static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";

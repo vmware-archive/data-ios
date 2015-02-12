@@ -39,19 +39,19 @@
     self.url = [NSURL URLWithString:@"http://test.com"];
 }
 
-- (PCFRequest *)createRequest {
+- (PCFDataRequest *)createRequest {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
 }
 
-- (PCFResponse *)createResponseWithError:(NSError *)error {
+- (PCFDataResponse *)createResponseWithError:(NSError *)error {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFResponse alloc] initWithObject:keyValue error:error];
+    return [[PCFDataResponse alloc] initWithObject:keyValue error:error];
 }
 
 - (void)testGetInvokesRemoteClient {
-    PCFRequest *request = [self createRequest];
-    PCFResponse *response = [self createResponseWithError:nil];
+    PCFDataRequest *request = [self createRequest];
+    PCFDataResponse *response = [self createResponseWithError:nil];
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = [[PCFRemoteStore alloc] initWithClient:client];
     
@@ -63,8 +63,8 @@
 }
 
 - (void)testGetAsyncInvokesRemoteClient {
-    PCFRequest *request = [self createRequest];
-    PCFResponse *response = [self createResponseWithError:nil];
+    PCFDataRequest *request = [self createRequest];
+    PCFDataResponse *response = [self createResponseWithError:nil];
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = [[PCFRemoteStore alloc] initWithClient:client];
     
@@ -72,7 +72,7 @@
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
-    [dataStore getWithRequest:request completionBlock:^(PCFResponse *resp) {
+    [dataStore getWithRequest:request completionBlock:^(PCFDataResponse *resp) {
         XCTAssertEqual(response, resp);
 
         [expectation fulfill];
@@ -84,8 +84,8 @@
 }
 
 - (void)testPutInvokesRemoteClient {
-    PCFRequest *request = [self createRequest];
-    PCFResponse *response = [self createResponseWithError:nil];
+    PCFDataRequest *request = [self createRequest];
+    PCFDataResponse *response = [self createResponseWithError:nil];
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = [[PCFRemoteStore alloc] initWithClient:client];
     
@@ -97,8 +97,8 @@
 }
 
 - (void)testPutAsyncInvokesRemoteClient {
-    PCFRequest *request = [self createRequest];
-    PCFResponse *response = [self createResponseWithError:nil];
+    PCFDataRequest *request = [self createRequest];
+    PCFDataResponse *response = [self createResponseWithError:nil];
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = [[PCFRemoteStore alloc] initWithClient:client];
     
@@ -106,7 +106,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
-    [dataStore putWithRequest:request completionBlock:^(PCFResponse *resp) {
+    [dataStore putWithRequest:request completionBlock:^(PCFDataResponse *resp) {
         XCTAssertEqual(response, resp);
         
         [expectation fulfill];
@@ -118,8 +118,8 @@
 }
 
 - (void)testDeleteInvokesRemoteClient {
-    PCFRequest *request = [self createRequest];
-    PCFResponse *response = [self createResponseWithError:nil];
+    PCFDataRequest *request = [self createRequest];
+    PCFDataResponse *response = [self createResponseWithError:nil];
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = [[PCFRemoteStore alloc] initWithClient:client];
     
@@ -131,8 +131,8 @@
 }
 
 - (void)testDeleteAsyncInvokesRemoteClient {
-    PCFRequest *request = [self createRequest];
-    PCFResponse *response = [self createResponseWithError:nil];
+    PCFDataRequest *request = [self createRequest];
+    PCFDataResponse *response = [self createResponseWithError:nil];
     PCFRemoteClient *client = OCMClassMock([PCFRemoteClient class]);
     PCFRemoteStore *dataStore = [[PCFRemoteStore alloc] initWithClient:client];
     
@@ -140,7 +140,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
-    [dataStore deleteWithRequest:request completionBlock:^(PCFResponse *resp) {
+    [dataStore deleteWithRequest:request completionBlock:^(PCFDataResponse *resp) {
         XCTAssertEqual(response, resp);
         
         [expectation fulfill];

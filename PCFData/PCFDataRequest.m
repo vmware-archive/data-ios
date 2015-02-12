@@ -1,28 +1,28 @@
 //
-//  PCFRequest.m
+//  PCFDataRequest.m
 //  PCFData
 //
 //  Created by DX122-XL on 2015-01-12.
 //  Copyright (c) 2015 Pivotal. All rights reserved.
 //
 
-#import "PCFRequest.h"
+#import "PCFDataRequest.h"
 #import "PCFData.h"
 
 @interface PCFData ()
 
-+ (NSString*)provideTokenWithUserPrompt;
++ (NSString*)provideTokenWithUserPrompt:(BOOL)prompt;
 
 @end
 
-@implementation PCFRequest
+@implementation PCFDataRequest
 
 static NSString* const PCFObject = @"object";
 static NSString* const PCFFallback = @"fallback";
 static NSString* const PCFForce = @"force";
 static NSString* const PCFType = @"type";
 
-- (instancetype)initWithRequest:(PCFRequest *)request {
+- (instancetype)initWithRequest:(PCFDataRequest *)request {
     return [self initWithObject:request.object fallback:request.fallback force:request.force];
 }
 
@@ -57,11 +57,11 @@ static NSString* const PCFType = @"type";
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat: @"PCFRequest: {Object=%@, Force=%d}", self.object, self.force];
+    return [NSString stringWithFormat: @"PCFDataRequest: {Object=%@, Force=%d}", self.object, self.force];
 }
 
 - (NSString *)accessToken {
-    return [PCFData provideTokenWithUserPrompt];
+    return [PCFData provideTokenWithUserPrompt:true];
 }
 
 @end

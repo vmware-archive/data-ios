@@ -14,7 +14,7 @@
 
 @interface PCFKeyValueObject ()
 
-- (PCFRequest *)createRequestWithValue:(NSString *)value;
+- (PCFDataRequest *)createRequestWithValue:(NSString *)value;
 
 @end
 
@@ -42,8 +42,8 @@
 }
 
 - (void)testForceGetInvokesDataStore {
-    PCFResponse *response = OCMClassMock([PCFResponse class]);
-    PCFRequest *request = OCMClassMock([PCFRequest class]);
+    PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
+    PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
     PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
@@ -56,8 +56,8 @@
 }
 
 - (void)testAsyncGetInvokesDataStore {
-    void (^block)(PCFResponse *) = ^(PCFResponse *response) {};
-    PCFRequest *request = OCMClassMock([PCFRequest class]);
+    void (^block)(PCFDataResponse *) = ^(PCFDataResponse *response) {};
+    PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
     PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
@@ -70,8 +70,8 @@
 }
 
 - (void)testPutInvokesDataStore {
-    PCFResponse *response = OCMClassMock([PCFResponse class]);
-    PCFRequest *request = OCMClassMock([PCFRequest class]);
+    PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
+    PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
     PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
@@ -84,8 +84,8 @@
 }
 
 - (void)testAsyncPutInvokesDataStore {
-    void (^block)(PCFResponse *) = ^(PCFResponse *response) {};
-    PCFRequest *request = OCMClassMock([PCFRequest class]);
+    void (^block)(PCFDataResponse *) = ^(PCFDataResponse *response) {};
+    PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
     PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
@@ -98,8 +98,8 @@
 }
 
 - (void)testDeleteInvokesDataStore {
-    PCFResponse *response = OCMClassMock([PCFResponse class]);
-    PCFRequest *request = OCMClassMock([PCFRequest class]);
+    PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
+    PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
     PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
@@ -112,8 +112,8 @@
 }
 
 - (void)testAsyncDeleteInvokesDataStore {
-    void (^block)(PCFResponse *) = ^(PCFResponse *response) {};
-    PCFRequest *request = OCMClassMock([PCFRequest class]);
+    void (^block)(PCFDataResponse *) = ^(PCFDataResponse *response) {};
+    PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
     PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     

@@ -12,7 +12,7 @@
 #import <PCFData/PCFData.h>
 #import "PCFDataPersistence.h"
 #import "PCFKeyValue.h"
-#import "PCFRequest.h"
+#import "PCFDataRequest.h"
 #import "PCFRequestCacheQueue.h"
 #import "PCFPendingRequest.h"
 
