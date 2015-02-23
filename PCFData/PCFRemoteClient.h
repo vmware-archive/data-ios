@@ -8,14 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@class PCFDataRequest, PCFDataResponse;
+@class PCFEtagStore;
 
 @interface PCFRemoteClient : NSObject
 
-- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request;
+- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
 
-- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request;
+- (NSString *)getWithUrl:(NSURL *)url force:(BOOL)force error:(NSError *__autoreleasing *)error;
 
-- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request;
+- (NSString *)putWithUrl:(NSURL *)url body:(NSString *)body force:(BOOL)force error:(NSError *__autoreleasing *)error;
+
+- (NSString *)deleteWithUrl:(NSURL *)url force:(BOOL)force error:(NSError *__autoreleasing *)error;
 
 @end

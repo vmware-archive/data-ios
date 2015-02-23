@@ -49,62 +49,27 @@
 
 - (PCFDataRequest *)createRequest {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    return [[PCFDataRequest alloc] initWithMethod:self.method object:keyValue fallback:nil force:self.force];
 }
 
-- (void)testQueueGet {
+- (void)testQueueRequest {
     PCFDataRequest *request = [self createRequest];
     id pending = OCMClassMock([PCFPendingRequest class]);
     PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
     
     OCMStub([pending alloc]).andReturn(pending);
-    OCMStub([pending initWithRequest:[OCMArg any] method:PCF_HTTP_GET]).andReturn(pending);
+    OCMStub([pending initWithRequest:[OCMArg any]]).andReturn(pending);
     
     PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
     
-    [cache queueGetWithRequest:request];
+    [cache queueRequest:request];
     
-    OCMVerify([pending initWithRequest:request method:PCF_HTTP_GET]);
+    OCMVerify([pending initWithRequest:request]);
     OCMVerify([queue addRequest:pending]);
     
     [pending stopMocking];
 }
 
-- (void)testQueuePut {
-    PCFDataRequest *request = [self createRequest];
-    id pending = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
-    
-    OCMStub([pending alloc]).andReturn(pending);
-    OCMStub([pending initWithRequest:[OCMArg any] method:PCF_HTTP_PUT]).andReturn(pending);
-    
-    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
-    
-    [cache queuePutWithRequest:request];
-    
-    OCMVerify([pending initWithRequest:request method:PCF_HTTP_PUT]);
-    OCMVerify([queue addRequest:pending]);
-    
-    [pending stopMocking];
-}
-
-- (void)testQueueDelete {
-    PCFDataRequest *request = [self createRequest];
-    id pending = OCMClassMock([PCFPendingRequest class]);
-    PCFRequestCacheQueue *queue = OCMClassMock([PCFRequestCacheQueue class]);
-    
-    OCMStub([pending alloc]).andReturn(pending);
-    OCMStub([pending initWithRequest:[OCMArg any] method:PCF_HTTP_DELETE]).andReturn(pending);
-    
-    PCFRequestCache *cache = [[PCFRequestCache alloc] initWithRequestQueue:queue executor:nil];
-    
-    [cache queueDeleteWithRequest:request];
-    
-    OCMVerify([pending initWithRequest:request method:PCF_HTTP_DELETE]);
-    OCMVerify([queue addRequest:pending]);
-    
-    [pending stopMocking];
-}
 
 - (void)testExecutePendingRequestsWithTokenAndHandlerNewData {
     NSArray *requestArray = OCMClassMock([NSArray class]);

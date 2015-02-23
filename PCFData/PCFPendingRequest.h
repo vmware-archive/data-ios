@@ -11,8 +11,5 @@
 
 @interface PCFPendingRequest : PCFDataRequest
 
-@property long method;
-
-- (instancetype)initWithRequest:(PCFDataRequest *)request method:(long)method;
 
 @end

@@ -16,11 +16,7 @@
 
 @interface PCFRequestCacheExecutor ()
 
-- (void)executeGet:(PCFPendingRequest *)request;
-
-- (void)executePut:(PCFPendingRequest *)request;
-
-- (void)executeDelete:(PCFPendingRequest *)request;
+- (void)executeWithFallback:(PCFPendingRequest *)request;
 
 @end
 
@@ -49,118 +45,79 @@
     self.force = arc4random_uniform(2);
 }
 
-- (PCFDataRequest *)createRequest {
+- (PCFDataRequest *)createRequestWithMethod:(int)method {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:self.value];
-    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    return [[PCFDataRequest alloc] initWithMethod:method object:keyValue fallback:nil force:self.force];
 }
 
 - (void)testExecuteRequestWithGet {
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest method:PCF_HTTP_GET];
-    PCFRequestCacheExecutor *executor = OCMPartialMock([[PCFRequestCacheExecutor alloc] initWithOfflineStore:nil fallbackStore:nil]);
+    PCFPendingRequest *pendingRequest = OCMClassMock([PCFPendingRequest class]);
+    PCFKeyValueOfflineStore *offlineStore = OCMClassMock([PCFKeyValueOfflineStore class]);
+    PCFRequestCacheExecutor *executor = OCMPartialMock([[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:nil]);
     
-    OCMStub([executor executeGet:[OCMArg any]]).andDo(nil);
+    OCMStub([pendingRequest method]).andReturn(PCF_HTTP_GET);
+    OCMStub([offlineStore executeRequest:[OCMArg any]]).andDo(nil);
     
-    [executor executeRequest:request];
+    [executor executeRequest:pendingRequest];
     
-    OCMVerify([executor executeGet:request]);
+    OCMVerify([offlineStore executeRequest:pendingRequest]);
 }
 
 - (void)testExecuteRequestWithPut {
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest method:PCF_HTTP_PUT];
+    PCFPendingRequest *pendingRequest = OCMClassMock([PCFPendingRequest class]);
     PCFRequestCacheExecutor *executor = OCMPartialMock([[PCFRequestCacheExecutor alloc] initWithOfflineStore:nil fallbackStore:nil]);
     
-    OCMStub([executor executePut:[OCMArg any]]).andDo(nil);
+    OCMStub([pendingRequest method]).andReturn(PCF_HTTP_PUT);
+    OCMStub([executor executeWithFallback:[OCMArg any]]).andDo(nil);
     
-    [executor executeRequest:request];
+    [executor executeRequest:pendingRequest];
     
-    OCMVerify([executor executePut:request]);
+    OCMVerify([executor executeWithFallback:pendingRequest]);
 }
 
 - (void)testExecuteRequestWithDelete {
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest method:PCF_HTTP_DELETE];
+    PCFPendingRequest *pendingRequest = OCMClassMock([PCFPendingRequest class]);
     PCFRequestCacheExecutor *executor = OCMPartialMock([[PCFRequestCacheExecutor alloc] initWithOfflineStore:nil fallbackStore:nil]);
     
-    OCMStub([executor executeDelete:[OCMArg any]]).andDo(nil);
+    OCMStub([pendingRequest method]).andReturn(PCF_HTTP_DELETE);
+    OCMStub([executor executeWithFallback:[OCMArg any]]).andDo(nil);
     
-    [executor executeRequest:request];
+    [executor executeRequest:pendingRequest];
     
-    OCMVerify([executor executeDelete:request]);
+    OCMVerify([executor executeWithFallback:pendingRequest]);
 }
 
-- (void)testExecuteGet {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:nil];
-
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
-    
-    [executor executeGet:request];
-    
-    OCMVerify([offlineStore getWithRequest:request]);
-}
 
 - (void)testExecutePut {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFKeyValueStore *fallbackStore = OCMStrictClassMock([PCFKeyValueStore class]);
-    PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
+    PCFPendingRequest *request = OCMClassMock([PCFPendingRequest class]);
+    PCFKeyValueOfflineStore *offlineStore = OCMClassMock([PCFKeyValueOfflineStore class]);
+    PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:nil];
     
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
+    [executor executeWithFallback:request];
     
-    [executor executePut:request];
-    
-    OCMVerify([offlineStore putWithRequest:request]);
+    OCMVerify([offlineStore executeRequest:request]);
 }
 
 - (void)testExecutePutWithError {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFKeyValueStore *fallbackStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFPendingRequest *request = OCMClassMock([PCFPendingRequest class]);
+    PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
+    PCFKeyValueOfflineStore *offlineStore = OCMClassMock([PCFKeyValueOfflineStore class]);
+    PCFKeyValueLocalStore *fallbackStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
     
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
-    PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:request.object error:[[NSError alloc] init]];
     id pendingRequest = OCMClassMock([PCFPendingRequest class]);
     
-    OCMStub([offlineStore putWithRequest:[OCMArg any]]).andReturn(response);
+    OCMStub([offlineStore executeRequest:[OCMArg any]]).andReturn(response);
+    OCMStub([response error]).andReturn([[NSError alloc] init]);
     OCMStub([pendingRequest alloc]).andReturn(pendingRequest);
     OCMStub([pendingRequest initWithRequest:[OCMArg any]]).andReturn(pendingRequest);
     
-    [executor executePut:request];
+    [executor executeWithFallback:request];
     
     XCTAssertEqual(request.fallback, [pendingRequest object]);
-    OCMVerify([offlineStore putWithRequest:request]);
-    OCMVerify([fallbackStore putWithRequest:pendingRequest]);
     
-    [pendingRequest stopMocking];
-}
-
-- (void)testExecuteDelete {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFKeyValueStore *fallbackStore = OCMStrictClassMock([PCFKeyValueStore class]);
-    PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
-    
-    [executor executeDelete:request];
-    
-    OCMVerify([offlineStore deleteWithRequest:request]);
-}
-
-- (void)testExecuteDeleteWithError {
-    PCFOfflineStore *offlineStore = OCMClassMock([PCFOfflineStore class]);
-    PCFKeyValueStore *fallbackStore = OCMClassMock([PCFKeyValueStore class]);
-    PCFRequestCacheExecutor *executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
-    
-    PCFPendingRequest *request = [[PCFPendingRequest alloc] initWithRequest:self.createRequest];
-    PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:request.object error:[[NSError alloc] init]];
-    id pendingRequest = OCMClassMock([PCFPendingRequest class]);
-    
-    OCMStub([offlineStore deleteWithRequest:[OCMArg any]]).andReturn(response);
-    OCMStub([pendingRequest alloc]).andReturn(pendingRequest);
-    OCMStub([pendingRequest initWithRequest:[OCMArg any]]).andReturn(pendingRequest);
-    
-    [executor executeDelete:request];
-    
-    XCTAssertEqual(request.fallback, [pendingRequest object]);
-    OCMVerify([offlineStore deleteWithRequest:request]);
-    OCMVerify([fallbackStore putWithRequest:pendingRequest]);
+    OCMVerify([offlineStore executeRequest:request]);
+    OCMVerify([fallbackStore executeRequest:pendingRequest]);
     
     [pendingRequest stopMocking];
 }

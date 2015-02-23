@@ -14,6 +14,15 @@
 #import "PCFDataRequest.h"
 #import "PCFPendingRequest.h"
 #import "PCFDataResponse.h"
+#import "PCFData.h"
+
+@interface PCFData ()
+
++ (NSString *)provideToken;
+
++ (void)invalidateToken;
+
+@end
 
 @interface PCFRemoteClient ()
 
@@ -37,89 +46,71 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     return self;
 }
 
-- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request {
-    if ([request.object isKindOfClass:PCFKeyValue.class]) {
-
-        NSError *error;
-        PCFKeyValue *object = request.object;
-        NSURLRequest *urlRequest = [self requestWithMethod:@"GET" accessToken:request.accessToken url:[self urlForKeyValue:object] value:nil force:request.force];
-
-        PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
-        keyValue.value = [self execute:urlRequest error:&error];
-        
-        PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:keyValue];
-        response.error = error;
-        return response;
-    } else {
-        return nil;
-    }
+- (NSString *)getWithUrl:(NSURL *)url force:(BOOL)force error:(NSError *__autoreleasing *)error {
+    NSMutableURLRequest *urlRequest = [self requestWithMethod:@"GET" url:url body:nil];
+    
+    return [self executeRequest:urlRequest force:force error:error];
 }
 
-- (PCFDataResponse *)putWithRequest:(PCFDataRequest *)request {
-    if ([request.object isKindOfClass:PCFKeyValue.class]) {
-        
-        NSError *error;
-        PCFKeyValue *object = request.object;
-        NSURLRequest *urlRequest = [self requestWithMethod:@"PUT" accessToken:request.accessToken url:[self urlForKeyValue:object] value:object.value force:request.force];
-
-        NSString *result = [self execute:urlRequest error:&error];
-        
-        PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
-        keyValue.value = result.length > 0 ? result : object.value;
-        
-        PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:keyValue];
-        response.error = error;
-        return response;
-    } else {
-        return nil;
-    }
+- (NSString *)putWithUrl:(NSURL *)url body:(NSString *)body force:(BOOL)force error:(NSError *__autoreleasing *)error {
+    NSMutableURLRequest *urlRequest = [self requestWithMethod:@"PUT" url:url body:body];
+    
+    return [self executeRequest:urlRequest force:force error:error];
 }
 
-- (PCFDataResponse *)deleteWithRequest:(PCFDataRequest *)request {
-    if ([request.object isKindOfClass:PCFKeyValue.class]) {
-        
-        NSError *error;
-        PCFKeyValue *object = request.object;
-        NSURLRequest *urlRequest = [self requestWithMethod:@"DELETE" accessToken:request.accessToken url:[self urlForKeyValue:object] value:nil force:request.force];
-        
-        PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithKeyValue:object];
-        keyValue.value = [self execute:urlRequest error:&error];
-        
-        PCFDataResponse *response = [[PCFDataResponse alloc] initWithObject:keyValue];
-        response.error = error;
-        return response;
-    } else {
-        return nil;
-    }
+- (NSString *)deleteWithUrl:(NSURL *)url  force:(BOOL)force error:(NSError *__autoreleasing *)error {
+    NSMutableURLRequest *urlRequest = [self requestWithMethod:@"DELETE" url:url body:nil];
+    
+    return [self executeRequest:urlRequest force:force error:error];
 }
 
-- (NSURL *)urlForKeyValue:(PCFKeyValue *)keyValue {
-    NSString *url = [[PCFDataConfig serviceUrl] stringByAppendingFormat:@"/%@/%@", keyValue.collection, keyValue.key];
-    return [NSURL URLWithString:url];
-}
-
-- (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value force:(BOOL)force {
+- (NSMutableURLRequest *)requestWithMethod:(NSString*)method url:(NSURL *)url body:(NSString *)body {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
     request.HTTPMethod = method;
-
-    if (accessToken) {
-        NSString *token = [PCFBearerPrefix stringByAppendingString:accessToken];
-        [request addValue:token forHTTPHeaderField:@"Authorization"];
-    }
-
-    LogInfo(@"Request: [%@] %@", method, request.URL);
     
-    if (!force && [PCFDataConfig areEtagsEnabled]) {
-        NSString *etag = [self.etagStore etagForUrl:url];
-        
-        if (etag) {
-            NSString *header = [method isEqual:@"GET"] ? @"If-None-Match" : @"If-Match";
-            [request addValue:etag forHTTPHeaderField:header];
-        }
-        
-        LogInfo(@"Request Etag: %@", etag ? etag : @"None");
+    if (body) {
+        request.HTTPBody = [body dataUsingEncoding:NSUTF8StringEncoding];
     }
     
+    return request;
+}
+
+- (NSString *)executeRequest:(NSMutableURLRequest *)request force:(BOOL)force error:(NSError *__autoreleasing *)error {
+    NSHTTPURLResponse *response;
+    NSData *data = [self executeRequest:request force:force error:error response:&response];
+ 
+    LogInfo(@"Response: [%ld] %@", response.statusCode, *error);
+    
+    if (error && (*error).code == kCFURLErrorUserCancelledAuthentication) {
+        LogInfo(@"Response error: invalidating token");
+        [PCFData invalidateToken];
+    
+        LogInfo(@"Response error: retrying");
+        
+        data = [self executeRequest:request force:force error:error response:&response];
+        
+        LogInfo(@"Response: [%ld] %@", response.statusCode, *error);
+    }
+    
+    return [self handleResponse:response data:data error:error];
+}
+
+- (NSData *)executeRequest:(NSMutableURLRequest *)request force:(BOOL)force error:(NSError *__autoreleasing *)error response:(NSHTTPURLResponse *__autoreleasing *)response {
+    
+    LogInfo(@"Request: [%@] %@", request.HTTPMethod, request.URL);
+    
+    [self addUserAgentHeader:request];
+    
+    [self addAuthorizationHeader:request];
+    
+    if (!force) {
+        [self addEtagHeader:request url:request.URL];
+    }
+    
+    return [NSURLConnection sendSynchronousRequest:request returningResponse:response error:error];
+}
+
+- (void)addUserAgentHeader:(NSMutableURLRequest *)request {
     NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.ios.PCFData"];
     NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *build = [[NSProcessInfo processInfo] operatingSystemVersionString];
@@ -127,18 +118,37 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     
     [request addValue:userAgent forHTTPHeaderField:@"User-Agent"];
     
-    if (value) {
-        request.HTTPBody = [value dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    
-    return request;
+    LogInfo(@"Request User-Agent: %@", userAgent);
 }
 
-- (NSString *)execute:(NSURLRequest *)request error:(NSError *__autoreleasing *)error {
-    NSHTTPURLResponse *response;
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
+- (void)addAuthorizationHeader:(NSMutableURLRequest *)request {
     
-    return [self handleResponse:response data:data error:error];
+    NSString *accessToken = [PCFData provideToken];
+    
+    if (accessToken) {
+        NSString *token = [PCFBearerPrefix stringByAppendingString:accessToken];
+        [request addValue:token forHTTPHeaderField:@"Authorization"];
+        
+        LogInfo(@"Request Authorization: %@", token);
+        
+    } else {
+        @throw [NSException exceptionWithName:@"TokenException" reason:@"Could not retrieve access token" userInfo:nil];
+    }
+}
+
+- (void)addEtagHeader:(NSMutableURLRequest *)request url:(NSURL *)url {
+    if ([PCFDataConfig areEtagsEnabled]) {
+        NSString *etag = [self.etagStore etagForUrl:url];
+        
+        if (etag) {
+            NSString *header = [request.HTTPMethod isEqual:@"GET"] ? @"If-None-Match" : @"If-Match";
+            [request addValue:etag forHTTPHeaderField:header];
+            
+            LogInfo(@"Request %@: %@", header, etag);
+        }
+        
+        LogInfo(@"Request Etag: None");
+    }
 }
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error {
@@ -156,10 +166,11 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
         if (response.statusCode == 404 && [PCFDataConfig areEtagsEnabled]) {
             [self.etagStore putEtagForUrl:response.URL etag:@""];
             
-            LogInfo(@"Response 404 NotFound clearing ETag.");
+            LogInfo(@"Response 404 NotFound clearing Etag.");
         }
         
         return nil;
+        
     } else {
         
         if ([PCFDataConfig areEtagsEnabled]) {

@@ -23,13 +23,13 @@
 @property NSString *token;
 @property PCFTestMappable *object;
 @property PCFTestMappable *fallback;
+@property int method;
 @property BOOL force;
 
 @end
 
 @implementation PCFDataRequestTests
 
-static NSString* const PCFAccessToken = @"accessToken";
 static NSString* const PCFMethod = @"method";
 static NSString* const PCFType = @"type";
 static NSString* const PCFObject = @"object";
@@ -42,21 +42,24 @@ static NSString* const PCFForce = @"force";
     self.token = [NSUUID UUID].UUIDString;
     self.object = [[PCFTestMappable alloc] init];;
     self.fallback = [[PCFTestMappable alloc] init];;
+    self.method = arc4random_uniform(3) + 1;
     self.force = arc4random_uniform(2);
 }
 
 - (void)testInitializeWithRequest {
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object fallback:self.fallback force:self.force];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithMethod:self.method object:self.object fallback:self.fallback force:self.force];
     PCFDataRequest *newRequest = [[PCFDataRequest alloc] initWithRequest:request];
     
+    XCTAssertEqual(request.method, newRequest.method);
     XCTAssertEqual(request.object, newRequest.object);
     XCTAssertEqual(request.force, newRequest.force);
     XCTAssertEqual(request.fallback, newRequest.fallback);
 }
 
 - (void)testInitializeWithParameters {
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object fallback:self.fallback force:self.force];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithMethod:self.method object:self.object fallback:self.fallback force:self.force];
     
+    XCTAssertEqual(self.method, request.method);
     XCTAssertEqual(self.object, request.object);
     XCTAssertEqual(self.force, request.force);
     XCTAssertEqual(self.fallback, request.fallback);
@@ -64,7 +67,7 @@ static NSString* const PCFForce = @"force";
 
 - (void)testInitWithDictionary {
     NSDictionary *dict = @{
-       PCFAccessToken: self.token,
+       PCFMethod: [NSString stringWithFormat:@"%d", self.method],
        PCFObject: [self.object toDictionary],
        PCFFallback: [self.fallback toDictionary],
        PCFForce: [NSString stringWithFormat:@"%d", self.force],
@@ -75,11 +78,12 @@ static NSString* const PCFForce = @"force";
     
     XCTAssertEqual(((PCFTestMappable *)self.fallback).value, ((PCFTestMappable *)request.fallback).value);
     XCTAssertEqual(((PCFTestMappable *)self.object).value, ((PCFTestMappable *)request.object).value);
+    XCTAssertEqual(self.method, request.method);
     XCTAssertEqual(self.force, request.force);
 }
 
 - (void)testToDictionary {
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object fallback:self.fallback force:self.force];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithMethod:self.method object:self.object fallback:self.fallback force:self.force];
     NSDictionary *dict = [request toDictionary];
     
     Class klass = NSClassFromString([dict objectForKey:PCFType]);
@@ -88,22 +92,8 @@ static NSString* const PCFForce = @"force";
     
     XCTAssertEqual(((PCFTestMappable *)self.object).value, requestObject.value);
     XCTAssertEqual(((PCFTestMappable *)self.fallback).value, requestFallback.value);
+    XCTAssertEqual(self.method, [[dict objectForKey:PCFMethod] intValue]);
     XCTAssertEqual(self.force, [[dict objectForKey:PCFForce] boolValue]);
-}
-
-- (void)testAccessToken {
-    id pcfData = OCMClassMock([PCFData class]);
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object];
-    
-    OCMStub([pcfData provideTokenWithUserPrompt:true]).andReturn(self.token);
-
-    NSString *accessToken = [request accessToken];
-    
-    XCTAssertEqual(self.token, accessToken);
-    
-    OCMVerify([pcfData provideTokenWithUserPrompt:true]);
-    
-    [pcfData stopMocking];
 }
 
 @end

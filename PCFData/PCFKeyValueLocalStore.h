@@ -11,7 +11,7 @@
 
 @class PCFDataPersistence;
 
-@interface PCFKeyValueStore : NSObject <PCFDataStore>
+@interface PCFKeyValueLocalStore : NSObject <PCFDataStore>
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence;
 

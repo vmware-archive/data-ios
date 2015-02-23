@@ -7,7 +7,7 @@
 //
 
 #import "PCFKeyValueObject.h"
-#import "PCFOfflineStore.h"
+#import "PCFKeyValueOfflineStore.h"
 #import "PCFDataResponse.h"
 #import "PCFDataRequest.h"
 #import "PCFKeyValue.h"
@@ -18,7 +18,6 @@
 
 @property NSString *key;
 @property NSString *collection;
-@property BOOL force;
 
 @end
 
@@ -29,7 +28,7 @@
 }
 
 - (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key {
-    PCFOfflineStore *dataStore = [[PCFOfflineStore alloc] init];
+    PCFKeyValueOfflineStore *dataStore = [[PCFKeyValueOfflineStore alloc] init];
     return [self initWithDataStore:dataStore collection:collection key:key];
 }
 
@@ -42,38 +41,38 @@
 }
 
 - (PCFDataResponse *)get {
-    PCFDataRequest *request = [self createRequestWithValue:nil];
-    return [self.dataStore getWithRequest:request];
+    PCFDataRequest *request = [self createRequestWithMethod:PCF_HTTP_GET value:nil];
+    return [self.dataStore executeRequest:request];
 }
 
 - (void)getWithCompletionBlock:(PCFDataResponseBlock)completionBlock {
-    PCFDataRequest *request = [self createRequestWithValue:nil];
-    [self.dataStore getWithRequest:request completionBlock:completionBlock];
+    PCFDataRequest *request = [self createRequestWithMethod:PCF_HTTP_GET value:nil];
+    [self.dataStore executeRequest:request completionBlock:completionBlock];
 }
 
 - (PCFDataResponse *)putWithValue:(NSString *)value {
-    PCFDataRequest *request = [self createRequestWithValue:value];
-    return [self.dataStore putWithRequest:request];
+    PCFDataRequest *request = [self createRequestWithMethod:PCF_HTTP_PUT value:value];
+    return [self.dataStore executeRequest:request];
 }
 
 - (void)putWithValue:(NSString *)value completionBlock:(PCFDataResponseBlock)completionBlock {
-    PCFDataRequest *request = [self createRequestWithValue:value];
-    [self.dataStore putWithRequest:request completionBlock:completionBlock];
+    PCFDataRequest *request = [self createRequestWithMethod:PCF_HTTP_PUT value:value];
+    [self.dataStore executeRequest:request completionBlock:completionBlock];
 }
 
 - (PCFDataResponse *)delete {
-    PCFDataRequest *request = [self createRequestWithValue:nil];
-    return [self.dataStore deleteWithRequest:request];
+    PCFDataRequest *request = [self createRequestWithMethod:PCF_HTTP_DELETE value:nil];
+    return [self.dataStore executeRequest:request];
 }
 
 - (void)deleteWithCompletionBlock:(PCFDataResponseBlock)completionBlock {
-    PCFDataRequest *request = [self createRequestWithValue:nil];
-    [self.dataStore deleteWithRequest:request completionBlock:completionBlock];
+    PCFDataRequest *request = [self createRequestWithMethod:PCF_HTTP_DELETE value:nil];
+    [self.dataStore executeRequest:request completionBlock:completionBlock];
 }
 
-- (PCFDataRequest *)createRequestWithValue:(NSString *)value {
+- (PCFDataRequest *)createRequestWithMethod:(int)method value:(NSString *)value {
     PCFKeyValue *keyValue = [[PCFKeyValue alloc] initWithCollection:self.collection key:self.key value:value];
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithMethod:method object:keyValue fallback:nil force:self.force];
     return request;
 }
 

@@ -10,7 +10,7 @@
 #import "PCFDataPersistence.h"
 #import "PCFRequestCacheQueue.h"
 #import "PCFRequestCacheExecutor.h"
-#import "PCFOfflineStore.h"
+#import "PCFKeyValueOfflineStore.h"
 #import "PCFDataRequest.h"
 #import "PCFPendingRequest.h"
 #import "PCFDataResponse.h"
@@ -26,12 +26,12 @@
 @implementation PCFRequestCache
 
 - (instancetype)init {
-    PCFOfflineStore *offlineStore = [[PCFOfflineStore alloc] init];
-    PCFKeyValueStore *fallbackStore = [[PCFKeyValueStore alloc] init];
+    PCFKeyValueOfflineStore *offlineStore = [[PCFKeyValueOfflineStore alloc] init];
+    PCFKeyValueLocalStore *fallbackStore = [[PCFKeyValueLocalStore alloc] init];
     return [self initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
 }
 
-- (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
+- (instancetype)initWithOfflineStore:(PCFKeyValueOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
     self = [super init];
     _queue = [[PCFRequestCacheQueue alloc] initWithPersistence:[[PCFDataPersistence alloc] init]];
     _executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
@@ -45,21 +45,9 @@
     return self;
 }
 
-- (void)queueGetWithRequest:(PCFDataRequest *)request {
-    LogInfo(@"PCFRequestCache queueGetWithRequest: %@", request);
-    PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_GET];
-    [self.queue addRequest:pending];
-}
-
-- (void)queuePutWithRequest:(PCFDataRequest *)request {
-    LogInfo(@"PCFRequestCache queuePutWithRequest: %@", request);
-    PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_PUT];
-    [self.queue addRequest:pending];
-}
-
-- (void)queueDeleteWithRequest:(PCFDataRequest *)request {
-    LogInfo(@"PCFRequestCache queueDeleteWithRequest: %@", request);
-    PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request method:PCF_HTTP_DELETE];
+- (void)queueRequest:(PCFDataRequest *)request {
+    LogInfo(@"PCFRequestCache queueRequest: %@", request);
+    PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request];
     [self.queue addRequest:pending];
 }
 

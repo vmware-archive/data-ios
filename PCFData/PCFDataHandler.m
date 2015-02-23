@@ -12,7 +12,8 @@
 
 @interface PCFDataHandler ()
 
-@property (strong) PCFTokenBlock tokenBlock;
+@property (strong) PCFTokenProviderBlock provideTokenBlock;
+@property (strong) PCFTokenInvalidatorBlock invalidateTokenBlock;
 @property (strong) PCFNetworkBlock networkBlock;
 
 @property PCFReachability *reachability;
@@ -22,8 +23,13 @@
 
 @implementation PCFDataHandler
 
-- (void)registerTokenProviderBlock:(PCFTokenBlock)block {
-    self.tokenBlock = block;
+- (void)registerTokenProviderBlock:(PCFTokenProviderBlock)block {
+    self.provideTokenBlock = block;
+    [self startReachability];
+}
+
+- (void)registerTokenInvalidatorBlock:(PCFTokenInvalidatorBlock)block {
+    self.invalidateTokenBlock = block;
     [self startReachability];
 }
 
@@ -93,11 +99,17 @@
     }
 }
 
-- (NSString *)provideTokenWithUserPrompt:(BOOL)prompt {
-    if (self.tokenBlock) {
-        return self.tokenBlock(prompt);
+- (NSString *)provideToken {
+    if (self.provideTokenBlock) {
+        return self.provideTokenBlock();
     } else {
         return nil;
+    }
+}
+
+- (void)invalidateToken {
+    if (self.invalidateTokenBlock) {
+        return self.invalidateTokenBlock();
     }
 }
 

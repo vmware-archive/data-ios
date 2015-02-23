@@ -27,12 +27,20 @@
     [PCFDataLogger sharedInstance].level = level;
 }
 
-+ (void)registerTokenProviderBlock:(PCFTokenBlock)block {
++ (void)registerTokenProviderBlock:(PCFTokenProviderBlock)block {
     [self.handler registerTokenProviderBlock:block];
 }
 
-+ (NSString *)provideTokenWithUserPrompt:(BOOL)prompt {
-    return [self.handler provideTokenWithUserPrompt:prompt];
++ (void)registerTokenInvalidatorBlock:(PCFTokenInvalidatorBlock)block {
+    [self.handler registerTokenInvalidatorBlock:block];
+}
+
++ (NSString *)provideToken {
+    return [self.handler provideToken];
+}
+
++ (void)invalidateToken {
+    return [self.handler invalidateToken];
 }
 
 + (void)registerNetworkObserverBlock:(PCFNetworkBlock)block {

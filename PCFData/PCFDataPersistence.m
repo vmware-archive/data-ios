@@ -25,12 +25,14 @@
     return [self.defaults objectForKey:key];
 }
 
-- (void)putValue:(NSString *)value forKey:(NSString *)key {
+- (NSString *)putValue:(NSString *)value forKey:(NSString *)key {
     [self.defaults setObject:value forKey:key];
+    return value;
 }
 
-- (void)deleteValueForKey:(NSString *)key {
+- (NSString *)deleteValueForKey:(NSString *)key {
     [self.defaults removeObjectForKey:key];
+    return @"";
 }
 
 @end

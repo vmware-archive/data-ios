@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "PCFDataStore.h"
 
-@class PCFPendingRequest, PCFOfflineStore;
+@class PCFPendingRequest, PCFKeyValueOfflineStore;
 
 @interface PCFRequestCacheExecutor : NSObject
 
-- (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore;
+- (instancetype)initWithOfflineStore:(PCFKeyValueOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore;
 
 - (void)executeRequest:(PCFPendingRequest *)request;
 

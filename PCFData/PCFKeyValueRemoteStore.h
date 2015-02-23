@@ -11,9 +11,7 @@
 
 @class PCFRemoteClient;
 
-@interface PCFRemoteStore : NSObject <PCFDataStore>
-
-- (instancetype)init;
+@interface PCFKeyValueRemoteStore : NSObject <PCFDataStore>
 
 - (instancetype)initWithClient:(PCFRemoteClient *)client;
 

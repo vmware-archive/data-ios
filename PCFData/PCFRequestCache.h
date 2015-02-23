@@ -10,23 +10,15 @@
 #import <UIKit/UIKit.h>
 #import "PCFDataStore.h"
 
-@class PCFOfflineStore, PCFRequestCacheQueue, PCFRequestCacheExecutor;
-
-static int const PCF_HTTP_GET = 1;
-static int const PCF_HTTP_PUT = 2;
-static int const PCF_HTTP_DELETE = 3;
+@class PCFKeyValueOfflineStore, PCFRequestCacheQueue, PCFRequestCacheExecutor;
 
 @interface PCFRequestCache : NSObject
 
-- (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore;
+- (instancetype)initWithOfflineStore:(PCFKeyValueOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore;
 
 - (instancetype)initWithRequestQueue:(PCFRequestCacheQueue *)queue executor:(PCFRequestCacheExecutor *)executor;
 
-- (void)queueGetWithRequest:(PCFDataRequest *)request;
-
-- (void)queuePutWithRequest:(PCFDataRequest *)request;
-
-- (void)queueDeleteWithRequest:(PCFDataRequest *)request;
+- (void)queueRequest:(PCFDataRequest *)request;
 
 - (void)executePendingRequests;
 

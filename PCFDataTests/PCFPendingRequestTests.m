@@ -16,7 +16,7 @@
 
 @interface PCFData ()
 
-+ (NSString*)provideTokenWithUserPrompt:(BOOL)prompt;
++ (NSString*)provideToken;
 
 @end
 
@@ -50,8 +50,8 @@ static NSString* const PCFType = @"type";
 
 
 - (void)testInitWithRequestAndMethod {
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object fallback:self.fallback force:self.force];
-    PCFPendingRequest *pendingRequest = [[PCFPendingRequest alloc] initWithRequest:request method:self.method];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithMethod:self.method object:self.object fallback:self.fallback force:self.force];
+    PCFPendingRequest *pendingRequest = [[PCFPendingRequest alloc] initWithRequest:request];
     
     XCTAssertEqual(self.method, pendingRequest.method);
     XCTAssertEqual(self.fallback, pendingRequest.fallback);
@@ -76,8 +76,8 @@ static NSString* const PCFType = @"type";
 }
 
 - (void)testToDictionary {
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object fallback:self.fallback force:self.force];
-    PCFPendingRequest *pendingRequest = [[PCFPendingRequest alloc] initWithRequest:request method:self.method];
+    PCFDataRequest *request = [[PCFDataRequest alloc] initWithMethod:self.method object:self.object fallback:self.fallback force:self.force];
+    PCFPendingRequest *pendingRequest = [[PCFPendingRequest alloc] initWithRequest:request];
     
     NSDictionary *dict = [pendingRequest toDictionary];
     
@@ -89,22 +89,6 @@ static NSString* const PCFType = @"type";
     XCTAssertEqual(self.force, [[dict objectForKey:PCFForce] boolValue]);
     XCTAssertEqual(((PCFTestMappable *)self.object).value, requestObject.value);
     XCTAssertEqual(((PCFTestMappable *)self.fallback).value, requestFallback.value);
-}
-
-- (void)testAccessToken {
-    id pcfData = OCMClassMock([PCFData class]);
-    PCFDataRequest *request = [[PCFDataRequest alloc] initWithObject:self.object];
-    PCFPendingRequest *pending = [[PCFPendingRequest alloc] initWithRequest:request];
-    
-    OCMStub([pcfData provideTokenWithUserPrompt:false]).andReturn(self.token);
-    
-    NSString *accessToken = [pending accessToken];
-    
-    XCTAssertEqual(self.token, accessToken);
-    
-    OCMVerify([pcfData provideTokenWithUserPrompt:false]);
-    
-    [pcfData stopMocking];
 }
 
 @end

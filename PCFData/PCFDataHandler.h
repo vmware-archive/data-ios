@@ -11,11 +11,15 @@
 
 @interface PCFDataHandler : NSObject
 
-- (void)registerTokenProviderBlock:(PCFTokenBlock)block;
+- (void)registerTokenProviderBlock:(PCFTokenProviderBlock)block;
+
+- (void)registerTokenInvalidatorBlock:(PCFTokenInvalidatorBlock)block;
 
 - (void)registerNetworkObserverBlock:(PCFNetworkBlock)block;
 
-- (NSString *)provideTokenWithUserPrompt:(BOOL)prompt;
+- (NSString *)provideToken;
+
+- (void)invalidateToken;
 
 - (void)notifyNetworkStatusChanged:(BOOL)connected;
 

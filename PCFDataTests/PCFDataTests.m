@@ -18,7 +18,9 @@
 
 + (PCFDataHandler *)handler;
 
-+ (NSString *)provideTokenWithUserPrompt:(BOOL)prompt;
++ (NSString *)provideToken;
+
++ (void)invalidateToken;
 
 @end
 
@@ -40,10 +42,10 @@
     self.logLevel = arc4random_uniform(4);
 }
 
-- (void)testRegisterTokenProviderWithUserPrompt {
+- (void)testRegisterTokenProvider {
     id pcfData = OCMClassMock([PCFData class]);
     PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
-    PCFTokenBlock block = ^(BOOL promptUser) { return @""; };
+    PCFTokenProviderBlock block = ^() { return @""; };
     
     OCMStub([pcfData handler]).andReturn(handler);
     
@@ -54,16 +56,44 @@
     [pcfData stopMocking];
 }
 
-- (void)testProvideTokenWithUserPrompt {
+- (void)testRegisterTokenInvalidator {
+    id pcfData = OCMClassMock([PCFData class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    PCFTokenInvalidatorBlock block = ^() {};
+    
+    OCMStub([pcfData handler]).andReturn(handler);
+    
+    [PCFData registerTokenInvalidatorBlock:block];
+    
+    OCMVerify([handler registerTokenInvalidatorBlock:block]);
+    
+    [pcfData stopMocking];
+}
+
+- (void)testProvideToken {
     id pcfData = OCMClassMock([PCFData class]);
     PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
     
     OCMStub([pcfData handler]).andReturn(handler);
-    OCMStub([handler provideTokenWithUserPrompt:self.prompt]).andReturn(self.token);
+    OCMStub([handler provideToken]).andReturn(self.token);
     
-    XCTAssertEqual(self.token, [PCFData provideTokenWithUserPrompt:self.prompt]);
+    XCTAssertEqual(self.token, [PCFData provideToken]);
     
-    OCMVerify([handler provideTokenWithUserPrompt:self.prompt]);
+    OCMVerify([handler provideToken]);
+
+    [pcfData stopMocking];
+}
+
+- (void)testInvalidateToken {
+    id pcfData = OCMClassMock([PCFData class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    
+    OCMStub([pcfData handler]).andReturn(handler);
+    OCMStub([handler provideToken]).andReturn(self.token);
+    
+    [PCFData invalidateToken];
+    
+    OCMVerify([handler invalidateToken]);
     
     [pcfData stopMocking];
 }

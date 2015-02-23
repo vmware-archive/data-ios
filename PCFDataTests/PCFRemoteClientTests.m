@@ -16,15 +16,19 @@
 
 @interface PCFRemoteClient ()
 
-- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
+- (NSMutableURLRequest *)requestWithMethod:(NSString*)method url:(NSURL *)url body:(NSString *)body;
 
-- (NSString *)execute:(NSURLRequest *)request error:(NSError *__autoreleasing *)error;
+- (NSString *)executeRequest:(NSMutableURLRequest *)request force:(BOOL)force error:(NSError *__autoreleasing *)error;
 
-- (NSURLRequest *)requestWithMethod:(NSString*)method accessToken:(NSString *)accessToken url:(NSURL *)url value:(NSString *)value force:(BOOL)force;
+- (NSData *)executeRequest:(NSMutableURLRequest *)request force:(BOOL)force error:(NSError *__autoreleasing *)error response:(NSHTTPURLResponse *__autoreleasing *)response;
 
 - (NSString *)handleResponse:(NSHTTPURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error;
 
-- (NSURL *)urlForKeyValue:(PCFKeyValue *)keyValue;
+- (void)addUserAgentHeader:(NSMutableURLRequest *)request;
+
+- (void)addAuthorizationHeader:(NSMutableURLRequest *)request;
+
+- (void)addEtagHeader:(NSMutableURLRequest *)request url:(NSURL *)url;
 
 @end
 
@@ -32,12 +36,15 @@
 
 + (NSString *)provideToken;
 
++ (void)invalidateToken;
+
 @end
 
 @interface PCFRemoteClientTests : XCTestCase
 
 @property NSString *token;
 @property NSString *result;
+@property NSString *body;
 @property NSError *error;
 @property NSURL *url;
 @property int httpErrorCode;
@@ -53,6 +60,7 @@
     
     self.token = [NSUUID UUID].UUIDString;
     self.result = [NSUUID UUID].UUIDString;
+    self.body = [NSUUID UUID].UUIDString;
     
     self.error = [[NSError alloc] init];
     self.url = [NSURL URLWithString:@"http://test.com"];
@@ -62,182 +70,222 @@
     self.force = arc4random_uniform(2);
 }
 
-- (PCFDataRequest *)createRequest {
-    PCFKeyValue *keyValue = OCMClassMock([PCFKeyValue class]);
-    OCMStub([keyValue value]).andReturn(self.result);
-    return [[PCFDataRequest alloc] initWithObject:keyValue fallback:nil force:self.force];
-}
-
-- (void)testGetWithKeyValue {
-    PCFDataRequest *request = OCMPartialMock([self createRequest]);
-    NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
-
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
-    OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
-    OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
-    OCMStub([request accessToken]).andReturn(self.token);
-
-    PCFDataResponse *response = [client getWithRequest:request];
-    PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
-
-    XCTAssertEqualObjects(responseObject.value, self.result);
-
-    OCMVerify([client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:self.force]);
-    OCMVerify([client execute:urlRequest error:[OCMArg anyObjectRef]]);
-}
-
-- (void)testPutWithKeyValue {
-    PCFDataRequest *request = OCMPartialMock([self createRequest]);
-    NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
-
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
-    OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
-    OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
-    OCMStub([request accessToken]).andReturn(self.token);
-    
-    PCFDataResponse *response = [client putWithRequest:request];
-    PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
-
-    XCTAssertEqualObjects(responseObject.value, self.result);
-
-    OCMVerify([client requestWithMethod:@"PUT" accessToken:self.token url:self.url value:self.result force:self.force]);
-    OCMVerify([client execute:urlRequest error:[OCMArg anyObjectRef]]);
-}
-
-- (void)testDeleteWithKeyValue {
-    PCFDataRequest *request = OCMPartialMock([self createRequest]);
-    NSURLRequest *urlRequest = OCMClassMock([NSURLRequest class]);
+- (void)testGetWithUrl {
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
     
-    OCMStub([client requestWithMethod:[OCMArg any] accessToken:[OCMArg any] url:[OCMArg any] value:[OCMArg any] force:self.force]).andReturn(urlRequest);
-    OCMStub([client execute:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
-    OCMStub([client urlForKeyValue:[OCMArg any]]).andReturn(self.url);
-    OCMStub([request accessToken]).andReturn(self.token);
+    OCMStub([client requestWithMethod:[OCMArg any] url:[OCMArg any] body:[OCMArg any]]).andReturn(request);
+    OCMStub([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]).andDo(nil);
     
-    PCFDataResponse *response = [client deleteWithRequest:request];
-    PCFKeyValue *responseObject = (PCFKeyValue *) response.object;
+    NSError *error;
+    [client getWithUrl:self.url force:self.force error:&error];
     
-    XCTAssertEqualObjects(responseObject.value, self.result);
-    
-    OCMVerify([client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil force:self.force]);
-    OCMVerify([client execute:urlRequest error:[OCMArg anyObjectRef]]);
+    OCMVerify([client requestWithMethod:@"GET" url:self.url body:nil]);
+    OCMVerify([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]);
 }
 
-- (void)testRequestWithMethodWithAccessTokenAndValue {
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] init];
+- (void)testPutWithUrl {
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    
+    OCMStub([client requestWithMethod:[OCMArg any] url:[OCMArg any] body:[OCMArg any]]).andReturn(request);
+    OCMStub([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]).andDo(nil);
+    
+    NSError *error;
+    [client putWithUrl:self.url body:self.body force:self.force error:&error];
+    
+    OCMVerify([client requestWithMethod:@"PUT" url:self.url body:self.body]);
+    OCMVerify([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]);
+}
+
+- (void)testDeleteWithUrl {
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    
+    OCMStub([client requestWithMethod:[OCMArg any] url:[OCMArg any] body:[OCMArg any]]).andReturn(request);
+    OCMStub([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]).andDo(nil);
+    
+    NSError *error;
+    [client deleteWithUrl:self.url force:self.force error:&error];
+    
+    OCMVerify([client requestWithMethod:@"DELETE" url:self.url body:nil]);
+    OCMVerify([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]);
+}
+
+- (void)testRequestWithMethod {
+    NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
+    id mutableRequest = OCMClassMock([NSMutableURLRequest class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:nil];
+    
+    OCMStub([mutableRequest alloc]).andReturn(mutableRequest);
+    OCMStub([mutableRequest initWithURL:[OCMArg any] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10]).andReturn(mutableRequest);
     
     NSString *method = [NSUUID UUID].UUIDString;
-    NSURLRequest *request = [client requestWithMethod:method accessToken:self.token url:self.url value:self.result force:self.force];
+    XCTAssertEqual(mutableRequest, [client requestWithMethod:method url:self.url body:self.body]);
     
-    NSString *token = [@"Bearer " stringByAppendingString:self.token];
-    NSString *authHeader = [request.allHTTPHeaderFields valueForKey:@"Authorization"];
-    NSString *decodedBody = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
-    NSString *userAgentHeader = [request.allHTTPHeaderFields valueForKey:@"User-Agent"];
+    OCMVerify([mutableRequest setHTTPMethod:method]);
+    OCMVerify([mutableRequest setHTTPBody:body]);
+    OCMVerify([mutableRequest initWithURL:self.url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10]);
     
-    NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.ios.PCFData"];
-    NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *build = [[NSProcessInfo processInfo] operatingSystemVersionString];
-    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@; iOS %@", version, build];
-    
-    XCTAssertEqualObjects(method, request.HTTPMethod);
-    XCTAssertEqualObjects(token, authHeader);
-    XCTAssertEqualObjects(self.url, request.URL);
-    XCTAssertEqualObjects(self.result, decodedBody);
-    XCTAssertEqualObjects(userAgent, userAgentHeader);
+    [mutableRequest stopMocking];
 }
 
-- (void)testRequestWithMethodSetsEtagWhenExistsForGet {
-    id config = OCMClassMock([PCFDataConfig class]);
-    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
-    
-    OCMStub([config sharedInstance]).andReturn(config);
-    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
-    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
-    
-    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:false];
-    
-    XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
-    
-    OCMVerify([etagStore etagForUrl:self.url]);
-    
-    [config stopMocking];
-}
-
-- (void)testRequestWithMethodSetsEtagWhenExistsForPut {
-    id config = OCMClassMock([PCFDataConfig class]);
-    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
-    
-    OCMStub([config sharedInstance]).andReturn(config);
-    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
-    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
-    
-    NSURLRequest *request = [client requestWithMethod:@"PUT" accessToken:self.token url:self.url value:nil force:false];
-    
-    XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
-    
-    OCMVerify([etagStore etagForUrl:self.url]);
-    
-    [config stopMocking];
-}
-
-- (void)testRequestWithMethodSetsEtagWhenExistsForDelete {
-    id config = OCMClassMock([PCFDataConfig class]);
-    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
-
-    OCMStub([config sharedInstance]).andReturn(config);
-    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
-    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
-    
-    NSURLRequest *request = [client requestWithMethod:@"DELETE" accessToken:self.token url:self.url value:nil force:false];
-    
-    XCTAssertEqual(self.etag, [request.allHTTPHeaderFields valueForKey:@"If-Match"]);
-    
-    OCMVerify([etagStore etagForUrl:self.url]);
-    
-    [config stopMocking];
-}
-
-- (void)testRequestWithMethodDoesntSetEtagForForceRequest {
-    id config = OCMClassMock([PCFDataConfig class]);
-    PCFEtagStore *etagStore = OCMStrictClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
-    
-    OCMStub([config sharedInstance]).andReturn(config);
-    OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
-    
-    NSURLRequest *request = [client requestWithMethod:@"GET" accessToken:self.token url:self.url value:nil force:true];
-    
-    XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-None-Match"]);
-    XCTAssertNil([request.allHTTPHeaderFields valueForKey:@"If-Match"]);
-    
-    [config stopMocking];
-}
-
-- (void)testExecuteInvokesNSURLConnection {
-    NSError *error = OCMClassMock([NSError class]);
-    NSURLRequest *request = [[NSURLRequest alloc] init];
-    NSData *data = [self.result dataUsingEncoding:NSUTF8StringEncoding];
-    
-    id connection = OCMClassMock([NSURLConnection class]);
-    
+- (void)testExecuteRequest {
+    NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    id pcfData = OCMClassMock([PCFData class]);
+    
+    OCMStub([client executeRequest:[OCMArg any] force:self.force error:[OCMArg anyObjectRef] response:[OCMArg anyObjectRef]]).andReturn(body);
+    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.body);
+    OCMStub([pcfData invalidateToken]).andDo(^(NSInvocation *invocation){
+        XCTFail(@"This method should not be hit");
+    });
+    
+    NSError *error;
+    XCTAssertEqual(self.body, [client executeRequest:request force:self.force error:&error]);
+    
+    OCMVerify([client handleResponse:[OCMArg any] data:body error:[OCMArg anyObjectRef]]);
+    OCMVerify([client executeRequest:request force:self.force error:[OCMArg anyObjectRef] response:[OCMArg anyObjectRef]]);
+    
+    [pcfData stopMocking];
+}
 
-    OCMStub([connection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(data);
-    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.result);
+- (void)testExecuteRequestWithUserCancelledError {
+    NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    id client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    id pcfData = OCMClassMock([PCFData class]);
     
-    NSString *value = [client execute:request error:&error];
+    OCMStub([client executeRequest:[OCMArg any] force:self.force error:[OCMArg anyObjectRef] response:[OCMArg anyObjectRef]]).andReturn(body);
+    OCMStub([client handleResponse:[OCMArg any] data:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(self.body);
     
-    XCTAssertEqualObjects(value, self.result);
+    NSError *error = [[NSError alloc] initWithDomain:@"" code:kCFURLErrorUserCancelledAuthentication userInfo:nil];
+    XCTAssertEqual(self.body, [client executeRequest:request force:self.force error:&error]);
     
-    OCMVerify([connection sendSynchronousRequest:request returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]);
-    OCMVerify([client handleResponse:[OCMArg any] data:data error:[OCMArg anyObjectRef]]);
+    OCMVerify([client handleResponse:[OCMArg any] data:body error:[OCMArg anyObjectRef]]);
+    OCMVerify([client executeRequest:request force:self.force error:[OCMArg anyObjectRef] response:[OCMArg anyObjectRef]]);
+    OCMVerify([pcfData invalidateToken]);
     
-    [connection stopMocking];
+    [pcfData stopMocking];
+}
+
+- (void)testExecuteRequestWithResponseWithForce {
+    NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    id nsURLConnection = OCMClassMock([NSURLConnection class]);
+    
+    OCMStub([client addUserAgentHeader:[OCMArg any]]).andDo(nil);
+    OCMStub([client addAuthorizationHeader:[OCMArg any]]).andDo(nil);
+    OCMStub([client addEtagHeader:[OCMArg any] url:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        XCTFail(@"This method should not be called.");
+    });
+    OCMStub([nsURLConnection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(body);
+    
+    NSError *error;
+    NSHTTPURLResponse *response;
+    XCTAssertEqual(body, [client executeRequest:request force:true error:&error response:&response]);
+    
+    OCMVerify([client addUserAgentHeader:request]);
+    OCMVerify([client addAuthorizationHeader:request]);
+
+    [nsURLConnection stopMocking];
+}
+
+- (void)testExecuteRequestWithResponseWithoutForce {
+    NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    id nsURLConnection = OCMClassMock([NSURLConnection class]);
+    
+    OCMStub([client addUserAgentHeader:[OCMArg any]]).andDo(nil);
+    OCMStub([client addAuthorizationHeader:[OCMArg any]]).andDo(nil);
+    OCMStub([nsURLConnection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(body);
+    
+    NSError *error;
+    NSHTTPURLResponse *response;
+    XCTAssertEqual(body, [client executeRequest:request force:false error:&error response:&response]);
+    
+    OCMVerify([client addUserAgentHeader:request]);
+    OCMVerify([client addAuthorizationHeader:request]);
+    OCMVerify([client addEtagHeader:request url:request.URL]);
+    
+    [nsURLConnection stopMocking];
+}
+
+- (void)testAddUserAgentHeader {
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    id nsBundle = OCMClassMock([NSBundle class]);
+    NSString *version = [NSUUID UUID].UUIDString;
+    NSString *build = [NSUUID UUID].UUIDString;
+    id nsProcessInfo = OCMClassMock([NSProcessInfo class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:nil];
+    
+    OCMStub([nsBundle bundleWithIdentifier:[OCMArg any]]).andReturn(nsBundle);
+    OCMStub([nsBundle objectForInfoDictionaryKey:[OCMArg any]]).andReturn(version);
+    OCMStub([nsProcessInfo processInfo]).andReturn(nsProcessInfo);
+    OCMStub([nsProcessInfo operatingSystemVersionString]).andReturn(build);
+    
+    [client addUserAgentHeader:request];
+    
+    NSString *userAgent = [NSString stringWithFormat:@"PCFData/%@; iOS %@", version, build];
+    OCMVerify([request addValue:userAgent forHTTPHeaderField:@"User-Agent"]);
+    
+    [nsBundle stopMocking];
+    [nsProcessInfo stopMocking];
+}
+
+- (void)testAddAuthorizationHeader {
+    id pcfData = OCMClassMock([PCFData class]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:nil];
+    
+    OCMStub([pcfData provideToken]).andReturn(self.token);
+    
+    [client addAuthorizationHeader:request];
+    
+    NSString *bearerToken = [@"Bearer " stringByAppendingString:self.token];
+    OCMVerify([request addValue:bearerToken forHTTPHeaderField:@"Authorization"]);
+    
+    [pcfData stopMocking];
+}
+
+- (void)testAddEtagHeaderWhenEtagsEnabled {
+    id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
+    
+    [client addEtagHeader:request url:self.url];
+    
+    OCMVerify([pcfDataConfig areEtagsEnabled]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    OCMVerify([request addValue:self.etag forHTTPHeaderField:@"If-Match"]);
+    
+    [pcfDataConfig stopMocking];
+}
+
+- (void)testAddEtagHeaderWhenEtagsEnabledForGetRequest {
+    id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([request HTTPMethod]).andReturn(@"GET");
+    OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
+    
+    [client addEtagHeader:request url:self.url];
+    
+    OCMVerify([pcfDataConfig areEtagsEnabled]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    OCMVerify([request addValue:self.etag forHTTPHeaderField:@"If-None-Match"]);
+    
+    [pcfDataConfig stopMocking];
 }
 
 - (void)testHandleResponseFailureWithError {

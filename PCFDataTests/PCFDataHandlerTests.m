@@ -96,34 +96,48 @@
 }
 
 - (void)testRegisterTokenProviderBlock {
-    id pcfConfig = OCMClassMock([PCFDataConfig class]);
     id reachability = OCMClassMock([PCFReachability class]);
     PCFDataHandler *handler = OCMPartialMock([[PCFDataHandler alloc] init]);
     
     OCMStub([reachability reachability]).andReturn(reachability);
-    OCMStub([pcfConfig sharedInstance]).andReturn(pcfConfig);
-    OCMStub([pcfConfig serviceUrl]).andReturn(@"");
     
-    [handler registerTokenProviderBlock:^(BOOL prompt) {
+    [handler registerTokenProviderBlock:^() {
         return self.token;
     }];
     
-    XCTAssertEqual(self.token, [handler provideTokenWithUserPrompt:self.prompt]);
+    XCTAssertEqual(self.token, [handler provideToken]);
     
     OCMVerify([handler startReachability]);
     
-    [pcfConfig stopMocking];
+    [reachability stopMocking];
+}
+
+- (void)testRegisterTokenInvalidatorBlock {
+    id reachability = OCMClassMock([PCFReachability class]);
+    PCFDataHandler *handler = OCMPartialMock([[PCFDataHandler alloc] init]);
+    
+    OCMStub([reachability reachability]).andReturn(reachability);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
+    
+    [handler registerTokenInvalidatorBlock:^() {
+        [expectation fulfill];
+    }];
+    
+    [handler invalidateToken];
+    
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+    
+    OCMVerify([handler startReachability]);
+    
     [reachability stopMocking];
 }
 
 - (void)testRegisterNetworkObserverBlock {
-    id pcfConfig = OCMClassMock([PCFDataConfig class]);
     id reachability = OCMClassMock([PCFReachability class]);
     PCFDataHandler *handler = OCMPartialMock([[PCFDataHandler alloc] init]);
     
     OCMStub([reachability reachability]).andReturn(reachability);
-    OCMStub([pcfConfig sharedInstance]).andReturn(pcfConfig);
-    OCMStub([pcfConfig serviceUrl]).andReturn(@"");
     
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     
@@ -137,7 +151,6 @@
     
     OCMVerify([handler startReachability]);
     
-    [pcfConfig stopMocking];
     [reachability stopMocking];
 }
 

@@ -7,24 +7,23 @@
 //
 
 #import "PCFRequestCacheExecutor.h"
-#import "PCFOfflineStore.h"
+#import "PCFKeyValueOfflineStore.h"
 #import "PCFPendingRequest.h"
 #import "PCFRequestCache.h"
 #import "PCFDataResponse.h"
 
 @interface PCFRequestCacheExecutor ()
 
-@property PCFOfflineStore *offlineStore;
+@property PCFKeyValueOfflineStore *offlineStore;
+
 @property id<PCFDataStore> fallbackStore;
 
 @end
 
 @implementation PCFRequestCacheExecutor
 
-static NSString* const PCFExecutionError = @"PCFExecutionError";
-static NSString* const PCFUnsupportedOperation = @"Unsupported operation in RequestCache.";
-
-- (instancetype)initWithOfflineStore:(PCFOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
+- (instancetype)initWithOfflineStore:(PCFKeyValueOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
+    self = [super init];
     _offlineStore = offlineStore;
     _fallbackStore = fallbackStore;
     return self;
@@ -33,15 +32,12 @@ static NSString* const PCFUnsupportedOperation = @"Unsupported operation in Requ
 - (void)executeRequest:(PCFPendingRequest *)request {
     switch (request.method) {
         case PCF_HTTP_GET:
-            [self executeGet:request];
+            [self.offlineStore executeRequest:request];
             break;
             
         case PCF_HTTP_PUT:
-            [self executePut:request];
-            break;
-            
         case PCF_HTTP_DELETE:
-            [self executeDelete:request];
+            [self executeWithFallback:request];
             break;
             
         default:
@@ -49,25 +45,14 @@ static NSString* const PCFUnsupportedOperation = @"Unsupported operation in Requ
     }
 }
 
-- (void)executeGet:(PCFPendingRequest *)request {
-    [self.offlineStore getWithRequest:request];
-}
-
-- (void)executePut:(PCFPendingRequest *)request {
-    PCFDataResponse *response = [self.offlineStore putWithRequest:request];
+- (void)executeWithFallback:(PCFPendingRequest *)request {
+    PCFDataResponse *response = [self.offlineStore executeRequest:request];
     if (response.error) {
         PCFPendingRequest *fallback = [[PCFPendingRequest alloc] initWithRequest:request];
+        fallback.method = PCF_HTTP_PUT;
         fallback.object = request.fallback;
-        [self.fallbackStore putWithRequest:fallback];
-    }
-}
-
-- (void)executeDelete:(PCFPendingRequest *)request {
-    PCFDataResponse *response = [self.offlineStore deleteWithRequest:request];
-    if (response.error) {
-        PCFPendingRequest *fallback = [[PCFPendingRequest alloc] initWithRequest:request];
-        fallback.object = request.fallback;
-        [self.fallbackStore putWithRequest:fallback];
+        
+        [self.fallbackStore executeRequest:fallback];
     }
 }
 

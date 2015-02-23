@@ -11,6 +11,8 @@
 
 @interface PCFKeyValueObject : NSObject
 
+@property BOOL force;
+
 + (instancetype)objectWithCollection:(NSString *)collection key:(NSString *)key;
 
 - (instancetype)initWithCollection:(NSString *)collection key:(NSString *)key;

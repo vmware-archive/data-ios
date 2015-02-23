@@ -14,7 +14,7 @@
 
 @interface PCFKeyValueObject ()
 
-- (PCFDataRequest *)createRequestWithValue:(NSString *)value;
+- (PCFDataRequest *)createRequestWithMethod:(int)method value:(NSString *)value;
 
 @end
 
@@ -44,85 +44,85 @@
 - (void)testForceGetInvokesDataStore {
     PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
     PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
-    PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFKeyValueLocalStore *dataStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
-    OCMStub([object createRequestWithValue:[OCMArg any]]).andReturn(request);
-    OCMStub([dataStore getWithRequest:[OCMArg any]]).andReturn(response);
+    OCMStub([object createRequestWithMethod:PCF_HTTP_GET value:[OCMArg any]]).andReturn(request);
+    OCMStub([dataStore executeRequest:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual([object get], response);
     
-    OCMVerify([dataStore getWithRequest:request]);
+    OCMVerify([dataStore executeRequest:request]);
 }
 
 - (void)testAsyncGetInvokesDataStore {
     void (^block)(PCFDataResponse *) = ^(PCFDataResponse *response) {};
     PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
-    PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFKeyValueLocalStore *dataStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
-    OCMStub([object createRequestWithValue:[OCMArg any]]).andReturn(request);
-    OCMStub([dataStore getWithRequest:[OCMArg any] completionBlock:[OCMArg any]]);
+    OCMStub([object createRequestWithMethod:PCF_HTTP_GET value:[OCMArg any]]).andReturn(request);
+    OCMStub([dataStore executeRequest:[OCMArg any] completionBlock:[OCMArg any]]);
     
     [object getWithCompletionBlock:block];
     
-    OCMVerify([dataStore getWithRequest:request completionBlock:block]);
+    OCMVerify([dataStore executeRequest:request completionBlock:block]);
 }
 
 - (void)testPutInvokesDataStore {
     PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
     PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
-    PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFKeyValueLocalStore *dataStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
-    OCMStub([object createRequestWithValue:[OCMArg any]]).andReturn(request);
-    OCMStub([dataStore putWithRequest:[OCMArg any]]).andReturn(response);
+    OCMStub([object createRequestWithMethod:PCF_HTTP_PUT value:[OCMArg any]]).andReturn(request);
+    OCMStub([dataStore executeRequest:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual([object putWithValue:self.value], response);
     
-    OCMVerify([dataStore putWithRequest:request]);
+    OCMVerify([dataStore executeRequest:request]);
 }
 
 - (void)testAsyncPutInvokesDataStore {
     void (^block)(PCFDataResponse *) = ^(PCFDataResponse *response) {};
     PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
-    PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFKeyValueLocalStore *dataStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
-    OCMStub([object createRequestWithValue:[OCMArg any]]).andReturn(request);
-    OCMStub([dataStore putWithRequest:[OCMArg any] completionBlock:[OCMArg any]]);
+    OCMStub([object createRequestWithMethod:PCF_HTTP_PUT value:[OCMArg any]]).andReturn(request);
+    OCMStub([dataStore executeRequest:[OCMArg any] completionBlock:[OCMArg any]]);
     
     [object putWithValue:self.value completionBlock:block];
     
-    OCMVerify([dataStore putWithRequest:request completionBlock:block]);
+    OCMVerify([dataStore executeRequest:request completionBlock:block]);
 }
 
 - (void)testDeleteInvokesDataStore {
     PCFDataResponse *response = OCMClassMock([PCFDataResponse class]);
     PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
-    PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFKeyValueLocalStore *dataStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
-    OCMStub([object createRequestWithValue:[OCMArg any]]).andReturn(request);
-    OCMStub([dataStore deleteWithRequest:[OCMArg any]]).andReturn(response);
+    OCMStub([object createRequestWithMethod:PCF_HTTP_DELETE value:[OCMArg any]]).andReturn(request);
+    OCMStub([dataStore executeRequest:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual([object delete], response);
     
-    OCMVerify([dataStore deleteWithRequest:request]);
+    OCMVerify([dataStore executeRequest:request]);
 }
 
 - (void)testAsyncDeleteInvokesDataStore {
     void (^block)(PCFDataResponse *) = ^(PCFDataResponse *response) {};
     PCFDataRequest *request = OCMClassMock([PCFDataRequest class]);
-    PCFKeyValueStore *dataStore = OCMClassMock([PCFKeyValueStore class]);
+    PCFKeyValueLocalStore *dataStore = OCMClassMock([PCFKeyValueLocalStore class]);
     PCFKeyValueObject *object = OCMPartialMock([[PCFKeyValueObject alloc] initWithDataStore:dataStore collection:self.collection key:self.key]);
     
-    OCMStub([object createRequestWithValue:[OCMArg any]]).andReturn(request);
-    OCMStub([dataStore deleteWithRequest:[OCMArg any] completionBlock:[OCMArg any]]);
+    OCMStub([object createRequestWithMethod:PCF_HTTP_DELETE value:[OCMArg any]]).andReturn(request);
+    OCMStub([dataStore executeRequest:[OCMArg any] completionBlock:[OCMArg any]]);
     
     [object deleteWithCompletionBlock:block];
     
-    OCMVerify([dataStore deleteWithRequest:request completionBlock:block]);
+    OCMVerify([dataStore executeRequest:request completionBlock:block]);
 }
 
 @end
