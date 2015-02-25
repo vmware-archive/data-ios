@@ -63,7 +63,7 @@
     switch (request.method) {
         case PCF_HTTP_GET:
             LogInfo(@"PCFKeyValueOfflineStore getWithRequest: %@", request);
-            return [self getWithRequest:request];
+            return [self executeGetRequest:request];
             
         case PCF_HTTP_PUT:
             LogInfo(@"PCFKeyValueOfflineStore putWithRequest: %@", request);
@@ -90,68 +90,93 @@
     });
 }
 
-- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request {
-
+- (PCFDataResponse *)executeGetRequest:(PCFDataRequest *)request {
+    
     if ([self isConnected]) {
-        PCFDataResponse *response = [self.remoteStore executeRequest:request];
-        
-        if (!response.error) {
-            PCFDataRequest *put = [[PCFDataRequest alloc] initWithRequest:request];
-            put.method = PCF_HTTP_PUT;
-            put.object = response.object;
-            
-            return [self.localStore executeRequest:put];
-            
-        } else if (response.error.code == 404) {
-            PCFDataRequest *delete = [[PCFDataRequest alloc] initWithRequest:request];
-            delete.method = PCF_HTTP_DELETE;
-            
-            [self.localStore executeRequest:delete];
-            return response;
-            
-        } else if (response.error.code == 304) {
-            LogInfo(@"Got error code 304 in get request. Getting local value.");
-            return [self.localStore executeRequest:request];
-            
-        } else {
-            return response;
-        }
+        return [self executeGetRequestRemotely:request];
         
     } else {
-        PCFDataResponse *response = [self.localStore executeRequest:request];
-        
-        [self.requestCache queueRequest:request];
-        
-        return response;
+        return [self queueGetRequest:request];
     }
 }
 
 - (PCFDataResponse *)executeRequestWithFallback:(PCFDataRequest *)request {
     
     if ([self isConnected]) {
-        PCFDataResponse *response = [self.remoteStore executeRequest:request];
-        
-        if (!response.error) {
-            return [self.localStore executeRequest:request];
-            
-        } else {
-            return response;
-        }
+        return [self executeRequestRemotely:request];
         
     } else {
         
-        PCFDataRequest *get = [[PCFDataRequest alloc] initWithRequest:request];
-        get.method = PCF_HTTP_GET;
+        return [self queueRequestWithFallback:request];
+    }
+}
+
+- (PCFDataResponse *)executeGetRequestRemotely:(PCFDataRequest *)request {
+    PCFDataResponse *response = [self.remoteStore executeRequest:request];
+    
+    if (!response.error) {
+        return [self executePutRequestLocally:request response:response];
         
-        PCFDataResponse *fallback = [self.localStore executeRequest:get];
-        PCFDataResponse *response = [self.localStore executeRequest:request];
+    } else if (response.error.code == 404) {
+        return [self executeDeleteRequestLocally:request response:response];
         
-        request.fallback = fallback.object;
+    } else if (response.error.code == 304) {
+        LogInfo(@"Got error code 304 in get request. Getting local value.");
+        return [self.localStore executeRequest:request];
         
-        [self.requestCache queueRequest:request];
-        
+    } else {
         return response;
     }
+}
+
+- (PCFDataResponse *)executePutRequestLocally:(PCFDataRequest *)request response:(PCFDataResponse *)response {
+    PCFDataRequest *put = [[PCFDataRequest alloc] initWithRequest:request];
+    put.method = PCF_HTTP_PUT;
+    put.object = response.object;
+    
+    return [self.localStore executeRequest:put];
+}
+
+- (PCFDataResponse *)executeDeleteRequestLocally:(PCFDataRequest *)request response:(PCFDataResponse *)response {
+    PCFDataRequest *delete = [[PCFDataRequest alloc] initWithRequest:request];
+    delete.method = PCF_HTTP_DELETE;
+    
+    [self.localStore executeRequest:delete];
+    
+    return response;
+}
+
+- (PCFDataResponse *)executeRequestRemotely:(PCFDataRequest *)request {
+    PCFDataResponse *response = [self.remoteStore executeRequest:request];
+    
+    if (!response.error) {
+        return [self.localStore executeRequest:request];
+        
+    } else {
+        return response;
+    }
+}
+
+- (PCFDataResponse *)queueGetRequest:(PCFDataRequest *)request {
+    PCFDataResponse *response = [self.localStore executeRequest:request];
+    
+    [self.requestCache queueRequest:request];
+    
+    return response;
+}
+
+- (PCFDataResponse *)queueRequestWithFallback:(PCFDataRequest *)request {
+    PCFDataRequest *get = [[PCFDataRequest alloc] initWithRequest:request];
+    get.method = PCF_HTTP_GET;
+    
+    PCFDataResponse *fallback = [self.localStore executeRequest:get];
+    PCFDataResponse *response = [self.localStore executeRequest:request];
+    
+    request.fallback = fallback.object;
+    
+    [self.requestCache queueRequest:request];
+    
+    return response;
 }
 
 - (BOOL)isConnected {

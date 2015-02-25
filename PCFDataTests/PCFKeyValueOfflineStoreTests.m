@@ -16,7 +16,7 @@
 
 @property (readonly) PCFRequestCache *requestCache;
 
-- (PCFDataResponse *)getWithRequest:(PCFDataRequest *)request;
+- (PCFDataResponse *)executeGetRequest:(PCFDataRequest *)request;
 
 - (PCFDataResponse *)executeRequestWithFallback:(PCFDataRequest *)request;
 
@@ -84,11 +84,11 @@
     
     PCFKeyValueOfflineStore *dataStore = OCMPartialMock([[PCFKeyValueOfflineStore alloc] init]);
     
-    OCMStub([dataStore getWithRequest:[OCMArg any]]).andReturn(response);
+    OCMStub([dataStore executeGetRequest:[OCMArg any]]).andReturn(response);
     
     XCTAssertEqual(response, [dataStore executeRequest:request]);
     
-    OCMVerify([dataStore getWithRequest:request]);
+    OCMVerify([dataStore executeGetRequest:request]);
 }
 
 - (void)testExecutePutRequestInvokesExecuteRequestWithFallback {
@@ -140,7 +140,7 @@
     OCMStub([remoteStore executeRequest:[OCMArg any]]).andReturn(remoteResponse);
     OCMStub([localStore executeRequest:self.putArg]).andReturn(localResponse);
     
-    PCFDataResponse *response = [dataStore getWithRequest:request];
+    PCFDataResponse *response = [dataStore executeGetRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
@@ -159,7 +159,7 @@
     OCMStub([dataStore isConnected]).andReturn(true);
     OCMStub([remoteStore executeRequest:[OCMArg any]]).andReturn(remoteResponse);
     
-    PCFDataResponse *response = [dataStore getWithRequest:request];
+    PCFDataResponse *response = [dataStore executeGetRequest:request];
     
     XCTAssertEqual(response, remoteResponse);
     
@@ -181,7 +181,7 @@
     OCMStub([remoteStore executeRequest:[OCMArg any]]).andReturn(remoteResponse);
     OCMStub([localStore executeRequest:[OCMArg any]]).andReturn(localResponse);
     
-    PCFDataResponse *response = [dataStore getWithRequest:request];
+    PCFDataResponse *response = [dataStore executeGetRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
@@ -203,7 +203,7 @@
     OCMStub([remoteStore executeRequest:[OCMArg any]]).andReturn(remoteResponse);
     OCMStub([localStore executeRequest:self.deleteArg]).andDo(nil);
     
-    PCFDataResponse *response = [dataStore getWithRequest:request];
+    PCFDataResponse *response = [dataStore executeGetRequest:request];
     
     XCTAssertEqual(response, remoteResponse);
     
@@ -223,7 +223,7 @@
     OCMStub([dataStore requestCache]).andReturn(requestCache);
     OCMStub([localStore executeRequest:[OCMArg any]]).andReturn(localResponse);
     
-    PCFDataResponse *response = [dataStore getWithRequest:request];
+    PCFDataResponse *response = [dataStore executeGetRequest:request];
     
     XCTAssertEqual(response, localResponse);
     
