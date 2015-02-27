@@ -29,8 +29,4 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    [PCFData performSyncWithCompletionHandler:completionHandler];
-}
-
 @end
