@@ -11,6 +11,8 @@
 
 @class PCFDataPersistence;
 
+static NSString * const PCFDataPrefix = @"PCFData:Data";
+
 @interface PCFKeyValueLocalStore : NSObject <PCFDataStore>
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence;

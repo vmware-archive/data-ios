@@ -22,8 +22,6 @@
 
 @implementation PCFEtagStoreTests
 
-static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
-
 - (void)setUp {
     [super setUp];
     
@@ -54,7 +52,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 }
 
 - (NSString *)prefixedUrl {
-    return [PCFDataEtagPrefix stringByAppendingString:[self.url absoluteString]];
+    return [self.url absoluteString];
 }
 
 @end

@@ -10,10 +10,14 @@
 
 @interface PCFDataPersistence : NSObject
 
+- (instancetype)initWithDomainName:(NSString *)domainName;
+    
 - (NSString *)getValueForKey:(NSString *)key;
 
 - (NSString *)putValue:(NSString *)value forKey:(NSString *)key;
 
 - (NSString *)deleteValueForKey:(NSString *)key;
+
+- (void)clear;
 
 @end

@@ -13,6 +13,8 @@
 #import "PCFRequestCache.h"
 #import "PCFDataLogger.h"
 #import "PCFDataHandler.h"
+#import "PCFDataPersistence.h"
+#import "PCFEtagStore.h"
 
 @interface PCFData ()
 
@@ -135,6 +137,23 @@
     OCMVerify([requestCache executePendingRequestsWithCompletionHandler:block]);
     
     [requestCache stopMocking];
+}
+
+- (void)testClearCachedData {
+    id dataPersistence = OCMClassMock([PCFDataPersistence class]);
+    
+    OCMStub([dataPersistence alloc]).andReturn(dataPersistence);
+    OCMStub([dataPersistence initWithDomainName:PCFDataPrefix]).andReturn(dataPersistence);
+    OCMStub([dataPersistence initWithDomainName:PCFDataEtagPrefix]).andReturn(dataPersistence);
+    
+    [PCFData clearCachedData];
+    
+    OCMVerify([dataPersistence initWithDomainName:PCFDataPrefix]);
+    OCMVerify([dataPersistence clear]);
+    OCMVerify([dataPersistence initWithDomainName:PCFDataEtagPrefix]);
+    OCMVerify([dataPersistence clear]);
+    
+    [dataPersistence stopMocking];
 }
 
 - (void)testLogLevelInvokesPCFLogger {

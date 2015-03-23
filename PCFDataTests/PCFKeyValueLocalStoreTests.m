@@ -25,8 +25,6 @@
 
 @implementation PCFKeyValueLocalStoreTests
 
-static NSString* const PCFDataPrefix = @"PCFData:Data:";
-
 - (void)setUp {
     [super setUp];
     
@@ -112,7 +110,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 }
 
 - (NSString *)prefixedKey {
-    return [PCFDataPrefix stringByAppendingFormat:@"%@:%@", self.collection, self.key];
+    return [self.collection stringByAppendingFormat:@":%@", self.key];
 }
 
 @end

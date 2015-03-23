@@ -18,10 +18,8 @@
 
 @implementation PCFEtagStore
 
-static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
-
 - (instancetype)init {
-    return [self initWithPersistence:[[PCFDataPersistence alloc] init]];
+    return [self initWithPersistence:[[PCFDataPersistence alloc] initWithDomainName:PCFDataEtagPrefix]];
 }
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence {
@@ -32,7 +30,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 
 - (NSString *)etagForUrl:(NSURL *)url {
     if (url) {
-        return [self.persistence getValueForKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
+        return [self.persistence getValueForKey:[url absoluteString]];
     } else {
         return nil;
     }
@@ -40,7 +38,7 @@ static NSString* const PCFDataEtagPrefix = @"PCFData:Etag:";
 
 - (void)putEtagForUrl:(NSURL *)url etag:(NSString *)etag {
     if (url) {
-        [self.persistence putValue:etag forKey:[PCFDataEtagPrefix stringByAppendingString:[url absoluteString]]];
+        [self.persistence putValue:etag forKey:[url absoluteString]];
     }
 }
 

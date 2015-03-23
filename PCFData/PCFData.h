@@ -41,6 +41,8 @@ typedef void (^PCFTokenInvalidatorBlock) ();
 
 + (void)performSyncWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
++ (void)clearCachedData;
+
 + (void)logLevel:(PCFDataLogLevel)level;
 
 @end

@@ -21,10 +21,8 @@
 
 @implementation PCFKeyValueLocalStore
 
-static NSString* const PCFDataPrefix = @"PCFData:Data:";
-
 - (instancetype)init {
-    return [self initWithPersistence:[[PCFDataPersistence alloc] init]];
+    return [self initWithPersistence:[[PCFDataPersistence alloc] initWithDomainName:PCFDataPrefix]];
 }
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence {
@@ -39,7 +37,7 @@ static NSString* const PCFDataPrefix = @"PCFData:Data:";
 //}
 
 + (NSString *)identifierWithKeyValue:(PCFKeyValue *)keyValue {
-    return [PCFDataPrefix stringByAppendingFormat:@"%@:%@", keyValue.collection, keyValue.key];
+    return [keyValue.collection stringByAppendingFormat:@":%@", keyValue.key];
 }
 
 - (PCFDataResponse *)executeRequest:(PCFDataRequest *)request {

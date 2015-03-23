@@ -10,6 +10,8 @@
 
 @class PCFDataPersistence;
 
+static NSString * const PCFDataEtagPrefix = @"PCFData:Etag";
+
 @interface PCFEtagStore : NSObject
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence;

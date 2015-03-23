@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "PCFData.h"
+#import "PCFEtagStore.h"
+#import "PCFDataPersistence.h"
 #import "PCFRequestCache.h"
 #import "PCFDataLogger.h"
 #import "PCFDataHandler.h"
@@ -53,6 +55,11 @@
 
 + (void)performSyncWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     [[[PCFRequestCache alloc] init] executePendingRequestsWithCompletionHandler:completionHandler];
+}
+
++ (void)clearCachedData {
+    [[[PCFDataPersistence alloc] initWithDomainName:PCFDataPrefix] clear];
+    [[[PCFDataPersistence alloc] initWithDomainName:PCFDataEtagPrefix] clear];
 }
 
 @end
