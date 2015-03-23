@@ -37,6 +37,7 @@
     
     OCMStub([defaults standardUserDefaults]).andReturn(defaults);
     OCMStub([defaults persistentDomainForName:[OCMArg any]]).andReturn(dictionary);
+    OCMStub([dictionary mutableCopy]).andReturn(dictionary);
     
     PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:domainName];
     
@@ -70,6 +71,7 @@
     
     OCMStub([defaults standardUserDefaults]).andReturn(defaults);
     OCMStub([defaults persistentDomainForName:[OCMArg any]]).andReturn(dictionary);
+    OCMStub([dictionary mutableCopy]).andReturn(dictionary);
     OCMStub([dictionary objectForKey:[OCMArg any]]).andReturn(self.value);
     
     PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:nil];
@@ -87,6 +89,7 @@
     
     OCMStub([defaults standardUserDefaults]).andReturn(defaults);
     OCMStub([defaults persistentDomainForName:[OCMArg any]]).andReturn(dictionary);
+    OCMStub([dictionary mutableCopy]).andReturn(dictionary);
     
     PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:domainName];
     XCTAssertEqual(self.value, [dataPersistence putValue:self.value forKey:self.key]);
@@ -104,6 +107,7 @@
     
     OCMStub([defaults standardUserDefaults]).andReturn(defaults);
     OCMStub([defaults persistentDomainForName:[OCMArg any]]).andReturn(dictionary);
+    OCMStub([dictionary mutableCopy]).andReturn(dictionary);
     
     PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:domainName];
     XCTAssertEqualObjects(@"", [dataPersistence deleteValueForKey:self.key]);
@@ -140,6 +144,41 @@
     
     OCMVerify([defaults removePersistentDomainForName:domainName]);
     XCTAssertNil([dataPersistence getValueForKey:self.key]);
+    
+    [defaults stopMocking];
+}
+
+- (void)testValues {
+    NSString *domainName = [NSUUID UUID].UUIDString;
+    id defaults = OCMClassMock([NSUserDefaults class]);
+    NSMutableDictionary *dictionary = OCMClassMock([NSMutableDictionary class]);
+    
+    OCMStub([defaults standardUserDefaults]).andReturn(defaults);
+    OCMStub([defaults persistentDomainForName:domainName]).andReturn(dictionary);
+    OCMStub([dictionary mutableCopy]).andReturn(dictionary);
+    
+    PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:domainName];
+    
+    XCTAssertEqual(dictionary, [dataPersistence values]);
+    
+    OCMVerify([defaults persistentDomainForName:domainName]);
+    OCMVerify([dictionary mutableCopy]);
+    
+    [defaults stopMocking];
+}
+
+- (void)testValuesWhenPersistentDomainNil {
+    NSString *domainName = [NSUUID UUID].UUIDString;
+    id defaults = OCMClassMock([NSUserDefaults class]);
+    
+    OCMStub([defaults standardUserDefaults]).andReturn(defaults);
+    OCMStub([defaults persistentDomainForName:domainName]).andReturn(nil);
+    
+    PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:domainName];
+    
+    XCTAssertNotNil([dataPersistence values]);
+    
+    OCMVerify([defaults persistentDomainForName:domainName]);
     
     [defaults stopMocking];
 }

@@ -55,7 +55,7 @@
 }
 
 - (NSMutableDictionary *)values {
-    NSMutableDictionary *dictionary = (NSMutableDictionary *) [self.defaults persistentDomainForName:self.domainName];
+    NSMutableDictionary *dictionary = [[self.defaults persistentDomainForName:self.domainName] mutableCopy];
     return dictionary ? dictionary : [NSMutableDictionary new];
 }
 
