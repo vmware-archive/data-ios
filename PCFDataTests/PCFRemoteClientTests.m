@@ -251,7 +251,7 @@
     [pcfData stopMocking];
 }
 
-- (void)testAddEtagHeaderWhenEtagsEnabled {
+- (void)testAddEtagHeaderWhenEtagsEnabledAndDefaultRequestHasEtag {
     id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
@@ -269,7 +269,7 @@
     [pcfDataConfig stopMocking];
 }
 
-- (void)testAddEtagHeaderWhenEtagsEnabledForGetRequest {
+- (void)testAddEtagHeaderWhenEtagsEnabledAndGetRequestHasEtag {
     id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
@@ -284,6 +284,43 @@
     OCMVerify([pcfDataConfig areEtagsEnabled]);
     OCMVerify([etagStore etagForUrl:self.url]);
     OCMVerify([request addValue:self.etag forHTTPHeaderField:@"If-None-Match"]);
+    
+    [pcfDataConfig stopMocking];
+}
+
+- (void)testAddEtagHeaderWhenEtagsEnabledAndDefaultRequestHasNoEtag {
+    id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(@"");
+    
+    [client addEtagHeader:request url:self.url];
+    
+    OCMVerify([pcfDataConfig areEtagsEnabled]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    OCMVerify([request addValue:@"*" forHTTPHeaderField:@"If-None-Match"]);
+    
+    [pcfDataConfig stopMocking];
+}
+
+- (void)testAddEtagHeaderWhenEtagsEnabledAndGetRequestHasNoEtag {
+    id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
+    NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
+    PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
+    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    
+    OCMStub([request HTTPMethod]).andReturn(@"GET");
+    OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
+    OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(@"");
+    
+    [client addEtagHeader:request url:self.url];
+    
+    OCMVerify([pcfDataConfig areEtagsEnabled]);
+    OCMVerify([etagStore etagForUrl:self.url]);
+    OCMVerify([request addValue:@"*" forHTTPHeaderField:@"If-Match"]);
     
     [pcfDataConfig stopMocking];
 }

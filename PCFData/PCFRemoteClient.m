@@ -140,11 +140,16 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     if ([PCFDataConfig areEtagsEnabled]) {
         NSString *etag = [self.etagStore etagForUrl:url];
         
-        if (etag) {
+        if ([etag length] > 0) {
             NSString *header = [request.HTTPMethod isEqual:@"GET"] ? @"If-None-Match" : @"If-Match";
             [request addValue:etag forHTTPHeaderField:header];
             
             LogInfo(@"Request %@: %@", header, etag);
+        } else {
+            NSString *header = [request.HTTPMethod isEqual:@"GET"] ? @"If-Match" : @"If-None-Match";
+            [request addValue:@"*" forHTTPHeaderField:header];
+            
+            LogInfo(@"Request %@: %@", header, @"*");
         }
         
         LogInfo(@"Request Etag: None");
