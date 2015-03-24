@@ -140,6 +140,20 @@
     [pcfData stopMocking];
 }
 
+- (void)testUnregisterNetworkObserver {
+    id pcfData = OCMClassMock([PCFData class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    PCFNetworkBlock block = ^(BOOL connected) {};
+    
+    OCMStub([pcfData handler]).andReturn(handler);
+    
+    [PCFData unregisterNetworkObserverBlock];
+    
+    OCMVerify([handler registerNetworkObserverBlock:nil]);
+    
+    [pcfData stopMocking];
+}
+
 - (void)testPerformSyncInvokesRequestCache {
     id requestCache = OCMClassMock([PCFRequestCache class]);
     

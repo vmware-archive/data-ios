@@ -41,6 +41,8 @@ typedef void (^PCFTokenInvalidatorBlock) ();
 
 + (void)registerNetworkObserverBlock:(PCFNetworkBlock)block;
 
++ (void)unregisterNetworkObserverBlock;
+
 + (void)performSync;
 
 + (void)performSyncWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;

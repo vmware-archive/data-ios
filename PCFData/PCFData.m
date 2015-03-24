@@ -57,6 +57,10 @@
     [self.handler registerNetworkObserverBlock:block];
 }
 
++ (void)unregisterNetworkObserverBlock {
+    [self.handler registerNetworkObserverBlock:nil];
+}
+
 + (void)performSync {
     [[[PCFRequestCache alloc] init] executePendingRequests];
 }
