@@ -22,7 +22,7 @@
 
 @implementation PCFRequestCacheQueueTests
 
-static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
+static NSString* const PCFRequestCacheKey = @"RequestCache";
 
 - (void)testAddRequestWithExistingArray {
     id jsonSerialization = OCMClassMock([NSJSONSerialization class]);
@@ -43,11 +43,11 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     
     [queue addRequest:request];
     
-    OCMVerify([persistence getValueForKey:PCFDataRequestCache]);
+    OCMVerify([persistence getValueForKey:PCFRequestCacheKey]);
     OCMVerify([jsonSerialization JSONObjectWithData:data options:0 error:nil]);
     OCMVerify([serializedArray addObject:dict]);
     OCMVerify([jsonSerialization dataWithJSONObject:serializedArray options:0 error:nil]);
-    OCMVerify([persistence putValue:[OCMArg any] forKey:PCFDataRequestCache]);
+    OCMVerify([persistence putValue:[OCMArg any] forKey:PCFRequestCacheKey]);
     
     [jsonSerialization stopMocking];
 }
@@ -67,10 +67,10 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     
     [queue addRequest:request];
     
-    OCMVerify([persistence getValueForKey:PCFDataRequestCache]);
+    OCMVerify([persistence getValueForKey:PCFRequestCacheKey]);
     OCMVerify([array arrayWithObject:dict]);
     OCMVerify([jsonSerialization dataWithJSONObject:array options:0 error:nil]);
-    OCMVerify([persistence putValue:[OCMArg any] forKey:PCFDataRequestCache]);
+    OCMVerify([persistence putValue:[OCMArg any] forKey:PCFRequestCacheKey]);
     
     [jsonSerialization stopMocking];
     [array stopMocking];
@@ -96,8 +96,8 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     
     XCTAssertEqual(pendingRequest, resultArray[0]);
     
-    OCMVerify([persistence getValueForKey:PCFDataRequestCache]);
-    OCMVerify([persistence deleteValueForKey:PCFDataRequestCache]);
+    OCMVerify([persistence getValueForKey:PCFRequestCacheKey]);
+    OCMVerify([persistence deleteValueForKey:PCFRequestCacheKey]);
     OCMVerify([jsonSerialization JSONObjectWithData:data options:0 error:nil]);
     OCMVerify([pendingRequest initWithDictionary:dict]);
     

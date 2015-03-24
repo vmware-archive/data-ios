@@ -33,8 +33,16 @@
     [self.handler registerTokenProviderBlock:block];
 }
 
++ (void)unregisterTokenProviderBlock {
+    [self.handler registerTokenProviderBlock:nil];
+}
+
 + (void)registerTokenInvalidatorBlock:(PCFTokenInvalidatorBlock)block {
     [self.handler registerTokenInvalidatorBlock:block];
+}
+
++ (void)unregisterTokenInvalidatorBlock {
+    [self.handler registerTokenInvalidatorBlock:nil];
 }
 
 + (NSString *)provideToken {

@@ -58,6 +58,19 @@
     [pcfData stopMocking];
 }
 
+- (void)testUnregisterTokenProvider {
+    id pcfData = OCMClassMock([PCFData class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    
+    OCMStub([pcfData handler]).andReturn(handler);
+    
+    [PCFData unregisterTokenProviderBlock];
+    
+    OCMVerify([handler registerTokenProviderBlock:nil]);
+    
+    [pcfData stopMocking];
+}
+
 - (void)testRegisterTokenInvalidator {
     id pcfData = OCMClassMock([PCFData class]);
     PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
@@ -68,6 +81,19 @@
     [PCFData registerTokenInvalidatorBlock:block];
     
     OCMVerify([handler registerTokenInvalidatorBlock:block]);
+    
+    [pcfData stopMocking];
+}
+
+- (void)testUnregisterTokenInvalidator {
+    id pcfData = OCMClassMock([PCFData class]);
+    PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
+    
+    OCMStub([pcfData handler]).andReturn(handler);
+    
+    [PCFData unregisterTokenInvalidatorBlock];
+    
+    OCMVerify([handler registerTokenInvalidatorBlock:nil]);
     
     [pcfData stopMocking];
 }

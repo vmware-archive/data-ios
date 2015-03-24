@@ -19,7 +19,7 @@
 
 @implementation PCFRequestCacheQueue
 
-static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
+static NSString* const PCFRequestCacheKey = @"RequestCache";
 
 - (instancetype)initWithPersistence:(PCFDataPersistence *)persistence {
     _persistence = persistence;
@@ -28,7 +28,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
 
 - (void)addRequest:(PCFPendingRequest *)request {
     @synchronized(self) {
-        NSString *serialized = [self.persistence getValueForKey:PCFDataRequestCache];
+        NSString *serialized = [self.persistence getValueForKey:PCFRequestCacheKey];
         
         NSMutableArray *array;
         
@@ -44,7 +44,7 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
         NSData *newData = [NSJSONSerialization dataWithJSONObject:array options:0 error:nil];
         NSString *newSerialized = [[NSString alloc] initWithData:newData encoding:NSUTF8StringEncoding];
         
-        [self.persistence putValue:newSerialized forKey:PCFDataRequestCache];
+        [self.persistence putValue:newSerialized forKey:PCFRequestCacheKey];
     }
 }
 
@@ -52,8 +52,8 @@ static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
     NSString *serialized;
     
     @synchronized(self) {
-        serialized = [self.persistence getValueForKey:PCFDataRequestCache];
-        [self.persistence deleteValueForKey:PCFDataRequestCache];
+        serialized = [self.persistence getValueForKey:PCFRequestCacheKey];
+        [self.persistence deleteValueForKey:PCFRequestCacheKey];
     }
     
     NSMutableArray *requests = [[NSMutableArray alloc] init];

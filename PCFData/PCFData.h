@@ -33,7 +33,11 @@ typedef void (^PCFTokenInvalidatorBlock) ();
 
 + (void)registerTokenProviderBlock:(PCFTokenProviderBlock)block;
 
++ (void)unregisterTokenProviderBlock;
+
 + (void)registerTokenInvalidatorBlock:(PCFTokenInvalidatorBlock)block;
+
++ (void)unregisterTokenInvalidatorBlock;
 
 + (void)registerNetworkObserverBlock:(PCFNetworkBlock)block;
 

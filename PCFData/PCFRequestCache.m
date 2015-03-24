@@ -25,6 +25,8 @@
 
 @implementation PCFRequestCache
 
+static NSString* const PCFDataRequestCache = @"PCFData:RequestCache";
+
 - (instancetype)init {
     PCFKeyValueOfflineStore *offlineStore = [[PCFKeyValueOfflineStore alloc] init];
     PCFKeyValueLocalStore *fallbackStore = [[PCFKeyValueLocalStore alloc] init];
@@ -33,7 +35,7 @@
 
 - (instancetype)initWithOfflineStore:(PCFKeyValueOfflineStore *)offlineStore fallbackStore:(id<PCFDataStore>)fallbackStore {
     self = [super init];
-    _queue = [[PCFRequestCacheQueue alloc] initWithPersistence:[[PCFDataPersistence alloc] init]];
+    _queue = [[PCFRequestCacheQueue alloc] initWithPersistence:[[PCFDataPersistence alloc] initWithDomainName:PCFDataRequestCache]];
     _executor = [[PCFRequestCacheExecutor alloc] initWithOfflineStore:offlineStore fallbackStore:fallbackStore];
     return self;
 }
