@@ -143,7 +143,6 @@
 - (void)testUnregisterNetworkObserver {
     id pcfData = OCMClassMock([PCFData class]);
     PCFDataHandler *handler = OCMClassMock([PCFDataHandler class]);
-    PCFNetworkBlock block = ^(BOOL connected) {};
     
     OCMStub([pcfData handler]).andReturn(handler);
     

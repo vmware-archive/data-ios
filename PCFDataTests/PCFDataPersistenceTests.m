@@ -100,6 +100,24 @@
     [defaults stopMocking];
 }
 
+- (void)testPutNilString {
+    NSString *domainName = [NSUUID UUID].UUIDString;
+    id defaults = OCMClassMock([NSUserDefaults class]);
+    NSMutableDictionary *dictionary = OCMClassMock([NSMutableDictionary class]);
+    
+    OCMStub([defaults standardUserDefaults]).andReturn(defaults);
+    OCMStub([defaults persistentDomainForName:[OCMArg any]]).andReturn(dictionary);
+    OCMStub([dictionary mutableCopy]).andReturn(dictionary);
+    
+    PCFDataPersistence *dataPersistence = [[PCFDataPersistence alloc] initWithDomainName:domainName];
+    XCTAssertNil([dataPersistence putValue:nil forKey:self.key]);
+    
+    OCMVerify([dictionary setObject:@"" forKey:self.key]);
+    OCMVerify([defaults setPersistentDomain:dictionary forName:domainName]);
+    
+    [defaults stopMocking];
+}
+
 - (void)testDeleteString {
     NSString *domainName = [NSUUID UUID].UUIDString;
     id defaults = OCMClassMock([NSUserDefaults class]);

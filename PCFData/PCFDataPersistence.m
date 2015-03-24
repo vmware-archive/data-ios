@@ -33,7 +33,7 @@
 - (NSString *)putValue:(NSString *)value forKey:(NSString *)key {
     @synchronized(self) {
         NSMutableDictionary *values = self.values;
-        [values setObject:value forKey:key];
+        [values setObject:(value ? value : @"") forKey:key];
         [self.defaults setPersistentDomain:values forName:self.domainName];
         return value;
     }
