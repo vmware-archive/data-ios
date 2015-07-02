@@ -17,7 +17,7 @@
 @property NSString *url;
 @property PCFCollisionStrategy strategy;
 @property BOOL trustAllSSLCertificates;
-@property NSString *pinnedSSLCertificateNames;
+@property NSArray *pinnedSSLCertificateNames;
 
 @end
 
@@ -34,7 +34,7 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     self.url = [NSUUID UUID].UUIDString;
     self.strategy = arc4random_uniform(1);
     self.trustAllSSLCertificates = arc4random_uniform(1);
-    self.pinnedSSLCertificateNames = [NSUUID UUID].UUIDString;
+    self.pinnedSSLCertificateNames = @[[NSUUID UUID].UUIDString];
 }
 
 - (void)testServiceUrl {
@@ -142,7 +142,7 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config pinnedSSLCertificateNames]).andReturn(self.pinnedSSLCertificateNames);
     
-    NSString *pinnedSSLCertificateNames = [PCFDataConfig pinnedSSLCertificateNames];
+    NSArray *pinnedSSLCertificateNames = [PCFDataConfig pinnedSSLCertificateNames];
     
     XCTAssertEqual(pinnedSSLCertificateNames, self.pinnedSSLCertificateNames);
     
@@ -159,7 +159,7 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     OCMStub([config values]).andReturn(dict);
     OCMStub([dict objectForKey:[OCMArg any]]).andReturn(self.pinnedSSLCertificateNames);
     
-    NSString *pinnedSSLCertificateNames = [config pinnedSSLCertificateNames];
+    NSArray *pinnedSSLCertificateNames = [config pinnedSSLCertificateNames];
     
     XCTAssertEqual(pinnedSSLCertificateNames, self.pinnedSSLCertificateNames);
     

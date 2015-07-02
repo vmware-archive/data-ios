@@ -52,33 +52,16 @@
 
     PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
     
-    id handlerClass = OCMClassMock([PCFSessionHandler class]);
-
-    // Setup Authentication Challenge
-    id credential = OCMClassMock([NSURLCredential class]);
-    NSURLProtectionSpace *space = OCMClassMock([NSURLProtectionSpace class]);
-    NSURLAuthenticationChallenge *challenge = OCMClassMock([NSURLAuthenticationChallenge class]);
-    OCMStub([challenge protectionSpace]).andReturn(space);
-    OCMStub([space authenticationMethod]).andReturn(NSURLAuthenticationMethodServerTrust);
-    OCMStub([credential credentialForTrust:[OCMArg anyPointer]]).andReturn(credential);
-
-    // Setup local cert data to be returned from bundle
-    id bundle = OCMClassMock([NSBundle class]);
-    NSString *path = [NSUUID UUID].UUIDString;
-    OCMStub([bundle mainBundle]).andReturn(bundle);
-    OCMStub([bundle pathForResource:@"pivotal" ofType:@"cer"]).andReturn(path);
+    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *localCertData = [remoteCertData copy];
     
-    NSData *localCertData = OCMClassMock([NSData class]);
-    NSData *remoteCertData = OCMClassMock([NSData class]);
-    id nsdata = OCMClassMock([NSData class]);
-    OCMStub([nsdata dataWithContentsOfFile:path]).andReturn(localCertData);
+    
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
+                                                             andRemoteCertData:remoteCertData];
+    NSURLCredential *credential = [self setupCredential];
+    [self setupBundleWithLocalCertData:localCertData];
 
-    // Setup remote cert data
-    OCMStub([handlerClass certificateDataFromProtectionSpace:space]).andReturn(remoteCertData);
-
-    OCMStub([remoteCertData isEqualToData:localCertData]).andReturn(YES);
-    OCMStub([localCertData isEqualToData:remoteCertData]).andReturn(YES);
-
+    
     __block BOOL completionHandlerWasCalled = NO;
     
     [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
@@ -89,8 +72,6 @@
     }];
     
     XCTAssertEqual(completionHandlerWasCalled, YES);
-    
-    [credential stopMocking];
 }
 
 - (void)testRespondToChallengeWithDefaultHandling {
@@ -98,28 +79,15 @@
     
     PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
     
-    id handlerClass = OCMClassMock([PCFSessionHandler class]);
+    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *localCertData = nil;
     
-    // Setup Authentication Challenge
-    id credential = OCMClassMock([NSURLCredential class]);
-    NSURLProtectionSpace *space = OCMClassMock([NSURLProtectionSpace class]);
-    NSURLAuthenticationChallenge *challenge = OCMClassMock([NSURLAuthenticationChallenge class]);
-    OCMStub([challenge protectionSpace]).andReturn(space);
-    OCMStub([space authenticationMethod]).andReturn(NSURLAuthenticationMethodServerTrust);
-    OCMStub([credential credentialForTrust:[OCMArg anyPointer]]).andReturn(credential);
     
-    // Setup local cert data to be returned from bundle
-    id bundle = OCMClassMock([NSBundle class]);
-    NSString *path = [NSUUID UUID].UUIDString;
-    OCMStub([bundle mainBundle]).andReturn(bundle);
-    OCMStub([bundle pathForResource:@"pivotal" ofType:@"cer"]).andReturn(path);
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
+                                                             andRemoteCertData:remoteCertData];
+    [self setupCredential];
+    [self setupBundleWithLocalCertData:localCertData];
     
-    NSData *remoteCertData = OCMClassMock([NSData class]);
-    id nsdata = OCMClassMock([NSData class]);
-    OCMStub([nsdata dataWithContentsOfFile:path]).andReturn(nil);
-    
-    // Setup remote cert data
-    OCMStub([handlerClass certificateDataFromProtectionSpace:space]).andReturn(remoteCertData);
     
     __block BOOL completionHandlerWasCalled = NO;
     
@@ -131,8 +99,6 @@
     }];
     
     XCTAssertEqual(completionHandlerWasCalled, YES);
-    
-    [credential stopMocking];
 }
 
 - (void)testRespondToChallengeWithRejectedProtectionSpace {
@@ -140,32 +106,15 @@
     
     PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
     
-    id handlerClass = OCMClassMock([PCFSessionHandler class]);
+    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *localCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
-    // Setup Authentication Challenge
-    id credential = OCMClassMock([NSURLCredential class]);
-    NSURLProtectionSpace *space = OCMClassMock([NSURLProtectionSpace class]);
-    NSURLAuthenticationChallenge *challenge = OCMClassMock([NSURLAuthenticationChallenge class]);
-    OCMStub([challenge protectionSpace]).andReturn(space);
-    OCMStub([space authenticationMethod]).andReturn(NSURLAuthenticationMethodServerTrust);
-    OCMStub([credential credentialForTrust:[OCMArg anyPointer]]).andReturn(credential);
     
-    // Setup local cert data to be returned from bundle
-    id bundle = OCMClassMock([NSBundle class]);
-    NSString *path = [NSUUID UUID].UUIDString;
-    OCMStub([bundle mainBundle]).andReturn(bundle);
-    OCMStub([bundle pathForResource:@"pivotal" ofType:@"cer"]).andReturn(path);
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
+                                                             andRemoteCertData:remoteCertData];
+    [self setupCredential];
+    [self setupBundleWithLocalCertData:localCertData];
     
-    NSData *localCertData = OCMClassMock([NSData class]);
-    NSData *remoteCertData = OCMClassMock([NSData class]);
-    id nsdata = OCMClassMock([NSData class]);
-    OCMStub([nsdata dataWithContentsOfFile:path]).andReturn(localCertData);
-    
-    // Setup remote cert data
-    OCMStub([handlerClass certificateDataFromProtectionSpace:space]).andReturn(remoteCertData);
-    
-    OCMStub([remoteCertData isEqualToData:localCertData]).andReturn(NO);
-    OCMStub([localCertData isEqualToData:remoteCertData]).andReturn(NO);
     
     __block BOOL completionHandlerWasCalled = NO;
     
@@ -177,24 +126,47 @@
     }];
     
     XCTAssertEqual(completionHandlerWasCalled, YES);
-    
-    [credential stopMocking];
 }
 
 - (void)testAcceptAllSSLCertificates {
     
 }
 
-//
-//I renamed RequestPerformer to SessionHandler.
-//
-//I've fixed all the tests so that everyhting passes using the sessionHandler instead of sendSynchonrousRequest.
-//
-//I commented out all the certificate validation code. We need to finish our tests before continuing :)
-//
-//I started adding cases for certificate validation above^^^^^^^. Can you continue on with those?
-//
-//If anything doesn't make sense we can discuss on monday
-//
+
+#pragma mark - Setup
+
+- (NSURLAuthenticationChallenge *)setupMockChallengeWithType:(NSString *)trustType andRemoteCertData:(NSData *)remoteCertData {
+    // Setup Authentication Challenge
+    NSURLProtectionSpace *space = OCMClassMock([NSURLProtectionSpace class]);
+    NSURLAuthenticationChallenge *challenge = OCMClassMock([NSURLAuthenticationChallenge class]);
+    OCMStub([challenge protectionSpace]).andReturn(space);
+    OCMStub([space authenticationMethod]).andReturn(NSURLAuthenticationMethodServerTrust);
+    
+    id handlerClass = OCMClassMock([PCFSessionHandler class]);
+    
+    OCMStub([handlerClass certificateDataFromProtectionSpace:space]).andReturn(remoteCertData);
+    
+    return challenge;
+}
+
+- (NSURLCredential *)setupCredential {
+    id credential = OCMClassMock([NSURLCredential class]);
+    OCMStub([credential credentialForTrust:[OCMArg anyPointer]]).andReturn(credential);
+    return credential;
+}
+
+- (void)setupBundleWithLocalCertData:(NSData *)localCertData {
+    // Setup local cert data to be returned from bundle
+    id bundle = OCMClassMock([NSBundle class]);
+    NSString *path = [NSUUID UUID].UUIDString;
+    OCMStub([bundle mainBundle]).andReturn(bundle);
+    OCMStub([bundle pathForResource:[OCMArg any] ofType:[OCMArg any]]).andReturn(path);
+    
+    id nsdata = OCMClassMock([NSData class]);
+    OCMStub([nsdata dataWithContentsOfFile:path]).andReturn(localCertData);
+}
+
+
+#pragma mark - Teardown
 
 @end

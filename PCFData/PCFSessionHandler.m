@@ -111,6 +111,20 @@
     return remoteCertificateData;
 }
 
+//- (BOOL)appHasCertificatesPinned {
+//    return YES;
+//}
+
+//- (BOOL)remoteCertDataMatchesPinnedCert {
+//    NSArray *pinnedCertNames;
+//    
+//    BOOL remoteCertMatchesPInnedCert = NO;
+//    
+//    for (NSString *pinnedCertName in pinnedCertNames) {
+//        
+//    }
+//}
+
 - (NSData *)certificateFromMainBundle {
     NSString *certificatePath = [[NSBundle mainBundle] pathForResource:@"pivotal" ofType:@"cer"];
     NSData *localCertificateData = [NSData dataWithContentsOfFile:certificatePath];

@@ -54,7 +54,7 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     return [[PCFDataConfig sharedInstance] trustAllSSLCertificates];
 }
 
-+ (NSString *)pinnedSSLCertificateNames {
++ (NSArray *)pinnedSSLCertificateNames {
     return [[PCFDataConfig sharedInstance] pinnedSSLCertificateNames];
 }
 
@@ -85,8 +85,8 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     return [trustAllSSLCertificates boolValue];
 }
 
-- (NSString *)pinnedSSLCertificateNames {
-    NSString *pinnedSSLCertificateNames = [self.values objectForKey:PCFPinnedSSLCertificateNames];
+- (NSArray *)pinnedSSLCertificateNames {
+    NSArray *pinnedSSLCertificateNames = [self.values objectForKey:PCFPinnedSSLCertificateNames];
     if (!pinnedSSLCertificateNames) {
         NSString *reason = [PCFPropertyMissing stringByAppendingString:PCFPinnedSSLCertificateNames];
         @throw [NSException exceptionWithName:PCFConfiguration reason:reason userInfo:nil];

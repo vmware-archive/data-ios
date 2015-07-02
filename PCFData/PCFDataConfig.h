@@ -26,6 +26,6 @@ typedef NS_ENUM(NSInteger, PCFCollisionStrategy) {
 
 + (BOOL)trustAllSSLCertificates;
 
-+ (NSString *)pinnedSSLCertificateNames;
++ (NSArray *)pinnedSSLCertificateNames;
 
 @end
