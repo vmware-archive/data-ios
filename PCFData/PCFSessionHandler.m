@@ -49,8 +49,13 @@
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     
-    *response = returnedResponse;
-    *error = returnedError;
+    if (response != nil) {
+        *response = returnedResponse;
+    }
+    
+    if (error != nil) {
+        *error = returnedError;
+    }
     
     return returnedData;
 }
@@ -63,7 +68,7 @@
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
 
-//    [self respondToChallenge:challenge completionHandler:completionHandler];
+    [self respondToChallenge:challenge completionHandler:completionHandler];
 }
 
 - (void)respondToChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
@@ -89,7 +94,7 @@
 }
 
 - (void)responseToChallengeForProtectionSpace:(NSURLProtectionSpace *)protectionSpace localCertificateData:(NSData *)localCertificateData completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
-    NSData *remoteCertificateData = [self certificateDataFromProtectionSpace:protectionSpace];
+    NSData *remoteCertificateData = [self.class certificateDataFromProtectionSpace:protectionSpace];
     
     if ([remoteCertificateData isEqualToData:localCertificateData]) {
         NSURLCredential *credential = [NSURLCredential credentialForTrust:protectionSpace.serverTrust];
@@ -100,7 +105,7 @@
     }
 }
 
-- (NSData *)certificateDataFromProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
++ (NSData *)certificateDataFromProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
     SecCertificateRef certificate = SecTrustGetCertificateAtIndex(protectionSpace.serverTrust, 0);
     NSData *remoteCertificateData = CFBridgingRelease(SecCertificateCopyData(certificate));
     return remoteCertificateData;

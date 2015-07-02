@@ -14,4 +14,6 @@
 
 - (NSData *)performRequest:(NSURLRequest *)request response:(NSURLResponse **)response error:(NSError **)error;
 
++ (NSData *)certificateDataFromProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
+
 @end
