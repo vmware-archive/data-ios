@@ -13,6 +13,7 @@
 #import "PCFRemoteClient.h"
 #import "PCFEtagStore.h"
 #import "PCFDataConfig.h"
+#import "PCFSessionHandler.h"
 
 @interface PCFRemoteClient ()
 
@@ -72,7 +73,7 @@
 
 - (void)testGetWithUrl {
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     
     OCMStub([client requestWithMethod:[OCMArg any] url:[OCMArg any] body:[OCMArg any]]).andReturn(request);
     OCMStub([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]).andDo(nil);
@@ -86,7 +87,7 @@
 
 - (void)testPutWithUrl {
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     
     OCMStub([client requestWithMethod:[OCMArg any] url:[OCMArg any] body:[OCMArg any]]).andReturn(request);
     OCMStub([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]).andDo(nil);
@@ -100,7 +101,7 @@
 
 - (void)testDeleteWithUrl {
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     
     OCMStub([client requestWithMethod:[OCMArg any] url:[OCMArg any] body:[OCMArg any]]).andReturn(request);
     OCMStub([client executeRequest:request force:self.force error:[OCMArg anyObjectRef]]).andDo(nil);
@@ -115,7 +116,7 @@
 - (void)testRequestWithMethod {
     NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
     id mutableRequest = OCMClassMock([NSMutableURLRequest class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:nil];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     
     OCMStub([mutableRequest alloc]).andReturn(mutableRequest);
     OCMStub([mutableRequest initWithURL:[OCMArg any] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10]).andReturn(mutableRequest);
@@ -133,7 +134,7 @@
 - (void)testExecuteRequest {
     NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     id pcfData = OCMClassMock([PCFData class]);
     
     OCMStub([client executeRequest:[OCMArg any] force:self.force error:[OCMArg anyObjectRef] response:[OCMArg anyObjectRef]]).andReturn(body);
@@ -154,7 +155,7 @@
 - (void)testExecuteRequestWithUserCancelledError {
     NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
-    id client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    id client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     id pcfData = OCMClassMock([PCFData class]);
     
     OCMStub([client executeRequest:[OCMArg any] force:self.force error:[OCMArg anyObjectRef] response:[OCMArg anyObjectRef]]).andReturn(body);
@@ -172,7 +173,8 @@
 
 - (void)testExecuteRequestWithResponseWithForce {
     NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    PCFSessionHandler *handler = OCMClassMock([PCFSessionHandler class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:handler]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     id nsURLConnection = OCMClassMock([NSURLConnection class]);
     
@@ -181,7 +183,7 @@
     OCMStub([client addEtagHeader:[OCMArg any] url:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         XCTFail(@"This method should not be called.");
     });
-    OCMStub([nsURLConnection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(body);
+    OCMStub([handler performRequest:[OCMArg any] response:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(body);
     
     NSError *error;
     NSHTTPURLResponse *response;
@@ -195,13 +197,14 @@
 
 - (void)testExecuteRequestWithResponseWithoutForce {
     NSData *body = [self.body dataUsingEncoding:NSUTF8StringEncoding];
-    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil]);
+    PCFSessionHandler *handler = OCMClassMock([PCFSessionHandler class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:handler]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     id nsURLConnection = OCMClassMock([NSURLConnection class]);
     
     OCMStub([client addUserAgentHeader:[OCMArg any]]).andDo(nil);
     OCMStub([client addAuthorizationHeader:[OCMArg any]]).andDo(nil);
-    OCMStub([nsURLConnection sendSynchronousRequest:[OCMArg any] returningResponse:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(body);
+    OCMStub([handler performRequest:[OCMArg any] response:[OCMArg anyObjectRef] error:[OCMArg anyObjectRef]]).andReturn(body);
     
     NSError *error;
     NSHTTPURLResponse *response;
@@ -220,7 +223,8 @@
     NSString *version = [NSUUID UUID].UUIDString;
     NSString *build = [NSUUID UUID].UUIDString;
     id nsProcessInfo = OCMClassMock([NSProcessInfo class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:nil];
+    PCFSessionHandler *handler = OCMClassMock([PCFSessionHandler class]);
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:handler]);
     
     OCMStub([nsBundle bundleWithIdentifier:[OCMArg any]]).andReturn(nsBundle);
     OCMStub([nsBundle objectForInfoDictionaryKey:[OCMArg any]]).andReturn(version);
@@ -239,7 +243,7 @@
 - (void)testAddAuthorizationHeader {
     id pcfData = OCMClassMock([PCFData class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:nil];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:nil sessionHandler:nil]);
     
     OCMStub([pcfData provideToken]).andReturn(self.token);
     
@@ -255,7 +259,7 @@
     id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:etagStore sessionHandler:nil]);
     
     OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(self.etag);
@@ -273,7 +277,7 @@
     id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:etagStore sessionHandler:nil]);
     
     OCMStub([request HTTPMethod]).andReturn(@"GET");
     OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
@@ -292,7 +296,7 @@
     id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:etagStore sessionHandler:nil]);
     
     OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
     OCMStub([etagStore etagForUrl:[OCMArg any]]).andReturn(@"");
@@ -310,7 +314,7 @@
     id pcfDataConfig = OCMClassMock([PCFDataConfig class]);
     NSMutableURLRequest *request = OCMClassMock([NSMutableURLRequest class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:etagStore sessionHandler:nil]);
     
     OCMStub([request HTTPMethod]).andReturn(@"GET");
     OCMStub([pcfDataConfig areEtagsEnabled]).andReturn(true);
@@ -357,7 +361,7 @@
     id config = OCMClassMock([PCFDataConfig class]);
     NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:etagStore sessionHandler:nil]);
     
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);
@@ -388,7 +392,7 @@
     NSHTTPURLResponse *response = OCMClassMock([NSHTTPURLResponse class]);
     NSDictionary *dict = OCMClassMock([NSDictionary class]);
     PCFEtagStore *etagStore = OCMClassMock([PCFEtagStore class]);
-    PCFRemoteClient *client = [[PCFRemoteClient alloc] initWithEtagStore:etagStore];
+    PCFRemoteClient *client = OCMPartialMock([[PCFRemoteClient alloc] initWithEtagStore:etagStore sessionHandler:nil]);
 
     OCMStub([config sharedInstance]).andReturn(config);
     OCMStub([config collisionStrategy]).andReturn(PCFCollisionStrategyOptimisticLocking);

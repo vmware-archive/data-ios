@@ -8,6 +8,7 @@
 
 #import "PCFRemoteClient.h"
 #import "PCFEtagStore.h"
+#import "PCFSessionHandler.h"
 #import "PCFDataLogger.h"
 #import "PCFDataConfig.h"
 #import "PCFKeyValue.h"
@@ -27,8 +28,7 @@
 @interface PCFRemoteClient ()
 
 @property PCFEtagStore *etagStore;
-
-- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
+@property PCFSessionHandler *sessionHandler;
 
 @end
 
@@ -37,12 +37,13 @@
 static NSString* const PCFBearerPrefix = @"Bearer ";
 
 - (instancetype)init {
-    return [self initWithEtagStore:[[PCFEtagStore alloc] init]];
+    return [self initWithEtagStore:[[PCFEtagStore alloc] init] sessionHandler:[[PCFSessionHandler alloc] init]];
 }
 
-- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore {
+- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore sessionHandler:(PCFSessionHandler *)sessionHandler{
     self = [super init];
     _etagStore = etagStore;
+    _sessionHandler = sessionHandler;
     return self;
 }
 
@@ -106,8 +107,8 @@ static NSString* const PCFBearerPrefix = @"Bearer ";
     if (!force) {
         [self addEtagHeader:request url:request.URL];
     }
-    
-    return [NSURLConnection sendSynchronousRequest:request returningResponse:response error:error];
+
+    return [self.sessionHandler performRequest:request response:response error:error];
 }
 
 - (void)addUserAgentHeader:(NSMutableURLRequest *)request {

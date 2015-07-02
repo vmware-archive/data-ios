@@ -103,6 +103,9 @@
 		E1DA3D8B1A70079800057671 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DA3D8A1A70079800057671 /* libOCMock.a */; };
 		E1DA3DC41A70558200057671 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
 		E1DA3DC51A70558200057671 /* PCFData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E1ED32EF1B41BBF000DD08AE /* PCFSessionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = E1ED32ED1B41BBF000DD08AE /* PCFSessionHandler.h */; };
+		E1ED32F01B41BBF000DD08AE /* PCFSessionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED32EE1B41BBF000DD08AE /* PCFSessionHandler.m */; };
+		E1ED32F21B42DF0000DD08AE /* PCFSessionHandlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED32F11B42DF0000DD08AE /* PCFSessionHandlerTests.m */; };
 		E1ED42D51A2FB73E00D9EF18 /* PCFReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */; };
 		E1ED42D71A2FBB0700D9EF18 /* PCFReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */; };
 		E1F93CE11A64812B00EA6B28 /* PCFDataRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = E1F93CDF1A64812B00EA6B28 /* PCFDataRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -232,6 +235,9 @@
 		E19CF6AC1A8D048800876495 /* PCFDataHandlerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataHandlerTests.m; sourceTree = "<group>"; };
 		E1BF427B1A41DA0500B4707D /* libPCFData-lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPCFData-lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1DA3D8A1A70079800057671 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
+		E1ED32ED1B41BBF000DD08AE /* PCFSessionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFSessionHandler.h; sourceTree = "<group>"; };
+		E1ED32EE1B41BBF000DD08AE /* PCFSessionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFSessionHandler.m; sourceTree = "<group>"; };
+		E1ED32F11B42DF0000DD08AE /* PCFSessionHandlerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFSessionHandlerTests.m; sourceTree = "<group>"; };
 		E1ED42D31A2FB73E00D9EF18 /* PCFReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFReachability.h; sourceTree = "<group>"; };
 		E1ED42D41A2FB73E00D9EF18 /* PCFReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFReachability.m; sourceTree = "<group>"; };
 		E1F93CDF1A64812B00EA6B28 /* PCFDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFDataRequest.h; sourceTree = "<group>"; };
@@ -339,6 +345,8 @@
 				E117658A1A35F87C00EF6B01 /* PCFEtagStore.m */,
 				E12CCFB11A27D36000EFC209 /* PCFRemoteClient.h */,
 				E12CCFB21A27D36000EFC209 /* PCFRemoteClient.m */,
+				E1ED32ED1B41BBF000DD08AE /* PCFSessionHandler.h */,
+				E1ED32EE1B41BBF000DD08AE /* PCFSessionHandler.m */,
 				E12CCFB51A27D36000EFC209 /* PCFRequestCache.h */,
 				E12CCFB61A27D36000EFC209 /* PCFRequestCache.m */,
 				E17079A71A6721CD00BA42C7 /* PCFRequestCacheExecutor.h */,
@@ -373,6 +381,7 @@
 				E11766121A38E13E00EF6B01 /* PCFLoggerTests.m */,
 				E151B0571A6EB025008C861A /* PCFPendingRequestTests.m */,
 				E12CD01F1A28F29D00EFC209 /* PCFRemoteClientTests.m */,
+				E1ED32F11B42DF0000DD08AE /* PCFSessionHandlerTests.m */,
 				E114296E1A6D68E2006AD400 /* PCFRequestCacheExecutorTests.m */,
 				E151B0511A6D941F008C861A /* PCFRequestCacheQueueTests.m */,
 				E12CD0211A28F4D300EFC209 /* PCFRequestCacheTests.m */,
@@ -433,6 +442,7 @@
 				E12CCFC41A27D36000EFC209 /* PCFKeyValueRemoteStore.h in Headers */,
 				E17079AE1A6852D500BA42C7 /* PCFKeyValue.h in Headers */,
 				E151B0551A6EAEAD008C861A /* PCFPendingRequest.h in Headers */,
+				E1ED32EF1B41BBF000DD08AE /* PCFSessionHandler.h in Headers */,
 				E19CF6AA1A8D021F00876495 /* PCFDataHandler.h in Headers */,
 				E1F93CEC1A65A39000EA6B28 /* PCFDataPersistence.h in Headers */,
 				E12CCFBB1A27D36000EFC209 /* PCFKeyValueObject.h in Headers */,
@@ -643,6 +653,7 @@
 				E12CCFBF1A27D36000EFC209 /* PCFKeyValueLocalStore.m in Sources */,
 				E12CCFC31A27D36000EFC209 /* PCFRemoteClient.m in Sources */,
 				E1F93CE21A64812B00EA6B28 /* PCFDataRequest.m in Sources */,
+				E1ED32F01B41BBF000DD08AE /* PCFSessionHandler.m in Sources */,
 				E17079AA1A6721CD00BA42C7 /* PCFRequestCacheExecutor.m in Sources */,
 				E12CCFC71A27D36000EFC209 /* PCFRequestCache.m in Sources */,
 				E1F93CED1A65A39000EA6B28 /* PCFDataPersistence.m in Sources */,
@@ -660,6 +671,7 @@
 				E12CCFE61A27D84300EFC209 /* PCFKeyValueOfflineStoreTests.m in Sources */,
 				E11765871A325BF800EF6B01 /* PCFEtagStoreTests.m in Sources */,
 				E12CD0221A28F4D300EFC209 /* PCFRequestCacheTests.m in Sources */,
+				E1ED32F21B42DF0000DD08AE /* PCFSessionHandlerTests.m in Sources */,
 				E151B05D1A6EE19E008C861A /* PCFTestMappable.m in Sources */,
 				E12CCFDD1A27D37D00EFC209 /* PCFKeyValueObjectTests.m in Sources */,
 				E11766131A38E13E00EF6B01 /* PCFLoggerTests.m in Sources */,

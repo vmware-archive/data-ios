@@ -25,6 +25,8 @@ static NSString* const PCFPropertyMissing = @"Property missing from Pivotal.plis
 
 static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
 static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
+static NSString* const PCFTrustAllSSLCertificates = @"pivotal.data.trustAllSslCertificates";
+static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCertificateNames";
 
 
 + (PCFDataConfig *)sharedInstance {
@@ -48,6 +50,14 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
     return [[PCFDataConfig sharedInstance] collisionStrategy];
 }
 
++ (BOOL)trustAllSSLCertificates {
+    return [[PCFDataConfig sharedInstance] trustAllSSLCertificates];
+}
+
++ (NSString *)pinnedSSLCertificateNames {
+    return [[PCFDataConfig sharedInstance] pinnedSSLCertificateNames];
+}
+
 - (instancetype)init {
     self.collisionTypes = @{
         @"OptimisticLocking" : [NSNumber numberWithInt:PCFCollisionStrategyOptimisticLocking],
@@ -68,6 +78,20 @@ static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
 - (PCFCollisionStrategy)collisionStrategy {
     NSString *strategy = [self.values objectForKey:PCFStrategy];
     return [[self.collisionTypes objectForKey:strategy] intValue];
+}
+
+- (BOOL)trustAllSSLCertificates {
+    NSString *trustAllSSLCertificates = [self.values objectForKey:PCFTrustAllSSLCertificates];
+    return [trustAllSSLCertificates boolValue];
+}
+
+- (NSString *)pinnedSSLCertificateNames {
+    NSString *pinnedSSLCertificateNames = [self.values objectForKey:PCFPinnedSSLCertificateNames];
+    if (!pinnedSSLCertificateNames) {
+        NSString *reason = [PCFPropertyMissing stringByAppendingString:PCFPinnedSSLCertificateNames];
+        @throw [NSException exceptionWithName:PCFConfiguration reason:reason userInfo:nil];
+    }
+    return pinnedSSLCertificateNames;
 }
 
 - (NSDictionary *)values {

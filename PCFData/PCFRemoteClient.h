@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @class PCFEtagStore;
+@class PCFSessionHandler;
 
 @interface PCFRemoteClient : NSObject
 
-- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore;
+- (instancetype)initWithEtagStore:(PCFEtagStore *)etagStore sessionHandler:(PCFSessionHandler *)sessionHandler;
 
 - (NSString *)getWithUrl:(NSURL *)url force:(BOOL)force error:(NSError *__autoreleasing *)error;
 
