@@ -7,6 +7,7 @@
 //
 
 #import "PCFSessionHandler.h"
+#import "PCFDataConfig.h"
 
 @interface PCFSessionHandler ()
 
@@ -83,23 +84,22 @@
 }
 
 - (void)respondToChallengeForProtectionSpace:(NSURLProtectionSpace *)protectionSpace completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
-    NSData *localCertificateData = [self certificateFromMainBundle];
     
-    if (localCertificateData) {
-        [self responseToChallengeForProtectionSpace:protectionSpace localCertificateData:localCertificateData completionHandler:completionHandler];
-        
+    if ([PCFDataConfig trustAllSSLCertificates]) {
+        completionHandler(NSURLSessionAuthChallengeUseCredential, nil);
+    } else if ([self appHasCertificatesPinned]) {
+        [self respondWithPinnedCertificatesToChallengeForProtectionSpace:protectionSpace completionHandler:completionHandler];
     } else {
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
 }
 
-- (void)responseToChallengeForProtectionSpace:(NSURLProtectionSpace *)protectionSpace localCertificateData:(NSData *)localCertificateData completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+- (void)respondWithPinnedCertificatesToChallengeForProtectionSpace:(NSURLProtectionSpace *)protectionSpace completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
     NSData *remoteCertificateData = [self.class certificateDataFromProtectionSpace:protectionSpace];
     
-    if ([remoteCertificateData isEqualToData:localCertificateData]) {
+    if ([self pinnedCertExistsMatchingRemoteCertData:remoteCertificateData]) {
         NSURLCredential *credential = [NSURLCredential credentialForTrust:protectionSpace.serverTrust];
         completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
-        
     } else {
         completionHandler(NSURLSessionAuthChallengeRejectProtectionSpace, nil);
     }
@@ -111,22 +111,29 @@
     return remoteCertificateData;
 }
 
-//- (BOOL)appHasCertificatesPinned {
-//    return YES;
-//}
+- (BOOL)appHasCertificatesPinned {
+    return [PCFDataConfig pinnedSSLCertificateNames].count > 0;
+}
 
-//- (BOOL)remoteCertDataMatchesPinnedCert {
-//    NSArray *pinnedCertNames;
-//    
-//    BOOL remoteCertMatchesPInnedCert = NO;
-//    
-//    for (NSString *pinnedCertName in pinnedCertNames) {
-//        
-//    }
-//}
+- (BOOL)pinnedCertExistsMatchingRemoteCertData:(NSData *)remoteCertData {
+    NSArray *pinnedCertNames = [PCFDataConfig pinnedSSLCertificateNames];
+    
+    BOOL pinnedCertExistsMatchingRemoteCertData = NO;
+    
+    for (NSString *pinnedCertName in pinnedCertNames) {
+        NSData *pinnedCertData = [self certificateFromMainBundleWithName:pinnedCertName];
+        
+        if ([remoteCertData isEqualToData:pinnedCertData]) {
+            pinnedCertExistsMatchingRemoteCertData = YES;
+            break;
+        }
+    }
+    
+    return pinnedCertExistsMatchingRemoteCertData;
+}
 
-- (NSData *)certificateFromMainBundle {
-    NSString *certificatePath = [[NSBundle mainBundle] pathForResource:@"pivotal" ofType:@"cer"];
+- (NSData *)certificateFromMainBundleWithName:(NSString *)certificateName {
+    NSString *certificatePath = [[NSBundle mainBundle] pathForResource:certificateName ofType:@"cer"];
     NSData *localCertificateData = [NSData dataWithContentsOfFile:certificatePath];
     return localCertificateData;
 }

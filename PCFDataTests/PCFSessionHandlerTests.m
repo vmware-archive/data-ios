@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import <PCFData/PCFData.h>
 #import "PCFSessionHandler.h"
+#import "PCFDataConfig.h"
 
 #define OCMOCK_STRUCT(atype, variable) [NSValue valueWithBytes:&variable withObjCType:@encode(atype)]
 
@@ -47,47 +48,14 @@
     OCMVerify([session dataTaskWithRequest:request completionHandler:[OCMArg any]]);
 }
 
-- (void)testRespondToChallengeWithCredential {
-    NSURLSession *session = OCMClassMock([NSURLSession class]);
-
-    PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
-    
-    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *localCertData = [remoteCertData copy];
-    
-    
-    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
-                                                             andRemoteCertData:remoteCertData];
-    NSURLCredential *credential = [self setupCredential];
-    [self setupBundleWithLocalCertData:localCertData];
-
-    
-    __block BOOL completionHandlerWasCalled = NO;
-    
-    [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
-        XCTAssertEqual(disposition, NSURLSessionAuthChallengeUseCredential);
-        XCTAssertEqual(verifiedCredential, credential);
-        
-        completionHandlerWasCalled = YES;
-    }];
-    
-    XCTAssertEqual(completionHandlerWasCalled, YES);
-}
-
-- (void)testRespondToChallengeWithDefaultHandling {
+- (void)testRespondToNonSslChallenge {
     NSURLSession *session = OCMClassMock([NSURLSession class]);
     
     PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
     
-    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *localCertData = nil;
-    
-    
-    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
-                                                             andRemoteCertData:remoteCertData];
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodHTTPBasic
+                                                             andRemoteCertData:nil];
     [self setupCredential];
-    [self setupBundleWithLocalCertData:localCertData];
-    
     
     __block BOOL completionHandlerWasCalled = NO;
     
@@ -101,7 +69,60 @@
     XCTAssertEqual(completionHandlerWasCalled, YES);
 }
 
-- (void)testRespondToChallengeWithRejectedProtectionSpace {
+- (void)testRespondToChallengeWithPinnedCertificateMatchingRemote {
+    NSURLSession *session = OCMClassMock([NSURLSession class]);
+
+    PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
+    
+    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *localCertData = [remoteCertData copy];
+    
+    
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
+                                                             andRemoteCertData:remoteCertData];
+    NSURLCredential *credential = [self setupCredential];
+    [self setupBundleWithLocalCertData:localCertData];
+    
+    [self setupConfigWithTrustAll:NO andPinnedCertNames:@[[NSUUID UUID].UUIDString]];
+    
+    __block BOOL completionHandlerWasCalled = NO;
+    
+    [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
+        XCTAssertEqual(disposition, NSURLSessionAuthChallengeUseCredential);
+        XCTAssertEqual(verifiedCredential, credential);
+        
+        completionHandlerWasCalled = YES;
+    }];
+    
+    XCTAssertEqual(completionHandlerWasCalled, YES);
+}
+
+- (void)testRespondToSslChallengeWithDefaultHandling {
+    NSURLSession *session = OCMClassMock([NSURLSession class]);
+    
+    PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
+    
+    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
+                                                             andRemoteCertData:remoteCertData];
+    [self setupCredential];
+
+    [self setupConfigWithTrustAll:NO andPinnedCertNames:@[]];
+    
+    __block BOOL completionHandlerWasCalled = NO;
+    
+    [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
+        XCTAssertEqual(disposition, NSURLSessionAuthChallengePerformDefaultHandling);
+        XCTAssertNil(verifiedCredential);
+        
+        completionHandlerWasCalled = YES;
+    }];
+    
+    XCTAssertEqual(completionHandlerWasCalled, YES);
+}
+
+- (void)testRespondToChallengeWithPinnedCertificatesThatDontMatchRemote {
     NSURLSession *session = OCMClassMock([NSURLSession class]);
     
     PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
@@ -115,7 +136,8 @@
     [self setupCredential];
     [self setupBundleWithLocalCertData:localCertData];
     
-    
+    [self setupConfigWithTrustAll:NO andPinnedCertNames:@[[NSUUID UUID].UUIDString]];
+
     __block BOOL completionHandlerWasCalled = NO;
     
     [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
@@ -128,19 +150,53 @@
     XCTAssertEqual(completionHandlerWasCalled, YES);
 }
 
-- (void)testAcceptAllSSLCertificates {
+- (void)testRespondToSslChallengeWithAcceptAllSSLCertificates {
+    NSURLSession *session = OCMClassMock([NSURLSession class]);
     
+    PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
+    
+    NSData *remoteCertData = [[NSUUID UUID].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
+                                                             andRemoteCertData:remoteCertData];
+    [self setupCredential];
+    
+    [self setupConfigWithTrustAll:YES andPinnedCertNames:@[]];
+    
+    __block BOOL completionHandlerWasCalled = NO;
+    
+    [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
+        XCTAssertEqual(disposition, NSURLSessionAuthChallengeUseCredential);
+        XCTAssertNil(verifiedCredential);
+        
+        completionHandlerWasCalled = YES;
+    }];
+    
+    XCTAssertEqual(completionHandlerWasCalled, YES);
 }
 
 
 #pragma mark - Setup
+
+- (PCFDataConfig *)setupConfigWithTrustAll:(BOOL)trustAllSslCertificates andPinnedCertNames:(NSArray *)pinnedSslCertificateNames {
+    
+    id config = OCMClassMock([PCFDataConfig class]);
+    
+    OCMStub([config sharedInstance]).andReturn(config);
+    
+    OCMStub([config trustAllSSLCertificates]).andReturn(trustAllSslCertificates);
+    
+    OCMStub([config pinnedSSLCertificateNames]).andReturn(pinnedSslCertificateNames);
+    
+    return config;
+}
 
 - (NSURLAuthenticationChallenge *)setupMockChallengeWithType:(NSString *)trustType andRemoteCertData:(NSData *)remoteCertData {
     // Setup Authentication Challenge
     NSURLProtectionSpace *space = OCMClassMock([NSURLProtectionSpace class]);
     NSURLAuthenticationChallenge *challenge = OCMClassMock([NSURLAuthenticationChallenge class]);
     OCMStub([challenge protectionSpace]).andReturn(space);
-    OCMStub([space authenticationMethod]).andReturn(NSURLAuthenticationMethodServerTrust);
+    OCMStub([space authenticationMethod]).andReturn(trustType);
     
     id handlerClass = OCMClassMock([PCFSessionHandler class]);
     
@@ -166,7 +222,5 @@
     OCMStub([nsdata dataWithContentsOfFile:path]).andReturn(localCertData);
 }
 
-
-#pragma mark - Teardown
 
 @end
