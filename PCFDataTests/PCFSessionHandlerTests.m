@@ -150,7 +150,7 @@
     XCTAssertEqual(completionHandlerWasCalled, YES);
 }
 
-- (void)testRespondToSslChallengeWithAcceptAllSSLCertificates {
+- (void)testRespondToSslChallengeWithTrustAllSSLCertificates {
     NSURLSession *session = OCMClassMock([NSURLSession class]);
     
     PCFSessionHandler *handler = [[PCFSessionHandler alloc] initWithUrlSession:session];
@@ -159,7 +159,7 @@
     
     NSURLAuthenticationChallenge *challenge = [self setupMockChallengeWithType:NSURLAuthenticationMethodServerTrust
                                                              andRemoteCertData:remoteCertData];
-    [self setupCredential];
+    NSURLCredential *credential = [self setupCredential];
     
     [self setupConfigWithTrustAll:YES andPinnedCertNames:@[]];
     
@@ -167,7 +167,7 @@
     
     [handler URLSession:session didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *verifiedCredential) {
         XCTAssertEqual(disposition, NSURLSessionAuthChallengeUseCredential);
-        XCTAssertNil(verifiedCredential);
+        XCTAssertEqual(verifiedCredential, credential);
         
         completionHandlerWasCalled = YES;
     }];

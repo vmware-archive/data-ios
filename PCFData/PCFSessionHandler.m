@@ -76,17 +76,18 @@
     NSURLProtectionSpace *protectionSpace = challenge.protectionSpace;
     
     if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        [self respondToChallengeForProtectionSpace:protectionSpace completionHandler:completionHandler];
+        [self respondToSslChallengeForProtectionSpace:protectionSpace completionHandler:completionHandler];
         
     } else {
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
 }
 
-- (void)respondToChallengeForProtectionSpace:(NSURLProtectionSpace *)protectionSpace completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+- (void)respondToSslChallengeForProtectionSpace:(NSURLProtectionSpace *)protectionSpace completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
     
     if ([PCFDataConfig trustAllSSLCertificates]) {
-        completionHandler(NSURLSessionAuthChallengeUseCredential, nil);
+        NSURLCredential *credential = [NSURLCredential credentialForTrust:protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
     } else if ([self appHasCertificatesPinned]) {
         [self respondWithPinnedCertificatesToChallengeForProtectionSpace:protectionSpace completionHandler:completionHandler];
     } else {
