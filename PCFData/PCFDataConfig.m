@@ -25,8 +25,8 @@ static NSString* const PCFPropertyMissing = @"Property missing from Pivotal.plis
 
 static NSString* const PCFServiceUrl = @"pivotal.data.serviceUrl";
 static NSString* const PCFStrategy = @"pivotal.data.collisionStrategy";
-static NSString* const PCFTrustAllSSLCertificates = @"pivotal.data.trustAllSslCertificates";
-static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCertificateNames";
+static NSString* const PCFTrustAllSslCertificates = @"pivotal.data.trustAllSslCertificates";
+static NSString* const PCFPinnedSslCertificateNames = @"pivotal.data.pinnedSslCertificateNames";
 
 
 + (PCFDataConfig *)sharedInstance {
@@ -50,12 +50,12 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     return [[PCFDataConfig sharedInstance] collisionStrategy];
 }
 
-+ (BOOL)trustAllSSLCertificates {
-    return [[PCFDataConfig sharedInstance] trustAllSSLCertificates];
++ (BOOL)trustAllSslCertificates {
+    return [[PCFDataConfig sharedInstance] trustAllSslCertificates];
 }
 
-+ (NSArray *)pinnedSSLCertificateNames {
-    return [[PCFDataConfig sharedInstance] pinnedSSLCertificateNames];
++ (NSArray *)pinnedSslCertificateNames {
+    return [[PCFDataConfig sharedInstance] pinnedSslCertificateNames];
 }
 
 - (instancetype)init {
@@ -80,18 +80,14 @@ static NSString* const PCFPinnedSSLCertificateNames = @"pivotal.data.pinnedSslCe
     return [[self.collisionTypes objectForKey:strategy] intValue];
 }
 
-- (BOOL)trustAllSSLCertificates {
-    NSString *trustAllSSLCertificates = [self.values objectForKey:PCFTrustAllSSLCertificates];
+- (BOOL)trustAllSslCertificates {
+    NSString *trustAllSSLCertificates = [self.values objectForKey:PCFTrustAllSslCertificates];
     return [trustAllSSLCertificates boolValue];
 }
 
-- (NSArray *)pinnedSSLCertificateNames {
-    NSArray *pinnedSSLCertificateNames = [self.values objectForKey:PCFPinnedSSLCertificateNames];
-    if (!pinnedSSLCertificateNames) {
-        NSString *reason = [PCFPropertyMissing stringByAppendingString:PCFPinnedSSLCertificateNames];
-        @throw [NSException exceptionWithName:PCFConfiguration reason:reason userInfo:nil];
-    }
-    return pinnedSSLCertificateNames;
+- (NSArray *)pinnedSslCertificateNames {
+    id object = [self.values objectForKey:PCFPinnedSslCertificateNames];
+    return !object || [object isKindOfClass:[NSArray class]] ? object : @[ object ];
 }
 
 - (NSDictionary *)values {

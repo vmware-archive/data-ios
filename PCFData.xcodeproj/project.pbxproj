@@ -100,6 +100,8 @@
 		E1BF42A21A41DA9300B4707D /* PCFKeyValueOfflineStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFAF1A27D36000EFC209 /* PCFKeyValueOfflineStore.h */; };
 		E1BF42A31A41DA9300B4707D /* PCFKeyValueRemoteStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB31A27D36000EFC209 /* PCFKeyValueRemoteStore.h */; };
 		E1BF42A41A41DA9300B4707D /* PCFDataResponse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E12CCFB71A27D36000EFC209 /* PCFDataResponse.h */; };
+		E1BF595C1B4DC7B30066F995 /* test1.cer in Resources */ = {isa = PBXBuildFile; fileRef = E1BF595A1B4DC7B30066F995 /* test1.cer */; };
+		E1BF595D1B4DC7B30066F995 /* test2.cer in Resources */ = {isa = PBXBuildFile; fileRef = E1BF595B1B4DC7B30066F995 /* test2.cer */; };
 		E1DA3D8B1A70079800057671 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DA3D8A1A70079800057671 /* libOCMock.a */; };
 		E1DA3DC41A70558200057671 /* PCFData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; };
 		E1DA3DC51A70558200057671 /* PCFData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E12CCF6C1A27D27B00EFC209 /* PCFData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -234,6 +236,8 @@
 		E19CF6A91A8D021F00876495 /* PCFDataHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataHandler.m; sourceTree = "<group>"; };
 		E19CF6AC1A8D048800876495 /* PCFDataHandlerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFDataHandlerTests.m; sourceTree = "<group>"; };
 		E1BF427B1A41DA0500B4707D /* libPCFData-lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPCFData-lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1BF595A1B4DC7B30066F995 /* test1.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = test1.cer; sourceTree = "<group>"; };
+		E1BF595B1B4DC7B30066F995 /* test2.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = test2.cer; sourceTree = "<group>"; };
 		E1DA3D8A1A70079800057671 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = PCFDataTests/ThirdParty/OCMockiOS/libOCMock.a; sourceTree = "<group>"; };
 		E1ED32ED1B41BBF000DD08AE /* PCFSessionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCFSessionHandler.h; sourceTree = "<group>"; };
 		E1ED32EE1B41BBF000DD08AE /* PCFSessionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCFSessionHandler.m; sourceTree = "<group>"; };
@@ -395,6 +399,8 @@
 		E12CCF7C1A27D27B00EFC209 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E1BF595A1B4DC7B30066F995 /* test1.cer */,
+				E1BF595B1B4DC7B30066F995 /* test2.cer */,
 				E151B05B1A6EE19E008C861A /* PCFTestMappable.h */,
 				E151B05C1A6EE19E008C861A /* PCFTestMappable.m */,
 				E11765AF1A36430F00EF6B01 /* Pivotal.plist */,
@@ -602,6 +608,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E11765B11A374A9E00EF6B01 /* Pivotal.plist in Resources */,
+				E1BF595C1B4DC7B30066F995 /* test1.cer in Resources */,
+				E1BF595D1B4DC7B30066F995 /* test2.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
