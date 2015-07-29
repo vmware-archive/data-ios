@@ -399,12 +399,12 @@
 		E12CCF7C1A27D27B00EFC209 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E1BF595A1B4DC7B30066F995 /* test1.cer */,
-				E1BF595B1B4DC7B30066F995 /* test2.cer */,
 				E151B05B1A6EE19E008C861A /* PCFTestMappable.h */,
 				E151B05C1A6EE19E008C861A /* PCFTestMappable.m */,
 				E11765AF1A36430F00EF6B01 /* Pivotal.plist */,
 				E12CCF7D1A27D27B00EFC209 /* Info.plist */,
+				E1BF595A1B4DC7B30066F995 /* test1.cer */,
+				E1BF595B1B4DC7B30066F995 /* test2.cer */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -552,7 +552,6 @@
 				TargetAttributes = {
 					E12CCF6B1A27D27B00EFC209 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = BVZYXK966R;
 					};
 					E12CCF761A27D27B00EFC209 = {
 						CreatedOnToolsVersion = 6.1;

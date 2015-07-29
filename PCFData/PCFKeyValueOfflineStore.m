@@ -106,7 +106,6 @@
         return [self executeRequestRemotely:request];
         
     } else {
-        
         return [self queueRequestWithFallback:request];
     }
 }
@@ -121,7 +120,6 @@
         return [self executeDeleteRequestLocally:request response:response];
         
     } else if (response.error.code == 304) {
-        LogInfo(@"Got error code 304 in get request. Getting local value.");
         return [self.localStore executeRequest:request];
         
     } else {
