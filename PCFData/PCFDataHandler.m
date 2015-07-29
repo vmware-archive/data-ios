@@ -44,6 +44,7 @@
         [self registerDefaultConnectedBlock];
         
         self.reachability = [PCFReachability reachability];
+        [self.reachability currentReachabilityStatus];
         [self.reachability startNotifier];
     }
 }
