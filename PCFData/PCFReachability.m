@@ -247,10 +247,10 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     // __EDIT__: This was added to fix a problem when turning off airplane mode and the phone has both wifi and cell data.
     // The method would return reachable (and transient, and connection required) but requests would fail for part of a second.
     // After that the method would return reachable (and not transient or connection required) and requests would work.
-    if ((flags & kSCNetworkReachabilityFlagsTransientConnection) && (flags & kSCNetworkReachabilityFlagsConnectionRequired)) {
-        NSLog(@"Transient connection and connection required.");
-        return NotReachable;
-    }
+//    if ((flags & kSCNetworkReachabilityFlagsTransientConnection) && (flags & kSCNetworkReachabilityFlagsConnectionRequired)) {
+//        NSLog(@"Transient connection and connection required.");
+//        return NotReachable;
+//    }
     // __END_EDIT__
 
     PCFNetworkStatus returnValue = NotReachable;
