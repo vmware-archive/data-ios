@@ -3,4 +3,4 @@
 set -e
 set -x
 
-xcodebuild -scheme PCFDataTests clean build test
+xcodebuild -destination platform='iOS Simulator',name="${XCODE_SIMULATOR_NAME}" -scheme PCFAuthTests clean build test
